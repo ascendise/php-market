@@ -21,10 +21,10 @@ final class Offer
         if ($quantity <= 0) {
             throw new InvalidArgumentException("Price can't be zero or less!");
         }
-        $this->productName = productName;
-        $this->price = price;
-        $this->quantity = quantity;
-        $this->seller = seller;
+        $this->productName = $productName;
+        $this->price = $price;
+        $this->quantity = $quantity;
+        $this->seller = $seller;
     }
 
     public function productName(): string

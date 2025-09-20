@@ -17,7 +17,7 @@ final class Offers implements IteratorAggregate
 
     public function __construct(Offer ...$offers)
     {
-        $this->offers = offers;
+        $this->offers = $offers;
     }
 
     public function getIterator(): Traversable

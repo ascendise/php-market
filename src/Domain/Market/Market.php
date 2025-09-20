@@ -8,13 +8,13 @@ final class Market
 {
     private OfferRepository $offerRepository;
 
-    public function __construct(Offers $offerRepository)
+    public function __construct(OfferRepository $offerRepository)
     {
         $this->offerRepository = $offerRepository;
     }
 
     public function listOffers(): Offers
     {
-        return $this->offers;
+        return $this->offerRepository->listOffers();
     }
 }
