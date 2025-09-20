@@ -6,11 +6,11 @@ namespace App\Domain\Market;
 
 final class Market
 {
-    private Offers $offers;
+    private OfferRepository $offerRepository;
 
-    public function __construct(Offers $offers)
+    public function __construct(Offers $offerRepository)
     {
-        $this->offers = $offers;
+        $this->offerRepository = $offerRepository;
     }
 
     public function listOffers(): Offers

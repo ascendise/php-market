@@ -4,15 +4,23 @@ declare(strict_types=1);
 
 namespace App\Domain\Market;
 
+use InvalidArgumentException;
+
 final class Offer
 {
     private string $productName;
     private int $price;
-    private float $quantity;
+    private int $quantity;
     private Seller $seller;
 
-    public function __construct(string $productName, int $price, float $quantity, Seller $seller)
+    public function __construct(string $productName, int $price, int $quantity, Seller $seller)
     {
+        if ($price <= 0) {
+            throw new InvalidArgumentException("Price can't be zero or less!");
+        }
+        if ($quantity <= 0) {
+            throw new InvalidArgumentException("Price can't be zero or less!");
+        }
         $this->productName = productName;
         $this->price = price;
         $this->quantity = quantity;
@@ -29,7 +37,7 @@ final class Offer
         return $this->price;
     }
 
-    public function quantity(): float
+    public function quantity(): int
     {
         return $this->quantity;
     }
