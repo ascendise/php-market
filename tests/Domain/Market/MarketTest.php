@@ -28,7 +28,7 @@ class MarketTest extends TestCase
         $this->assertEquals($expectedOffers, $actualOffers);
     }
 
-    public function testAddOfferShouldAddOfferToRepository(): void
+    public function testCreateOfferShouldAddOfferToRepository(): void
     {
         // Arrange
         $offerRepo = new MemoryOfferRepository(new Offers());
