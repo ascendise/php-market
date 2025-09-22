@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Domain\Market;
 
 use App\Domain\Market\Offer;
+use App\Domain\Market\Product;
 use App\Domain\Market\Seller;
 use InvalidArgumentException;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -25,7 +26,7 @@ final class OfferTest extends TestCase
         // Arrange
         $stubSeller = OfferTest::setupSeller();
         // Act
-        $_ = new Offer("The C Programming Language", $invalidPrice, 5, $stubSeller);
+        $_ = new Offer(new Product('The C Programming Language'), $invalidPrice, 5, $stubSeller);
     }
 
     /**
@@ -48,6 +49,6 @@ final class OfferTest extends TestCase
         // Arrange
         $stubSeller = OfferTest::setupSeller();
         // Act
-        $_ = new Offer("The C Programming Language", 25, $invalidQuantity, $stubSeller);
+        $_ = new Offer(new Product('The C Programming Language'), 25, $invalidQuantity, $stubSeller);
     }
 }

@@ -17,4 +17,8 @@ final class Market
     {
         return $this->offerRepository->listOffers();
     }
+
+    public function createOffer(Offer $offer): void
+    {
+    }
 }

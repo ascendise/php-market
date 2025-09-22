@@ -8,12 +8,12 @@ use InvalidArgumentException;
 
 final class Offer
 {
-    private string $productName;
+    private Product $product;
     private int $price;
     private int $quantity;
     private Seller $seller;
 
-    public function __construct(string $productName, int $price, int $quantity, Seller $seller)
+    public function __construct(Product $product, int $price, int $quantity, Seller $seller)
     {
         if ($price <= 0) {
             throw new InvalidArgumentException("Price can't be zero or less!");
@@ -21,15 +21,15 @@ final class Offer
         if ($quantity <= 0) {
             throw new InvalidArgumentException("Price can't be zero or less!");
         }
-        $this->productName = $productName;
+        $this->product = $product;
         $this->price = $price;
         $this->quantity = $quantity;
         $this->seller = $seller;
     }
 
-    public function productName(): string
+    public function product(): Product
     {
-        return $this->productName;
+        return $this->product;
     }
 
     public function price(): int
