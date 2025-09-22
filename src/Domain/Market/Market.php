@@ -15,10 +15,11 @@ final class Market
 
     public function listOffers(): Offers
     {
-        return $this->offerRepository->listOffers();
+        return $this->offerRepository->list();
     }
 
     public function createOffer(Offer $offer): void
     {
+        $this->offerRepository->add($offer);
     }
 }

@@ -12,12 +12,6 @@ use PHPUnit\Framework\TestCase;
 
 class MarketTest extends TestCase
 {
-    private static function setupSut(Offers $initOffers): Market
-    {
-        $offerRepo = new MemoryOfferRepository($initOffers);
-        return new Market($offerRepo);
-    }
-
     public function testListOffersShouldReturnAllOffersInRepository(): void
     {
         // Arrange
@@ -26,10 +20,25 @@ class MarketTest extends TestCase
             new Offer(product: new Product('Ben and Jerrys'), price: 8, quantity: 1, seller: $seller),
             new Offer(product: new Product('Tires'), price: 200, quantity: 4, seller: $seller)
         );
-        $sut = MarketTest::setupSut($expectedOffers);
+        $offerRepo = new MemoryOfferRepository($expectedOffers);
+        $sut = new Market($offerRepo);
         // Act
         $actualOffers = $sut->listOffers();
         // Assert
         $this->assertEquals($expectedOffers, $actualOffers);
+    }
+
+    public function testAddOfferShouldAddOfferToRepository(): void
+    {
+        // Arrange
+        $offerRepo = new MemoryOfferRepository(new Offers());
+        $sut = new Market($offerRepo);
+        // Act
+        $seller = new StubTrader();
+        $new_offer = new Offer(product: new Product('Ben and Jerrys'), price: 8, quantity: 1, seller: $seller);
+        $sut->createOffer($new_offer);
+        // Assert
+        $offers = $offerRepo->list();
+        $this->assertContains($new_offer, $offers);
     }
 }

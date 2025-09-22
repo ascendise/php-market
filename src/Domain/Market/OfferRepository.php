@@ -6,6 +6,6 @@ namespace App\Domain\Market;
 
 interface OfferRepository
 {
-    public function listOffers(): Offers;
-    public function addOffer(Offer $offer): Offers;
+    public function list(): Offers;
+    public function add(Offer $offer): void;
 }

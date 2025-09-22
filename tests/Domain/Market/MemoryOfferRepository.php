@@ -15,13 +15,13 @@ class MemoryOfferRepository implements OfferRepository
         $this->offers = $initOffers;
     }
 
-    public function listOffers(): Offers
+    public function list(): Offers
     {
         return $this->offers;
     }
 
-    public function addOffer(Offer $offer): Offers
+    public function add(Offer $offer): void
     {
-        $this->offers[] = $offer;
+        $this->offers = new Offers($offer, ... $this->offers);
     }
 }
