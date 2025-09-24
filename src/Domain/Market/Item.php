@@ -7,7 +7,7 @@ namespace App\Domain\Market;
 class Item
 {
     private readonly Product $product;
-    private readonly int $quantity;
+    private int $quantity;
 
     public function __construct(Product $product, int $quantity)
     {
@@ -23,5 +23,10 @@ class Item
     public function quantity(): int
     {
         return $this->quantity;
+    }
+
+    public function setQuantity(int $quantity): void
+    {
+        $this->quantity = $quantity;
     }
 }
