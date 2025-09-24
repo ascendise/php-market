@@ -17,7 +17,10 @@ class Inventory implements IteratorAggregate
 
     public function __construct(Item ...$items)
     {
-        $this->items = $items ?? [];
+        $this->items = [];
+        foreach ($items as $item) {
+            $this->items += [$item->product()->name() => $item];
+        }
     }
 
     public function getIterator(): Traversable
@@ -32,22 +35,14 @@ class Inventory implements IteratorAggregate
 
     public function remove(Product $product, int $quantity): ?Item
     {
-        foreach ($this->items as $item) {
-            if ($item->product() == $product) {
-                $item->setQuantity($item->quantity() - $quantity);
-                return new Item($item->product(), $quantity);
-            }
-        }
-        return null;
+        $item = $this->items[$product->name()];
+        $removed = $item->remove($quantity);
+        return $removed;
     }
 
     public function quantityOf(Product $product): int
     {
-        foreach ($this->items as $item) {
-            if ($item->product() == $product) {
-                return $item->quantity();
-            }
-        }
-        return null;
+        $item = $this->items[$product->name()];
+        return $item->quantity();
     }
 }

@@ -25,8 +25,17 @@ class Item
         return $this->quantity;
     }
 
-    public function setQuantity(int $quantity): void
+    public function add(int $quantity): void
     {
-        $this->quantity = $quantity;
+        $this->quantity += $quantity;
+    }
+
+    /**
+    * @return Item new item containing removed product/quantity
+    */
+    public function remove(int $quantity): Item
+    {
+        $this->quantity -= $quantity;
+        return new Item($this->product, $quantity);
     }
 }
