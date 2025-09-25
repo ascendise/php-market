@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Domain\Market;
 
+use App\Domain\Market\Balance;
 use App\Domain\Market\Offer;
 use App\Domain\Market\Trader;
 use App\Domain\Market\Product;
@@ -20,7 +21,7 @@ final class TraderTest extends TestCase
         // Arrange
         $product = new Product('Banana');
         $inventory = new Inventory(new Item($product, 12));
-        $trader = new Trader($inventory, 0);
+        $trader = new Trader($inventory, new Balance(1000));
         // Act
         $offer = $trader->sell($product, price: 1, quantity: 5);
         // Assert
@@ -41,7 +42,7 @@ final class TraderTest extends TestCase
         $this->expectException(InsufficientStockException::class);
         $this->expectExceptionMessage($expected_exception->getMessage());
         // Arrange
-        $trader = new Trader($inventory, 1000);
+        $trader = new Trader($inventory, new Balance(1000));
         // Act
         $_ = $trader->sell($product, 1, $quantity);
     }
