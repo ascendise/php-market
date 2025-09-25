@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Domain\Market;
 
 use Exception;
+use App\Domain\Market\InsufficientStockException;
 use IteratorAggregate;
 use Traversable;
 
@@ -35,6 +36,10 @@ class Inventory implements IteratorAggregate
 
     public function remove(Product $product, int $quantity): ?Item
     {
+        $stocked = $this->quantityOf($product);
+        if ($stocked == 0 || $stocked < $quantity) {
+            throw new InsufficientStockException($quantity, $stocked, $product);
+        }
         $item = $this->items[$product->name()];
         $removed = $item->remove($quantity);
         return $removed;
@@ -42,6 +47,9 @@ class Inventory implements IteratorAggregate
 
     public function quantityOf(Product $product): int
     {
+        if (!array_key_exists($product->name(), $this->items)) {
+            return 0;
+        }
         $item = $this->items[$product->name()];
         return $item->quantity();
     }
