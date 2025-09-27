@@ -65,9 +65,9 @@ final class TraderTest extends TestCase
     public function testBuyShouldAddOfferToInventoryWhenSuccesful(): void
     {
         // Arrange
-        $seller = new StubTrader();
         $sut = new Trader(new Inventory(), new Balance(1000));
         $computer = new Product("Computer");
+        $seller = new StubTrader();
         $offer = new Offer($computer, 300, 3, $seller);
         // Act
         $sut->buy($offer);
@@ -75,5 +75,18 @@ final class TraderTest extends TestCase
         $expectedInventory = new Inventory(new Item($computer, 3));
         $this->assertEquals($expectedInventory, $sut->listInventory());
         $this->assertEquals(100, $sut->balance());
+    }
+
+    public function testBuyShouldTransferCurrencyToSellerWhenSuccessful(): void
+    {
+        // Arrange
+        $sut = new Trader(new Inventory(), new Balance(1000));
+        $computer = new Product("Computer");
+        $seller = new Trader(new Inventory(), new Balance(0));
+        $offer = new Offer($computer, 300, 3, $seller);
+        // Act
+        $sut->buy($offer);
+        // Assert
+        $this->assertEquals(900, $seller->balance());
     }
 }

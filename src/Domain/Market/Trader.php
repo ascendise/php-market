@@ -26,8 +26,14 @@ final class Trader implements Seller, Buyer
     public function buy(Offer $offer): void
     {
         $item = new Item($offer->product(), $offer->quantity());
-        $_ = $this->balance->withdraw($offer->totalPrice());
+        $payment = $this->balance->withdraw($offer->totalPrice());
+        $offer->seller()->receivePayment($payment);
         $this->inventory->add($item);
+    }
+
+    public function receivePayment(Payment $payment): void
+    {
+        $this->balance->deposit($payment);
     }
 
     public function listInventory(): IteratorAggregate

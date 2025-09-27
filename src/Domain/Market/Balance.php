@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Domain\Market;
 
-use Exception;
 use InvalidArgumentException;
 
 final class Balance
@@ -32,6 +31,6 @@ final class Balance
 
     public function deposit(Payment $payment): void
     {
-        throw new Exception("deposit() Not implemented");
+        $this->amount += $payment->amount();
     }
 }
