@@ -2,14 +2,19 @@
 
 namespace App\Tests\Domain\Market;
 
+use App\Domain\Market\Buyer;
 use App\Domain\Market\Offer;
 use App\Domain\Market\Product;
 use App\Domain\Market\Seller;
 
-class StubTrader implements Seller
+class StubTrader implements Seller, Buyer
 {
     public function sell(Product $product, int $price, int $quantity): Offer
     {
         return new Offer($product, $price, $quantity, $this);
+    }
+
+    public function buy(Offer $offer): void
+    {
     }
 }

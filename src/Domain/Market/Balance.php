@@ -4,17 +4,34 @@ declare(strict_types=1);
 
 namespace App\Domain\Market;
 
+use Exception;
 use InvalidArgumentException;
 
 final class Balance
 {
-    private readonly int $initialBalance;
+    private int $amount;
 
-    public function __construct(int $initialBalance)
+    public function __construct(int $initialAmount)
     {
-        if ($initialBalance < 0) {
+        if ($initialAmount < 0) {
             throw new InvalidArgumentException("Balance can't be less than zero!");
         }
-        $this->initialBalance = $initialBalance;
+        $this->amount = $initialAmount;
+    }
+
+    public function amount(): int
+    {
+        return $this->amount;
+    }
+
+    public function withdraw(int $amount): Payment
+    {
+        $this->amount -= $amount;
+        return new Payment($amount);
+    }
+
+    public function deposit(Payment $payment): void
+    {
+        throw new Exception("deposit() Not implemented");
     }
 }

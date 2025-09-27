@@ -17,8 +17,8 @@ class MarketTest extends TestCase
         // Arrange
         $seller = new StubTrader();
         $expectedOffers = new Offers(
-            new Offer(product: new Product('Ben and Jerrys'), price: 8, quantity: 1, seller: $seller),
-            new Offer(product: new Product('Tires'), price: 200, quantity: 4, seller: $seller)
+            new Offer(product: new Product('Ben and Jerrys'), pricePerItem: 8, quantity: 1, seller: $seller),
+            new Offer(product: new Product('Tires'), pricePerItem: 200, quantity: 4, seller: $seller)
         );
         $offerRepo = new MemoryOfferRepository($expectedOffers);
         $sut = new Market($offerRepo);
@@ -35,7 +35,7 @@ class MarketTest extends TestCase
         $sut = new Market($offerRepo);
         // Act
         $seller = new StubTrader();
-        $new_offer = new Offer(product: new Product('Ben and Jerrys'), price: 8, quantity: 1, seller: $seller);
+        $new_offer = new Offer(product: new Product('Ben and Jerrys'), pricePerItem: 8, quantity: 1, seller: $seller);
         $sut->createOffer($new_offer);
         // Assert
         $offers = $offerRepo->list();

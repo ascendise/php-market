@@ -16,22 +16,22 @@ use PHPUnit\Framework\TestCase;
 
 final class TraderTest extends TestCase
 {
-    public function testCreateOfferShouldReturnOfferIfEnoughResources(): void
+    public function testSellShouldReturnOfferIfEnoughResources(): void
     {
         // Arrange
         $product = new Product('Banana');
         $inventory = new Inventory(new Item($product, 12));
-        $trader = new Trader($inventory, new Balance(1000));
+        $sut = new Trader($inventory, new Balance(1000));
         // Act
-        $offer = $trader->sell($product, price: 1, quantity: 5);
+        $offer = $sut->sell($product, price: 1, quantity: 5);
         // Assert
-        $expected_offer = new Offer($product, 1, 5, $trader);
+        $expected_offer = new Offer($product, 1, 5, $sut);
         $this->assertEquals($expected_offer, $offer, 'Wrong offer created!');
         $this->assertEquals(7, $inventory->quantityOf($product));
     }
 
     #[DataProvider("providerNoResourceCases")]
-    public function testCreateOfferShouldThrowIfTraderHasInsufficientStock(
+    public function testSellShouldThrowIfTraderHasInsufficientStock(
         Inventory $inventory,
         Product $product,
         int $quantity,
@@ -42,10 +42,11 @@ final class TraderTest extends TestCase
         $this->expectException(InsufficientStockException::class);
         $this->expectExceptionMessage($expected_exception->getMessage());
         // Arrange
-        $trader = new Trader($inventory, new Balance(1000));
+        $sut = new Trader($inventory, new Balance(1000));
         // Act
-        $_ = $trader->sell($product, 1, $quantity);
+        $_ = $sut->sell($product, 1, $quantity);
     }
+
     /**
      * @return array<int,array<int,mixed>>
      */
@@ -59,5 +60,20 @@ final class TraderTest extends TestCase
             array($lowQuantityInventory, new Product('Banana'), 5, 0), // Wrong product
             array(new Inventory(), $product, 5, 0), // Empty inventory
         );
+    }
+
+    public function testBuyShouldAddOfferToInventoryWhenSuccesful(): void
+    {
+        // Arrange
+        $seller = new StubTrader();
+        $sut = new Trader(new Inventory(), new Balance(1000));
+        $computer = new Product("Computer");
+        $offer = new Offer($computer, 300, 3, $seller);
+        // Act
+        $sut->buy($offer);
+        // Assert
+        $expectedInventory = new Inventory(new Item($computer, 3));
+        $this->assertEquals($expectedInventory, $sut->listInventory());
+        $this->assertEquals(100, $sut->balance());
     }
 }

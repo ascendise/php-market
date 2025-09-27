@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Domain\Market;
 
-use Exception;
+use ArrayIterator;
 use App\Domain\Market\InsufficientStockException;
 use IteratorAggregate;
 use Traversable;
@@ -20,18 +20,18 @@ class Inventory implements IteratorAggregate
     {
         $this->items = [];
         foreach ($items as $item) {
-            $this->items += [$item->product()->name() => $item];
+            $this->add($item);
         }
     }
 
     public function getIterator(): Traversable
     {
-        return $this->items;
+        return new ArrayIterator($this->items);
     }
 
     public function add(Item $item): void
     {
-        throw new Exception("Not implemented");
+        $this->items += [$item->product()->name() => $item];
     }
 
     public function remove(Product $product, int $quantity): ?Item
