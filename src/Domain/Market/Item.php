@@ -14,6 +14,9 @@ class Item
 
     public function __construct(Product $product, int $quantity)
     {
+        if ($quantity <= 0) {
+            throw new InvalidArgumentException("Quantity can't be zero or less!");
+        }
         $this->product = $product;
         $this->quantity = $quantity;
     }
