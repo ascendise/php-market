@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Domain\Market;
 
+use InvalidArgumentException;
+use Item as ItemItem;
+
 class Item
 {
     private readonly Product $product;
@@ -25,17 +28,34 @@ class Item
         return $this->quantity;
     }
 
-    public function add(int $quantity): void
+    /**
+    * @return Item containing the new quantity qfter adding item
+    * @throws InvalidArgumentException when trying to add two different products
+    */
+    public function add(Item $item): Item
     {
-        $this->quantity += $quantity;
+        if ($item->product() != $this->product()) {
+            throw new InvalidArgumentException("Cannot add two items with different products!");
+        }
+        $newQuantity = $this->quantity() + $item->quantity();
+        return new Item($this->product(), $newQuantity);
     }
 
     /**
-    * @return Item new item containing removed product/quantity
+    * @return Item containing the new quantity after removing item
+    * @throws InvalidArgumentException when trying to add two different products
+    * @throws InsufficientStockException when trying to remove more items than available
     */
-    public function remove(int $quantity): Item
+    public function remove(Item $item): Item
     {
-        $this->quantity -= $quantity;
-        return new Item($this->product, $quantity);
+        if ($item->product() != $this->product()) {
+            throw new InvalidArgumentException("Cannot add two items with different products!");
+        }
+        $stocked = $this->quantity();
+        if ($stocked == 0 || $stocked < $item->quantity()) {
+            throw new InsufficientStockException($item->quantity(), $stocked, $this->product());
+        }
+        $newQuantity = $this->quantity() - $item->quantity();
+        return new Item($this->product, $newQuantity);
     }
 }
