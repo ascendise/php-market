@@ -15,7 +15,7 @@ final class MarketController extends AbstractController
     {
         return $this->render('market/index.html.twig', [
             'trader' => [],
-            'market' => []
+            'offers' => []
         ]);
     }
 }

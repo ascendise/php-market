@@ -26,11 +26,11 @@
                 <th>Quantity</th>
                 <th>Price</th>
             </tr>
-            {% for offer in market.offers %}
+            {% for offer in offers %}
                 <tr>
                     <td>{{ offer.product.name }}</td>
                     <td>{{ offer.quantity }}</td>
-                    <td>{{ offer.price }}</td>
+                    <td>{{ offer.totalPrice }}</td>
                 </tr>
             {% endfor %}
         </table>
