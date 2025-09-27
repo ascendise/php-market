@@ -37,4 +37,16 @@ final class InventoryTest extends TestCase
         $expected = new Inventory($item);
         $this->assertEquals($expected, $sut);
     }
+
+    public function testAddShouldAddQuantityToExistingItem(): void
+    {
+        // Arrange
+        $product = new Product('Apple');
+        $sut = new Inventory(new Item($product, 3));
+        // Act
+        $sut->add(new Item($product, 8));
+        // Assert
+        $expected = new Inventory(new Item($product, 11));
+        $this->assertEquals($expected, $sut);
+    }
 }

@@ -31,7 +31,12 @@ class Inventory implements IteratorAggregate
 
     public function add(Item $item): void
     {
-        $this->items += [$item->product()->name() => $item];
+        $productName = $item->product()->name();
+        if ($this->itemExists($productName)) {
+            $this->items[$productName]->add($item->quantity());
+        } else {
+            $this->items += [$productName => $item];
+        }
     }
 
     public function remove(Product $product, int $quantity): ?Item
@@ -47,10 +52,15 @@ class Inventory implements IteratorAggregate
 
     public function quantityOf(Product $product): int
     {
-        if (!array_key_exists($product->name(), $this->items)) {
+        if (!$this->itemExists($product->name())) {
             return 0;
         }
         $item = $this->items[$product->name()];
         return $item->quantity();
+    }
+
+    private function itemExists(string $productName): bool
+    {
+        return array_key_exists($productName, $this->items);
     }
 }
