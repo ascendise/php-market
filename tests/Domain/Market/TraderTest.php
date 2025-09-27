@@ -11,6 +11,7 @@ use App\Domain\Market\Product;
 use App\Domain\Market\Inventory;
 use App\Domain\Market\Item;
 use App\Domain\Market\InsufficientStockException;
+use App\Domain\Market\InsufficientBalanceException;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
@@ -88,5 +89,18 @@ final class TraderTest extends TestCase
         $sut->buy($offer);
         // Assert
         $this->assertEquals(900, $seller->balance());
+    }
+
+    public function testBuyShouldThrowWhenNotEnoughCurrencyToPayOffer(): void
+    {
+        // Assert
+        $this->expectException(InsufficientBalanceException::class);
+        // Arrange
+        $sut = new Trader(new Inventory(), new Balance(100));
+        $computer = new Product("Computer");
+        $seller = new StubTrader();
+        $offer = new Offer($computer, 300, 3, $seller);
+        // Act
+        $sut->buy($offer);
     }
 }

@@ -25,6 +25,9 @@ final class Balance
 
     public function withdraw(int $amount): Payment
     {
+        if ($amount > $this->amount) {
+            throw new InsufficientBalanceException($amount, $this->amount());
+        }
         $this->amount -= $amount;
         return new Payment($amount);
     }
