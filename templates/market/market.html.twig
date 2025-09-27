@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Market Page</title>
+    </head>
+    <body>
+        <h1>Trader</h1>
+        <h2>Balance: {{ trader.balance }}</h2>
+        <h2>Inventory</h2>
+        <table>
+            <tr>
+                <th>Product</th>
+                <th>Stocked</th>
+            </tr>
+            {% for item in trader.inventory %}
+                <tr>
+                    <td>{{ item.product.name }}</td>
+                    <td>{{ item.quantity }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+        <h1>Market</h1>
+        <table>
+            <tr>
+                <th>Product</th>
+                <th>Quantity</th>
+                <th>Price</th>
+            </tr>
+            {% for offer in market.offers %}
+                <tr>
+                    <td>{{ offer.product.name }}</td>
+                    <td>{{ offer.quantity }}</td>
+                    <td>{{ offer.price }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    </body>
+</html>
