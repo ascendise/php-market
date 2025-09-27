@@ -45,11 +45,11 @@ class Item
     }
 
     /**
-    * @return Item containing the new quantity after removing item
+    * @return Item containing the new quantity after removing item or null if no items left
     * @throws InvalidArgumentException when trying to add two different products
     * @throws InsufficientStockException when trying to remove more items than available
     */
-    public function remove(Item $item): Item
+    public function remove(Item $item): ?Item
     {
         if ($item->product() != $this->product()) {
             throw new InvalidArgumentException("Cannot add two items with different products!");
@@ -59,6 +59,9 @@ class Item
             throw new InsufficientStockException($item->quantity(), $stocked, $this->product());
         }
         $newQuantity = $this->quantity() - $item->quantity();
+        if ($newQuantity == 0) {
+            return null;
+        }
         return new Item($this->product, $newQuantity);
     }
 }

@@ -51,7 +51,7 @@ final class InventoryTest extends TestCase
         $this->assertEquals($expected, $sut);
     }
 
-    public function testRemoveShouldremoveItemInInventoryAndReturnRemovedStack(): void
+    public function testRemoveShouldRemoveItemInInventoryAndReturnRemovedStack(): void
     {
         // Arrange
         $product = new Product('Apple');
@@ -63,6 +63,18 @@ final class InventoryTest extends TestCase
         $this->assertEquals($expected_inventory, $sut);
         $expected_removed_items = new Item($product, 3);
         $this->assertEquals($expected_removed_items, $removed);
+    }
+
+    public function testRemoveShouldRemoveItemCompletelyWhenQuantityIsReducedToZero(): void
+    {
+        // Arrange
+        $product = new Product('Apple');
+        $sut = new Inventory(new Item($product, 1));
+        // Act
+        $removed = $sut->remove($product, 1);
+        // Assert
+        $expected_inventory = new Inventory();
+        $this->assertEquals($expected_inventory, $sut);
     }
 
     public function testRemoveShouldThrowWhenTryingToRemoveMoreProductThanStocked(): void

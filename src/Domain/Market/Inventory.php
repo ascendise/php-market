@@ -46,7 +46,12 @@ class Inventory implements IteratorAggregate
             throw new InsufficientStockException($quantity, 0, $product);
         }
         $removed = new Item($product, $quantity);
-        $this->items[$productName] = $this->items[$productName]->remove($removed);
+        $leftItems = $this->items[$productName]->remove($removed);
+        if ($leftItems == null) {
+            unset($this->items[$productName]);
+        } else {
+            $this->items[$productName] = $leftItems;
+        }
         return $removed;
     }
 
