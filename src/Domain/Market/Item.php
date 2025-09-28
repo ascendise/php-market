@@ -5,9 +5,8 @@ declare(strict_types=1);
 namespace App\Domain\Market;
 
 use InvalidArgumentException;
-use Item as ItemItem;
 
-class Item
+final class Item
 {
     private readonly Product $product;
     private int $quantity;

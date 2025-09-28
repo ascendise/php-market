@@ -2,6 +2,7 @@
 
 namespace App\Entity\Market;
 
+use App\Domain;
 use App\Repository\Market\ItemRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Types\UuidType;
@@ -25,6 +26,20 @@ class Item
     #[ORM\ManyToOne(inversedBy: 'inventory')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Trader $owner = null;
+
+    public static function fromEntity(Domain\Market\Item $entity, Domain\Market\Trader $owner): Item
+    {
+        $item = new Item();
+        $item->setProductName($entity->product()->name());
+        $item->setQuantity($entity->quantity());
+        $item->setOwner($owner);
+    }
+
+    public function toEntity(): Domain\Market\Item
+    {
+        $product = new Domain\Market\Product($this->productName);
+        return new Domain\Market\Item($product, $this->quantity);
+    }
 
     public function getId(): ?Uuid
     {

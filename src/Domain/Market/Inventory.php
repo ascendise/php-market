@@ -12,7 +12,7 @@ use Traversable;
 /**
  * @implements IteratorAggregate<mixed,Item>
  */
-class Inventory implements IteratorAggregate
+final class Inventory implements IteratorAggregate
 {
     private array $items;
 

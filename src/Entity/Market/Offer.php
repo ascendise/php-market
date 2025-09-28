@@ -2,7 +2,6 @@
 
 namespace App\Entity\Market;
 
-use App\Application\ToEntity;
 use App\Domain;
 use App\Repository\OfferRepository;
 use Symfony\Bridge\Doctrine\IdGenerator\UuidGenerator;
@@ -11,7 +10,7 @@ use Symfony\Component\Uid\Uuid;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: OfferRepository::class)]
-class Offer implements ToEntity
+class Offer
 {
     #[ORM\Id]
     #[ORM\Column(type: UuidType::NAME, unique: true)]
@@ -27,6 +26,34 @@ class Offer implements ToEntity
 
     #[ORM\Column]
     private ?int $totalPrice = null;
+
+    #[ORM\ManyToOne(inversedBy: 'offers')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Trader $seller = null;
+
+    public static function fromEntity(Domain\Market\Offer $entity): Offer
+    {
+        $offer = new Offer();
+        $offer->setProductName($entity->product()->name());
+        $offer->setQuantity($entity->quantity());
+        $offer->setTotalPrice($entity->totalPrice());
+        $seller = Trader::fromEntity($entity->seller());
+        $offer->setSeller($entity->totalPrice());
+    }
+
+    public function toEntity(): Domain\Market\Offer
+    {
+        $product = new Domain\Market\Product($this->productName);
+        $quantity = $this->quantity;
+        $pricePerItem = $this->totalPrice / $quantity;
+        $seller = $this->seller->toEntity();
+        return new Domain\Market\Offer(
+            $product,
+            $pricePerItem,
+            $quantity,
+            $seller
+        );
+    }
 
     public function getId(): ?int
     {
@@ -69,16 +96,15 @@ class Offer implements ToEntity
         return $this;
     }
 
-    public function toEntity(): Domain\Market\Offer
+    public function getSeller(): ?Trader
     {
-        $product = new Domain\Market\Product($this->productName);
-        $quantity = $this->quantity;
-        $pricePerItem = $this->totalPrice / $quantity;
-        return new Domain\Market\Offer(
-            $product,
-            $pricePerItem,
-            $quantity,
-            null //TODO: Add trader id
-        );
+        return $this->seller;
+    }
+
+    public function setSeller(?Trader $seller): static
+    {
+        $this->seller = $seller;
+
+        return $this;
     }
 }

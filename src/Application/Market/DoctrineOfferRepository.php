@@ -9,7 +9,6 @@ use App\Domain\Market\OfferRepository;
 use App\Domain\Market\Offers;
 use App\Entity;
 use Doctrine\ORM\EntityManagerInterface;
-use Exception;
 
 final class DoctrineOfferRepository implements OfferRepository
 {
@@ -20,11 +19,13 @@ final class DoctrineOfferRepository implements OfferRepository
     public function list(): Offers
     {
         $offers = $this->entityManager->getRepository(Entity\Market\Offer::class)->findAll();
-        return new Offers(array_map(fn ($o) => $o->toEntity(), $offers));
+        return new Offers(array_map(fn (Entity\Market\Offer $o) => $o->toEntity(), $offers));
     }
 
     public function add(Offer $offer): void
     {
-        throw new Exception("DoctrineOfferRepository.list() not implemented");
+        $offerModel = Entity\Market\Offer::fromEntity($offer);
+        $this->entityManager->persist($offerModel);
+        $this->entityManager->flush();
     }
 }
