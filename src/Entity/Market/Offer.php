@@ -2,6 +2,8 @@
 
 namespace App\Entity\Market;
 
+use App\Application\ToEntity;
+use App\Domain;
 use App\Repository\OfferRepository;
 use Symfony\Bridge\Doctrine\IdGenerator\UuidGenerator;
 use Symfony\Bridge\Doctrine\Types\UuidType;
@@ -9,7 +11,7 @@ use Symfony\Component\Uid\Uuid;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: OfferRepository::class)]
-class Offer
+class Offer implements ToEntity
 {
     #[ORM\Id]
     #[ORM\Column(type: UuidType::NAME, unique: true)]
@@ -65,5 +67,18 @@ class Offer
         $this->totalPrice = $totalPrice;
 
         return $this;
+    }
+
+    public function toEntity(): Domain\Market\Offer
+    {
+        $product = new Domain\Market\Product($this->productName);
+        $quantity = $this->quantity;
+        $pricePerItem = $this->totalPrice / $quantity;
+        return new Domain\Market\Offer(
+            $product,
+            $pricePerItem,
+            $quantity,
+            null //TODO: Add trader id
+        );
     }
 }
