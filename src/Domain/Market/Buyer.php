@@ -4,6 +4,8 @@ namespace App\Domain\Market;
 
 interface Buyer
 {
+    public function id(): string;
+
     /**
     * Buys offer if balance permits it
     *

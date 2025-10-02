@@ -10,6 +10,11 @@ use App\Domain\Market\Seller;
 
 class StubTrader implements Seller, Buyer
 {
+    public function id(): string
+    {
+        return 'id';
+    }
+
     public function sell(Product $product, int $price, int $quantity): Offer
     {
         return new Offer($product, $price, $quantity, $this);

@@ -22,7 +22,7 @@ final class TraderTest extends TestCase
         // Arrange
         $product = new Product('Banana');
         $inventory = new Inventory(new Item($product, 12));
-        $sut = new Trader($inventory, new Balance(1000));
+        $sut = new Trader('id', $inventory, new Balance(1000));
         // Act
         $offer = $sut->sell($product, price: 1, quantity: 5);
         // Assert
@@ -43,7 +43,7 @@ final class TraderTest extends TestCase
         $this->expectException(InsufficientStockException::class);
         $this->expectExceptionMessage($expected_exception->getMessage());
         // Arrange
-        $sut = new Trader($inventory, new Balance(1000));
+        $sut = new Trader('id', $inventory, new Balance(1000));
         // Act
         $_ = $sut->sell($product, 1, $quantity);
     }
@@ -66,7 +66,7 @@ final class TraderTest extends TestCase
     public function testBuyShouldAddOfferToInventoryWhenSuccesful(): void
     {
         // Arrange
-        $sut = new Trader(new Inventory(), new Balance(1000));
+        $sut = new Trader('id', new Inventory(), new Balance(1000));
         $computer = new Product("Computer");
         $seller = new StubTrader();
         $offer = new Offer($computer, 300, 3, $seller);
@@ -81,9 +81,9 @@ final class TraderTest extends TestCase
     public function testBuyShouldTransferCurrencyToSellerWhenSuccessful(): void
     {
         // Arrange
-        $sut = new Trader(new Inventory(), new Balance(1000));
+        $sut = new Trader('id', new Inventory(), new Balance(1000));
         $computer = new Product("Computer");
-        $seller = new Trader(new Inventory(), new Balance(0));
+        $seller = new Trader('id2', new Inventory(), new Balance(0));
         $offer = new Offer($computer, 300, 3, $seller);
         // Act
         $sut->buy($offer);
@@ -96,7 +96,7 @@ final class TraderTest extends TestCase
         // Assert
         $this->expectException(InsufficientBalanceException::class);
         // Arrange
-        $sut = new Trader(new Inventory(), new Balance(100));
+        $sut = new Trader('id', new Inventory(), new Balance(100));
         $computer = new Product("Computer");
         $seller = new StubTrader();
         $offer = new Offer($computer, 300, 3, $seller);

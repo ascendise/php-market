@@ -43,6 +43,7 @@ class Trader
     public function fromEntity(Domain\Market\Trader $entity): Trader
     {
         $trader = new Trader();
+        $trader->id = $entity->id();
         foreach ($entity->listInventory() as $item) {
             $trader->inventory->add(Item::fromEntity($item), $entity);
         }
@@ -56,7 +57,7 @@ class Trader
             $inventory->add($item->toEntity());
         }
         $balance = new Domain\Market\Balance($this->balance);
-        return new Domain\Market\Trader($inventory, $balance);
+        return new Domain\Market\Trader($this->id, $inventory, $balance);
     }
 
     public function getId(): ?Uuid

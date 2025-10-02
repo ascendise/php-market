@@ -7,6 +7,8 @@ namespace App\Domain\Market;
 */
 interface Seller
 {
+    public function id(): string;
+
     /**
     * Create a new offer to be added to the market
     * @throws InsufficientStockException when trying to create an offer without enough product in your inventory

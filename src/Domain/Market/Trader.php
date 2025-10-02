@@ -8,13 +8,11 @@ use IteratorAggregate;
 
 final class Trader implements Seller, Buyer
 {
-    private Inventory $inventory;
-    private Balance $balance;
-
-    public function __construct(Inventory $inventory, Balance $balance)
-    {
-        $this->inventory = $inventory;
-        $this->balance = $balance;
+    public function __construct(
+        private readonly string $id,
+        private readonly Inventory $inventory,
+        private readonly Balance $balance
+    ) {
     }
 
     public function sell(Product $product, int $price, int $quantity): Offer
@@ -44,5 +42,10 @@ final class Trader implements Seller, Buyer
     public function balance(): int
     {
         return $this->balance->amount();
+    }
+
+    public function id(): string
+    {
+        return $this->id();
     }
 }
