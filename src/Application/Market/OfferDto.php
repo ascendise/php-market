@@ -29,9 +29,9 @@ final class OfferDto
     {
         return new OfferDto(
             ProductDto::fromEntity($offer->product()),
-            $offer->quantity(),
-            $offer->totalPrice(),
-            Uuid::fromString($offer->seller()->id())
+            quantity: $offer->quantity(),
+            totalPrice: $offer->totalPrice(),
+            sellerId: Uuid::fromString($offer->seller()->id())
         );
     }
 
@@ -39,9 +39,9 @@ final class OfferDto
     {
         return new Offer(
             $this->product->toEntity(),
-            $this->pricePerItem(),
-            $this->quantity,
-            $seller
+            pricePerItem: $this->pricePerItem(),
+            quantity: $this->quantity,
+            seller: $seller
         );
     }
 

@@ -46,6 +46,6 @@ final class Trader implements Seller, Buyer
 
     public function id(): string
     {
-        return $this->id();
+        return $this->id;
     }
 }
