@@ -4,13 +4,20 @@ declare(strict_types=1);
 
 namespace App\Application\Market;
 
+use App\Domain\Market\OfferRepository;
 use Exception;
 
 final class MarketServiceImpl implements MarketService
 {
+    public function __construct(
+        private readonly OfferRepository $offerRepository
+    ) {
+    }
+
     public function listOffers(): OffersDto
     {
-        throw new Exception('MarketServiceImpl.listOffers() not implemented');
+        $offers = $this->offerRepository->list();
+        return OffersDto::fromEntity($offers);
     }
 
     public function createOffer(TraderDto $seller, OfferDto $offerDto): void

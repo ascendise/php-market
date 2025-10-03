@@ -12,7 +12,7 @@ class StubTrader implements Seller, Buyer
 {
     public function id(): string
     {
-        return 'id';
+        return '0199ab17-17d2-79b4-9483-c95a6365ee96';
     }
 
     public function sell(Product $product, int $price, int $quantity): Offer
