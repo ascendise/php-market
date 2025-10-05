@@ -18,6 +18,7 @@ use App\Domain\Market\OfferRepository;
 use App\Domain\Market\Offers;
 use App\Domain\Market\Product;
 use App\Domain\Market\Trader;
+use App\Domain\Market\TraderRepository;
 use App\Tests\Domain\Market\MemoryOfferRepository;
 use App\Tests\Domain\Market\MemoryTraderRepository;
 use App\Tests\Domain\Market\StubTrader;
@@ -26,11 +27,13 @@ use Symfony\Component\Uid\Uuid;
 
 final class MarketServiceTest extends TestCase
 {
-    private function setupSut(?OfferRepository $offerRepository, Trader ...$traders): MarketServiceImpl
-    {
+    private function setupSut(
+        ?OfferRepository $offerRepository = null,
+        ?TraderRepository $traderRepository = null
+    ): MarketServiceImpl {
         $offerRepository = $offerRepository ?? new MemoryOfferRepository(new Offers());
         $market = new Market($offerRepository);
-        $traderRepository = new MemoryTraderRepository(...$traders);
+        $traderRepository = $traderRepository ?? new MemoryTraderRepository();
         return new MarketServiceImpl($market, $traderRepository);
     }
 
@@ -60,10 +63,10 @@ final class MarketServiceTest extends TestCase
     {
         // Arrange
         $inventory = new Inventory(new Item(new Product('Apple'), quantity: 5));
+        $offerRepository = new MemoryOfferRepository(new Offers());
         $traderId = Uuid::v7();
         $trader = new Trader($traderId->toString(), $inventory, new Balance(1000));
-        $offerRepository = new MemoryOfferRepository(new Offers());
-        $sut = $this->setupSut($offerRepository, $trader);
+        $sut = $this->setupSut($offerRepository, new MemoryTraderRepository($trader));
         // Act
         $createOffer = new CreateOfferDto(
             new ProductDto('Apple'),
@@ -79,7 +82,27 @@ final class MarketServiceTest extends TestCase
             sellerId: Uuid::fromString($trader->id())
         );
         $this->assertEquals($expectedOffer, $createdOffer);
-        $offerCount = iterator_count($offerRepository->list());
-        $this->assertEquals(1, $offerCount);
+        $this->assertCount(1, $offerRepository->list());
+    }
+
+    public function testCreateOfferShouldPersistTraderState(): void
+    {
+        // Arrange
+        $inventory = new Inventory(new Item(new Product('Apple'), quantity: 5));
+        $traderId = Uuid::v7();
+        $trader = new Trader($traderId->toString(), $inventory, new Balance(1000));
+        $traderRepository = new MemoryTraderRepository($trader);
+        $sut = $this->setupSut(traderRepository: $traderRepository);
+        // Act
+        $createOffer = new CreateOfferDto(
+            new ProductDto('Apple'),
+            quantity: 3,
+            pricePerItem: 1
+        );
+        $createdOffer = $sut->createOffer($traderId, $createOffer);
+        // Assert
+        $updatedTrader = $traderRepository->findTrader($traderId->toString());
+        $apples = array_find([...$updatedTrader->listInventory()], fn ($i) => $i->product()->name() == 'Apple');
+        $this->assertEquals(2, $apples->quantity(), 'Trader inventory was not updated!');
     }
 }

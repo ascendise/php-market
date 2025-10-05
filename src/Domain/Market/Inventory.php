@@ -10,7 +10,7 @@ use IteratorAggregate;
 use Traversable;
 
 /**
- * @implements IteratorAggregate<mixed,Item>
+ * @implements IteratorAggregate<string,Item>
  */
 final class Inventory implements IteratorAggregate
 {

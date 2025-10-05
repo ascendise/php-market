@@ -34,6 +34,9 @@ final class Trader implements Seller, Buyer
         $this->balance->deposit($payment);
     }
 
+    /*
+    * @return IteratorAggregate<string, Item>
+    */
     public function listInventory(): IteratorAggregate
     {
         return $this->inventory;

@@ -8,6 +8,7 @@ use App\Domain\Market\Trader;
 use App\Domain\Market\TraderRepository;
 use App\Entity;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use Symfony\Component\Uid\Uuid;
 
 final class DoctrineTraderRepository implements TraderRepository
@@ -24,5 +25,13 @@ final class DoctrineTraderRepository implements TraderRepository
             return null;
         }
         return new $trader->toEntity();
+    }
+
+    public function update(Trader $trader): void
+    {
+        $newTrader = Entity\Market\Trader::fromEntity($trader);
+        $this->entityManager->refresh($newTrader);
+        $this->entityManager->persist($newTrader);
+        $this->entityManager->flush($newTrader);
     }
 }
