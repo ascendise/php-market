@@ -26,7 +26,7 @@ final class OfferTest extends TestCase
         // Arrange
         $stubSeller = OfferTest::setupSeller();
         // Act
-        $_ = new Offer(new Product('The C Programming Language'), $invalidPrice, 5, $stubSeller);
+        $_ = new Offer('id', new Product('The C Programming Language'), $invalidPrice, 5, $stubSeller);
     }
 
     /**
@@ -49,6 +49,6 @@ final class OfferTest extends TestCase
         // Arrange
         $stubSeller = OfferTest::setupSeller();
         // Act
-        $_ = new Offer(new Product('The C Programming Language'), 25, $invalidQuantity, $stubSeller);
+        $_ = new Offer('id', new Product('The C Programming Language'), 25, $invalidQuantity, $stubSeller);
     }
 }

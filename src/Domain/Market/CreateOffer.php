@@ -6,10 +6,9 @@ namespace App\Domain\Market;
 
 use InvalidArgumentException;
 
-final class Offer
+final class CreateOffer
 {
     public function __construct(
-        private readonly string $id,
         private readonly Product $product,
         private readonly int $pricePerItem,
         private readonly int $quantity,
@@ -23,28 +22,14 @@ final class Offer
         }
     }
 
-    public function id(): string
+    public function toOffer(string $id): Offer
     {
-        return $this->id;
-    }
-
-    public function product(): Product
-    {
-        return $this->product;
-    }
-
-    public function quantity(): int
-    {
-        return $this->quantity;
-    }
-
-    public function totalPrice(): int
-    {
-        return $this->quantity * $this->pricePerItem;
-    }
-
-    public function seller(): Seller
-    {
-        return $this->seller;
+        return new Offer(
+            $id,
+            $this->product,
+            $this->pricePerItem,
+            $this->quantity,
+            $this->seller
+        );
     }
 }

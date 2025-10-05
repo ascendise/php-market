@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace App\Tests\Domain\Market;
 
+use App\Domain\Market\CreateOffer;
 use App\Domain\Market\Offer;
 use App\Domain\Market\Offers;
 use App\Domain\Market\Market;
 use App\Domain\Market\Product;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Uid\Uuid;
 
 class MarketTest extends TestCase
 {
@@ -17,8 +19,20 @@ class MarketTest extends TestCase
         // Arrange
         $seller = new StubTrader();
         $expectedOffers = new Offers(
-            new Offer(product: new Product('Ben and Jerrys'), pricePerItem: 8, quantity: 1, seller: $seller),
-            new Offer(product: new Product('Tires'), pricePerItem: 200, quantity: 4, seller: $seller)
+            new Offer(
+                Uuid::v7()->toString(),
+                product: new Product('Ben and Jerrys'),
+                pricePerItem: 8,
+                quantity: 1,
+                seller: $seller
+            ),
+            new Offer(
+                Uuid::v7()->toString(),
+                product: new Product('Tires'),
+                pricePerItem: 200,
+                quantity: 4,
+                seller: $seller
+            )
         );
         $offerRepo = new MemoryOfferRepository($expectedOffers);
         $sut = new Market($offerRepo);
@@ -35,10 +49,15 @@ class MarketTest extends TestCase
         $sut = new Market($offerRepo);
         // Act
         $seller = new StubTrader();
-        $new_offer = new Offer(product: new Product('Ben and Jerrys'), pricePerItem: 8, quantity: 1, seller: $seller);
-        $sut->createOffer($new_offer);
+        $newOffer = new CreateOffer(
+            product: new Product('Ben and Jerrys'),
+            pricePerItem: 8,
+            quantity: 1,
+            seller: $seller
+        );
+        $sut->createOffer($newOffer);
         // Assert
         $offers = $offerRepo->list();
-        $this->assertContains($new_offer, $offers);
+        $this->assertCount(1, $offers);
     }
 }

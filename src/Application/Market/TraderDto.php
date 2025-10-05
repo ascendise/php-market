@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Application\Market;
 
+use App\Domain\Market\Trader;
 use InvalidArgumentException;
 use Symfony\Component\Uid\Uuid;
 
@@ -17,5 +18,14 @@ final class TraderDto
         if ($balance < 0) {
             throw new InvalidArgumentException("Trader can't have balance less than zero!");
         }
+    }
+
+    public static function fromEntity(Trader $trader): TraderDto
+    {
+        return new TraderDto(
+            Uuid::fromString($trader->id()),
+            $trader->balance(),
+            InventoryDto::fromEntities(iterator_to_array($trader->listInventory()))
+        );
     }
 }

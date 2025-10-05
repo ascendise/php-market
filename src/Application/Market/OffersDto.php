@@ -15,11 +15,14 @@ use Traversable;
  */
 final class OffersDto implements IteratorAggregate
 {
+    /* @var array<string, OffersDto> $offers */
     private array $offers = [];
 
     public function __construct(OfferDto ...$offers)
     {
-        $this->offers = $offers ?? [];
+        foreach ($offers as $offer) {
+            $this->offers += [$offer->id->toString() => $offer];
+        }
     }
 
     public static function fromEntity(Offers $offers): OffersDto

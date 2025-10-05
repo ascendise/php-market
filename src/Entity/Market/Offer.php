@@ -31,7 +31,8 @@ class Offer
     #[ORM\JoinColumn(nullable: false)]
     private ?Trader $seller = null;
 
-    public static function fromEntity(Domain\Market\Offer $entity): Offer
+
+    public static function fromEntity(Domain\Market\CreateOffer $entity): Offer
     {
         $offer = new Offer();
         $offer->setProductName($entity->product()->name());

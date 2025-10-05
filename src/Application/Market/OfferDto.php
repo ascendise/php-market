@@ -12,6 +12,7 @@ use Symfony\Component\Uid\Uuid;
 final class OfferDto
 {
     public function __construct(
+        public readonly Uuid $id,
         public readonly ProductDto $product,
         public readonly int $quantity,
         public readonly int $totalPrice,
@@ -28,6 +29,7 @@ final class OfferDto
     public static function fromEntity(Offer $offer): OfferDto
     {
         return new OfferDto(
+            Uuid::fromString($offer->id()),
             ProductDto::fromEntity($offer->product()),
             quantity: $offer->quantity(),
             totalPrice: $offer->totalPrice(),
@@ -38,6 +40,7 @@ final class OfferDto
     public function toEntity(Seller $seller): Offer
     {
         return new Offer(
+            $this->id->toString(),
             $this->product->toEntity(),
             pricePerItem: $this->pricePerItem(),
             quantity: $this->quantity,

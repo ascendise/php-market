@@ -18,8 +18,13 @@ final class Market
         return $this->offerRepository->list();
     }
 
-    public function createOffer(Offer $offer): void
+    public function findOffer(string $id): Offer
     {
-        $this->offerRepository->add($offer);
+        return $this->offerRepository->findById($id);
+    }
+
+    public function createOffer(CreateOffer $offer): Offer
+    {
+        return $this->offerRepository->create($offer);
     }
 }

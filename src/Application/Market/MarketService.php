@@ -10,5 +10,5 @@ interface MarketService
 {
     public function listOffers(): OffersDto;
     public function createOffer(Uuid $sellerId, CreateOfferDto $createOffer): OfferDto;
-    public function buyOffer(Uuid $buyerId, OfferDto $offerDto): void;
+    public function buyOffer(Uuid $buyerId, Uuid $offerId): TraderDto;
 }

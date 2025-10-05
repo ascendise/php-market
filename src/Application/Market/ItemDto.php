@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Application\Market;
 
+use App\Domain\Market\Item;
 use InvalidArgumentException;
 
 final class ItemDto
@@ -15,5 +16,13 @@ final class ItemDto
         if ($quantity <= 0) {
             throw new InvalidArgumentException('Quantity cannot be zero or less!');
         }
+    }
+
+    public static function fromEntity(Item $item): ItemDto
+    {
+        return new ItemDto(
+            ProductDto::fromEntity($item->product()),
+            $item->quantity()
+        );
     }
 }

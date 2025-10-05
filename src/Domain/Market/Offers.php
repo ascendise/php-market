@@ -9,15 +9,18 @@ use IteratorAggregate;
 use Traversable;
 
 /**
- * @implements IteratorAggregate<mixed,Offer>
+ * @implements IteratorAggregate<string,Offer>
  */
 final class Offers implements IteratorAggregate
 {
-    private array $offers;
+    /* @param array<string, Offer> */
+    private array $offers = [];
 
     public function __construct(Offer ...$offers)
     {
-        $this->offers = $offers ?? [];
+        foreach ($offers as $offer) {
+            $this->offers += [$offer->id() => $offer];
+        }
     }
 
     public function getIterator(): Traversable

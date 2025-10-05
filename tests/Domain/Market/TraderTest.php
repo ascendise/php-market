@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Domain\Market;
 
 use App\Domain\Market\Balance;
+use App\Domain\Market\CreateOffer;
 use App\Domain\Market\Offer;
 use App\Domain\Market\Trader;
 use App\Domain\Market\Product;
@@ -26,7 +27,7 @@ final class TraderTest extends TestCase
         // Act
         $offer = $sut->sell($product, price: 1, quantity: 5);
         // Assert
-        $expected_offer = new Offer($product, 1, 5, $sut);
+        $expected_offer = new CreateOffer($product, 1, 5, $sut);
         $this->assertEquals($expected_offer, $offer, 'Wrong offer created!');
         $this->assertEquals(7, $inventory->quantityOf($product));
     }
@@ -69,7 +70,7 @@ final class TraderTest extends TestCase
         $sut = new Trader('id', new Inventory(), new Balance(1000));
         $computer = new Product("Computer");
         $seller = new StubTrader();
-        $offer = new Offer($computer, 300, 3, $seller);
+        $offer = new Offer('id', $computer, 300, 3, $seller);
         // Act
         $sut->buy($offer);
         // Assert
@@ -84,7 +85,7 @@ final class TraderTest extends TestCase
         $sut = new Trader('id', new Inventory(), new Balance(1000));
         $computer = new Product("Computer");
         $seller = new Trader('id2', new Inventory(), new Balance(0));
-        $offer = new Offer($computer, 300, 3, $seller);
+        $offer = new Offer('id', $computer, 300, 3, $seller);
         // Act
         $sut->buy($offer);
         // Assert
@@ -99,7 +100,7 @@ final class TraderTest extends TestCase
         $sut = new Trader('id', new Inventory(), new Balance(100));
         $computer = new Product("Computer");
         $seller = new StubTrader();
-        $offer = new Offer($computer, 300, 3, $seller);
+        $offer = new Offer('id', $computer, 300, 3, $seller);
         // Act
         $sut->buy($offer);
     }

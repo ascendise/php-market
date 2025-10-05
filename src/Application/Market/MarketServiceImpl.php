@@ -6,7 +6,6 @@ namespace App\Application\Market;
 
 use App\Domain\Market\Market;
 use App\Domain\Market\TraderRepository;
-use Exception;
 use Symfony\Component\Uid\Uuid;
 
 final class MarketServiceImpl implements MarketService
@@ -31,13 +30,18 @@ final class MarketServiceImpl implements MarketService
             $createOffer->pricePerItem,
             $createOffer->quantity
         );
-        $this->market->createOffer($offer);
+        $newOffer = $this->market->createOffer($offer);
         $this->traderRegister->update($seller);
-        return OfferDto::fromEntity($offer);
+        return OfferDto::fromEntity($newOffer);
     }
 
-    public function buyOffer(Uuid $buyerId, OfferDto $offerDto): void
+    public function buyOffer(Uuid $buyerId, Uuid $offerId): TraderDto
     {
-        throw new Exception('MarketServiceImpl.buyOffer() not implemented');
+        $buyer = $this->traderRegister->findTrader($buyerId->toString());
+        $offer = $this->market->findOffer($offerId->toString());
+        $buyer->buy($offer);
+        $this->traderRegister->update($offer->seller());
+        $this->traderRegister->update($buyer);
+        return TraderDto::fromEntity($buyer);
     }
 }

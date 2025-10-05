@@ -8,7 +8,6 @@ use App\Domain\Market\Trader;
 use App\Domain\Market\TraderRepository;
 use App\Entity;
 use Doctrine\ORM\EntityManagerInterface;
-use Exception;
 use Symfony\Component\Uid\Uuid;
 
 final class DoctrineTraderRepository implements TraderRepository

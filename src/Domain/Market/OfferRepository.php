@@ -7,5 +7,6 @@ namespace App\Domain\Market;
 interface OfferRepository
 {
     public function list(): Offers;
-    public function add(Offer $offer): void;
+    public function findById(string $id): ?Offer;
+    public function create(CreateOffer $createOffer): Offer;
 }

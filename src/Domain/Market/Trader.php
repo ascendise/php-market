@@ -15,10 +15,10 @@ final class Trader implements Seller, Buyer
     ) {
     }
 
-    public function sell(Product $product, int $price, int $quantity): Offer
+    public function sell(Product $product, int $price, int $quantity): CreateOffer
     {
         $item = $this->inventory->remove($product, $quantity);
-        return new Offer($item->product(), $price, $item->quantity(), $this);
+        return new CreateOffer($item->product(), $price, $item->quantity(), $this);
     }
 
     public function buy(Offer $offer): void
