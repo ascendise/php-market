@@ -47,4 +47,14 @@ final class DoctrineOfferRepository implements OfferRepository
         }
         return new $offer->toEntity();
     }
+
+    public function remove(string $id): void
+    {
+        $offer = $this->findById($id);
+        if (!$offer) {
+            return;
+        }
+        $this->entityManager->remove($offer);
+        $this->entityManager->persist();
+    }
 }
