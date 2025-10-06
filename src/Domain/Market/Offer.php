@@ -38,6 +38,11 @@ final class Offer
         return $this->quantity;
     }
 
+    public function pricePerItem(): int
+    {
+        return $this->pricePerItem;
+    }
+
     public function totalPrice(): int
     {
         return $this->quantity * $this->pricePerItem;

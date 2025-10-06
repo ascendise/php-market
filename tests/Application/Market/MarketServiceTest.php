@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Tests\Application\Market;
 
+use App\Application\Market\ItemDto;
 use App\Application\Market\MarketServiceImpl;
 use App\Application\Market\OfferDto;
 use App\Application\Market\CreateOfferDto;
 use App\Application\Market\OffersDto;
 use App\Application\Market\ProductDto;
-use App\Application\Market\TraderDto;
 use App\Domain\Market\Balance;
 use App\Domain\Market\Inventory;
 use App\Domain\Market\Item;
@@ -109,12 +109,12 @@ final class MarketServiceTest extends TestCase
         );
         $createdOffer = $sut->createOffer($traderId, $createOffer);
         // Assert
-        $updatedTrader = $traderRepository->findTrader($traderId->toString());
+        $updatedTrader = $traderRepository->find($traderId->toString());
         $apples = array_find([...$updatedTrader->listInventory()], fn ($i) => $i->product()->name() == 'Apple');
         $this->assertEquals(2, $apples->quantity(), 'Trader inventory was not updated!');
     }
 
-    public function testBuyOfferShouldTransferItemsToBuyer(): void
+    public function testBuyOfferShouldReturnUpdatedTrader(): void
     {
         // Arrange
         $buyerId = Uuid::v7();
@@ -126,36 +126,31 @@ final class MarketServiceTest extends TestCase
         $traderRepo = new MemoryTraderRepository($seller, $buyer);
         $sut = $this->setupSut($offerRepo, $traderRepo);
         // Act
-        $response = $sut->buyOffer($buyerId, $offerId);
+        $updatedBuyer = $sut->buyOffer($buyerId, $offerId);
         // Assert
-        $updatedBuyer = $traderRepo->findTrader($buyerId->toString());
-        $this->assertEquals(700, $updatedBuyer->balance());
-        $this->assertContainsEquals(new Item(new Product('Graphics Card'), 3), $updatedBuyer->listInventory());
-        $this->assertEquals(TraderDto::fromEntity($updatedBuyer), $response);
+        $this->assertEquals(700, $updatedBuyer->balance);
+        $this->assertContainsEquals(new ItemDto(new ProductDto('Graphics Card'), 3), $updatedBuyer->inventory);
     }
 
-    public function testBuyOfferShouldTransferMoneyToSeller(): void
+    public function testBuyOfferShouldUpdateTraders(): void
     {
         // Arrange
-        $sellerId = Uuid::v7();
-        $seller = new Trader($sellerId->toString(), new Inventory(), new Balance(0));
+        $seller = new Trader(Uuid::v7()->toString(), new Inventory(), new Balance(0));
         $buyerId = Uuid::v7();
         $buyer = new Trader($buyerId->toString(), new Inventory(), new Balance(1000));
-        $traderRepo = new MemoryTraderRepository($seller, $buyer);
         $offerId = Uuid::v7();
-        $offer = new Offer(
-            $offerId->toString(),
-            new Product('Graphics Card'),
-            quantity: 3,
-            pricePerItem: 100,
-            seller: $traderRepo->findTrader($sellerId->toString())
-        );
+        $offer = new Offer($offerId->toString(), new Product('Graphics Card'), 100, 3, $seller);
         $offerRepo = new MemoryOfferRepository(new Offers($offer));
+        $traderRepo = new MemoryTraderRepository($seller, $buyer);
         $sut = $this->setupSut($offerRepo, $traderRepo);
         // Act
-        $_ = $sut->buyOffer($buyerId, $offerId);
+        $response = $sut->buyOffer($buyerId, $offerId);
         // Assert
-        $updatedSeller = $traderRepo->findTrader($sellerId->toString());
-        $this->assertEquals(300, $updatedSeller->balance());
+        $updatedBuyer = $traderRepo->find($buyer->id());
+        $updatedSeller = $traderRepo->find($seller->id());
+        // Check if initial state of trader changed
+        $this->assertEquals($seller, $updatedSeller); // Seller reference in offer, should be equal as in DB
+        $this->assertNotEquals($buyer, $updatedBuyer); /* Buyer gets fetched by value
+                                                        * initial buyer does not have updated state */
     }
 }

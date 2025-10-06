@@ -6,6 +6,6 @@ namespace App\Domain\Market;
 
 interface TraderRepository
 {
-    public function findTrader(string $id): Trader;
+    public function find(string $id): Trader;
     public function update(Trader $trader): void;
 }

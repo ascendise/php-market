@@ -24,7 +24,7 @@ final class MarketServiceImpl implements MarketService
 
     public function createOffer(Uuid $sellerId, CreateOfferDto $createOffer): OfferDto
     {
-        $seller = $this->traderRegister->findTrader($sellerId->toString());
+        $seller = $this->traderRegister->find($sellerId->toString());
         $offer = $seller->sell(
             $createOffer->product->toEntity(),
             $createOffer->pricePerItem,
@@ -37,7 +37,7 @@ final class MarketServiceImpl implements MarketService
 
     public function buyOffer(Uuid $buyerId, Uuid $offerId): TraderDto
     {
-        $buyer = $this->traderRegister->findTrader($buyerId->toString());
+        $buyer = $this->traderRegister->find($buyerId->toString());
         $offer = $this->market->findOffer($offerId->toString());
         $buyer->buy($offer);
         $this->traderRegister->update($offer->seller());

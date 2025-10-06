@@ -4,11 +4,15 @@ declare(strict_types=1);
 
 namespace App\Tests\Domain\Market;
 
+use App\Domain\Market\Balance;
 use App\Domain\Market\CreateOffer;
+use App\Domain\Market\Inventory;
+use App\Domain\Market\Item;
 use App\Domain\Market\Offer;
 use App\Domain\Market\Offers;
 use App\Domain\Market\Market;
 use App\Domain\Market\Product;
+use App\Domain\Market\Trader;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Uid\Uuid;
 
@@ -59,5 +63,23 @@ class MarketTest extends TestCase
         // Assert
         $offers = $offerRepo->list();
         $this->assertCount(1, $offers);
+    }
+
+    public function testTransferShouldMoveItemsAndMoney(): void
+    {
+        // Arrange
+        $seller = new Trader('seller', new Inventory(), new Balance(0));
+        $buyer = new Trader('buyer', new Inventory(), new Balance(1000));
+        $offer = new Offer('offer', new Product('Graphics Card'), 100, 3, $seller);
+        $offerRepo = new MemoryOfferRepository(new Offers($offer));
+        $sut = new Market($offerRepo);
+        // Act
+        $sut->transact($buyer, $offer);
+        // Assert
+        $boughtItem = new Item(new Product('Graphics Card'), 3);
+        $this->assertContainsEquals($boughtItem, $buyer->listInventory(), 'Buyer did not receive item!');
+        $this->assertEquals($buyer->balance(), 700, 'Buyer did not transfer money!');
+        $this->assertEquals($seller->balance(), 300, 'Selller did not receive money!');
+        $this->assertEquals(new Offers(), $offerRepo->list(), 'Offer was not removed after transaction!');
     }
 }

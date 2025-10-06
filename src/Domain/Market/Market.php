@@ -27,4 +27,10 @@ final class Market
     {
         return $this->offerRepository->create($offer);
     }
+
+    public function transact(Buyer $buyer, Offer $offer): void
+    {
+        $buyer->buy($offer);
+        $this->offerRepository->remove($offer->id());
+    }
 }

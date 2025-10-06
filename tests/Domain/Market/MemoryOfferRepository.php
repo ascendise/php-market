@@ -14,7 +14,7 @@ use Symfony\Component\Uid\UuidV7;
 class MemoryOfferRepository implements OfferRepository
 {
     /* @var array<string, Offer> $offers */
-    private array $offers;
+    private array $offers = [];
 
     /* @var Iterator<mixed, Uuid> $uuidGenerator */
     private Iterator $uuidGenerator;
@@ -60,6 +60,18 @@ class MemoryOfferRepository implements OfferRepository
 
     public function findById(string $id): ?Offer
     {
-        return $this->offers[$id];
+        $offer = $this->offers[$id];
+        return new Offer(
+            $offer->id(),
+            $offer->product(),
+            $offer->pricePerItem(),
+            $offer->quantity(),
+            $offer->seller()
+        );
+    }
+
+    public function remove(string $id): void
+    {
+        unset($this->offers[$id]);
     }
 }

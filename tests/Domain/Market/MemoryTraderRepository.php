@@ -21,7 +21,7 @@ final class MemoryTraderRepository implements TraderRepository
         }
     }
 
-    public function findTrader(string $id): Trader
+    public function find(string $id): Trader
     {
         $trader = $this->traders[$id];
         $inventory = new Inventory();
