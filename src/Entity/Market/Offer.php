@@ -4,6 +4,7 @@ namespace App\Entity\Market;
 
 use App\Domain;
 use App\Repository\OfferRepository;
+use Exception;
 use Symfony\Bridge\Doctrine\IdGenerator\UuidGenerator;
 use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Component\Uid\Uuid;
@@ -27,7 +28,7 @@ class Offer
     #[ORM\Column]
     private ?int $totalPrice = null;
 
-    #[ORM\ManyToOne(inversedBy: 'offers')]
+    #[ORM\ManyToOne(inversedBy: 'offers', fetch: 'EAGER')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Trader $seller = null;
 
@@ -35,20 +36,21 @@ class Offer
     public static function fromEntity(Domain\Market\CreateOffer $entity): Offer
     {
         $offer = new Offer();
-        $offer->setProductName($entity->product()->name());
-        $offer->setQuantity($entity->quantity());
-        $offer->setTotalPrice($entity->totalPrice());
-        $seller = Trader::fromEntity($entity->seller());
-        $offer->setSeller($entity->totalPrice());
+        $offer->setProductName($entity->product->name());
+        $offer->setQuantity($entity->quantity);
+        $offer->setTotalPrice($entity->totalPrice);
+        $seller = Trader::fromEntity($entity->seller);
+        $offer->setSeller($seller);
     }
 
     public function toEntity(): Domain\Market\Offer
     {
         $product = new Domain\Market\Product($this->productName);
         $quantity = $this->quantity;
-        $pricePerItem = $this->totalPrice / $quantity;
+        $pricePerItem = intdiv($this->totalPrice, $quantity);
         $seller = $this->seller->toEntity();
         return new Domain\Market\Offer(
+            $this->id->toString(),
             $product,
             $pricePerItem,
             $quantity,

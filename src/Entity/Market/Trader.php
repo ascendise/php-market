@@ -3,7 +3,7 @@
 namespace App\Entity\Market;
 
 use App\Domain;
-use App\Repository\Market\TraderRepository;
+use App\Repository\TraderRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;

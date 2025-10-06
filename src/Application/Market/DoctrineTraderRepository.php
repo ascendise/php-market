@@ -8,6 +8,7 @@ use App\Domain\Market\Trader;
 use App\Domain\Market\TraderRepository;
 use App\Entity;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use Symfony\Component\Uid\Uuid;
 
 final class DoctrineTraderRepository implements TraderRepository
@@ -16,12 +17,13 @@ final class DoctrineTraderRepository implements TraderRepository
     {
     }
 
-    public function find(string $id): Trader
+    public function find(string $id): ?Trader
     {
         $uuid = Uuid::fromString($id);
-        $trader = $this->entityManager->getRepository(Entity\Market\Trader::class)->find($id);
-        if (!trader || !$trader instanceof Entity\Market\Trader) {
-            return null;
+        $trader = $this->entityManager->getRepository(Entity\Market\Trader::class)->findOneBy(['id' => $id]);
+        if (!$trader) {
+            throw new Exception("No trader :(! $uuid");
+            //return null;
         }
         return new $trader->toEntity();
     }

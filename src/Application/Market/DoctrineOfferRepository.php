@@ -21,7 +21,7 @@ final class DoctrineOfferRepository implements OfferRepository
     public function list(): Offers
     {
         $offers = $this->offerRepo()->findAll();
-        return new Offers(array_map(fn (Entity\Market\Offer $o) => $o->toEntity(), $offers));
+        return new Offers(...array_map(fn (Entity\Market\Offer $o) => $o->toEntity(), $offers));
     }
     /**
      * @return EntityRepository<Entity\Market\Offer>
@@ -42,7 +42,7 @@ final class DoctrineOfferRepository implements OfferRepository
     public function findById(string $id): ?Offer
     {
         $offer = $this->offerRepo()->find($id);
-        if (!offer || !$offer instanceof Entity\Market\Offer) {
+        if (!$offer || !$offer instanceof Entity\Market\Offer) {
             return null;
         }
         return new $offer->toEntity();

@@ -3,7 +3,7 @@
 namespace App\Entity\Market;
 
 use App\Domain;
-use App\Repository\Market\ItemRepository;
+use App\Repository\ItemRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Component\Uid\Uuid;
