@@ -11,7 +11,7 @@ use IteratorAggregate;
 use Traversable;
 
 /**
- * @implements IteratorAggregate<int,Offer>
+ * @implements IteratorAggregate<int,OfferDto>
  */
 final class OffersDto implements IteratorAggregate
 {

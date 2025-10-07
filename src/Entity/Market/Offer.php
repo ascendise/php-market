@@ -4,7 +4,6 @@ namespace App\Entity\Market;
 
 use App\Domain;
 use App\Repository\OfferRepository;
-use Exception;
 use Symfony\Bridge\Doctrine\IdGenerator\UuidGenerator;
 use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Component\Uid\Uuid;

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Application\Market;
 
-use App\Entity\Market\Item;
+use App\Domain\Market\Item;
 use ArrayIterator;
 use IteratorAggregate;
 use Traversable;
@@ -34,7 +34,7 @@ final class InventoryDto implements IteratorAggregate
     {
         $inventory = new InventoryDto();
         foreach ($items as $item) {
-            $inventory->items += [ItemDto::fromEntity($item)];
+            $inventory->items += [$item->product()->name() => ItemDto::fromEntity($item)];
         }
         return $inventory;
     }
