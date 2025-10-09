@@ -27,12 +27,13 @@ class Item
     #[ORM\JoinColumn(nullable: false)]
     private ?Trader $owner = null;
 
-    public static function fromEntity(Domain\Market\Item $entity, Domain\Market\Trader $owner): Item
+    public static function fromEntity(Domain\Market\Item $entity, Trader $owner): Item
     {
         $item = new Item();
         $item->setProductName($entity->product()->name());
         $item->setQuantity($entity->quantity());
         $item->setOwner($owner);
+        return $item;
     }
 
     public function toEntity(): Domain\Market\Item

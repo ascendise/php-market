@@ -25,7 +25,7 @@ class Trader
     /**
      * @var Collection<int, Item>
      */
-    #[ORM\OneToMany(targetEntity: Item::class, mappedBy: 'owner', orphanRemoval: true, fetch: 'EAGER')]
+    #[ORM\OneToMany(targetEntity: Item::class, mappedBy: 'owner', orphanRemoval: true)]
     private Collection $inventory;
 
     /**
@@ -40,14 +40,15 @@ class Trader
         $this->offers = new ArrayCollection();
     }
 
-    public function fromEntity(Domain\Market\Trader $entity): Trader
+    public static function fromEntity(Domain\Market\Trader $entity): Trader
     {
         $trader = new Trader();
-        $trader->id = $entity->id();
+        $trader->id = Uuid::fromString($entity->id());
         foreach ($entity->listInventory() as $item) {
-            $trader->inventory->add(Item::fromEntity($item), $entity);
+            $trader->inventory->add(Item::fromEntity($item, $trader), $entity);
         }
         $trader->setBalance($entity->balance());
+        return $trader;
     }
 
     public function toEntity(): Domain\Market\Trader

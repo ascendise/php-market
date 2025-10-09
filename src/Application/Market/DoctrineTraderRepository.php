@@ -19,8 +19,8 @@ final class DoctrineTraderRepository implements TraderRepository
     public function find(string $id): ?Trader
     {
         $uuid = Uuid::fromString($id);
-        $trader = $this->entityManager->getRepository(Entity\Market\Trader::class)->findAll()[0];
-        if (!$trader || !$trader instanceof Entity\Market\Trader) {
+        $trader = $this->entityManager->getRepository(Entity\Market\Trader::class)->find($uuid);
+        if (!$trader) {
             return null;
         }
         return $trader->toEntity();

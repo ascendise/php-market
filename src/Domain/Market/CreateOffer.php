@@ -22,6 +22,11 @@ final class CreateOffer
         }
     }
 
+    public function totalPrice(): int
+    {
+        return $this->pricePerItem * $this->quantity;
+    }
+
     public function toOffer(string $id): Offer
     {
         return new Offer(
@@ -31,5 +36,25 @@ final class CreateOffer
             $this->quantity,
             $this->seller
         );
+    }
+
+    public function product(): Product
+    {
+        return $this->product;
+    }
+
+    public function pricePerItem(): int
+    {
+        return $this->pricePerItem;
+    }
+
+    public function quantity(): int
+    {
+        return $this->quantity;
+    }
+
+    public function seller(): Seller
+    {
+        return $this->seller;
     }
 }

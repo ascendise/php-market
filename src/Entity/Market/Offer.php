@@ -27,19 +27,20 @@ class Offer
     #[ORM\Column]
     private ?int $totalPrice = null;
 
-    #[ORM\ManyToOne(inversedBy: 'offers', fetch: 'EAGER')]
+    #[ORM\ManyToOne(inversedBy: 'offers')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Trader $seller = null;
 
 
-    public static function fromEntity(Domain\Market\CreateOffer $entity): Offer
+    public static function fromEntity(Domain\Market\CreateOffer $entity, Trader $seller): Offer
     {
         $offer = new Offer();
-        $offer->setProductName($entity->product->name());
-        $offer->setQuantity($entity->quantity);
-        $offer->setTotalPrice($entity->totalPrice);
-        $seller = Trader::fromEntity($entity->seller);
+        $offer->setProductName($entity->product()->name());
+        $offer->setQuantity($entity->quantity());
+        $offer->setTotalPrice($entity->totalPrice());
         $offer->setSeller($seller);
+        $seller->addOffer($offer);
+        return $offer;
     }
 
     public function toEntity(): Domain\Market\Offer

@@ -11,11 +11,23 @@
             <tr>
                 <th>Product</th>
                 <th>Stocked</th>
+                <th>Options</th>
             </tr>
             {% for item in trader.inventory %}
                 <tr>
                     <td>{{ item.product.name }}</td>
                     <td>{{ item.quantity }}</td>
+                    <td>
+                        <form hx-post='/api/market/sell'
+                            hx-ext='json-enc-custom'
+                            parse-types="true"
+                            hx-headers='{"X-Trader-Id": "{{ trader.id }}"}'>
+                            <input type='number' name='quantity' value='1'/>
+                            <input type='number' name='pricePerItem' value='1'/>
+                            <input hidden type='text' name='product[name]' value='{{ item.product.name }}'/>
+                            <input type='submit' value='Sell'/>
+                        </form>
+                    </td>
                 </tr>
             {% endfor %}
         </table>
@@ -25,14 +37,24 @@
                 <th>Product</th>
                 <th>Quantity</th>
                 <th>Price</th>
+                <th>Options</th>
             </tr>
             {% for offer in offers %}
                 <tr>
                     <td>{{ offer.product.name }}</td>
                     <td>{{ offer.quantity }}</td>
                     <td>{{ offer.totalPrice }}</td>
+                    <td>
+                        <input type='submit'
+                            name='quantity'
+                            hx-post='/api/market/buy/{{ offer.id }}'
+                            hx-headers='{"X-Trader-Id": "{{ trader.id }}"}'
+                            value='Buy'/>
+                    </td>
                 </tr>
             {% endfor %}
         </table>
+        <script src='https://cdn.jsdelivr.net/npm/htmx.org@2.0.7/dist/htmx.min.js' integrity='sha384-ZBXiYtYQ6hJ2Y0ZNoYuI+Nq5MqWBr+chMrS/RkXpNzQCApHEhOt2aY8EJgqwHLkJ' crossorigin='anonymous'></script>
+        <script src="https://cdn.jsdelivr.net/gh/Emtyloc/json-enc-custom@v0.1.7/json-enc-custom.js"></script>
     </body>
 </html>

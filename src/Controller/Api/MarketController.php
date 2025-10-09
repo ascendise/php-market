@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace App\Controller\Api;
 
+use App\Application\Market\CreateOfferDto;
 use App\Application\Market\MarketService;
-use CreateOfferDto;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Uid\Uuid;
 
@@ -19,7 +20,7 @@ final class MarketController extends AbstractController
     ) {
     }
 
-    #[Route('api/market/buy/{offerId}', methods: 'POST')]
+    #[Route('api/market/buy/{offerId}', methods: 'POST', format: 'json')]
     public function buy(
         Uuid $offerId,
         Request $request
@@ -30,9 +31,9 @@ final class MarketController extends AbstractController
         return $this->json($updatedTrader);
     }
 
-    #[Route('api/market/sell', methods: 'POST')]
+    #[Route('api/market/sell', methods: 'POST', format: 'json')]
     public function sell(
-        CreateOfferDto $createOfferRequest,
+        #[MapRequestPayload] CreateOfferDto $createOfferRequest,
         Request $request
     ): JsonResponse {
         $traderId = $request->headers->get('X-Trader-Id');
