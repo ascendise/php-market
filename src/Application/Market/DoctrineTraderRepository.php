@@ -28,9 +28,28 @@ final class DoctrineTraderRepository implements TraderRepository
 
     public function update(Trader $trader): void
     {
+        $oldTrader = $this->entityManager->getRepository(Entity\Market\Trader::class)->find($trader->id());
         $newTrader = Entity\Market\Trader::fromEntity($trader);
-        $this->entityManager->refresh($newTrader);
-        $this->entityManager->persist($newTrader);
-        $this->entityManager->flush($newTrader);
+        $oldTrader->setBalance($newTrader->getBalance());
+        $removedItems = [];
+        foreach ($oldTrader->getInventory() as $item) {
+            $updatedItem = $newTrader->getInventory()
+                ->filter(fn ($i) => $i->getProductName() == $item->getProductName());
+            if ($updatedItem->isEmpty()) {
+                $removedItems[] = $updatedItem;
+            }
+            $item->setQuantity($updatedItem->first()->getQuantity());
+        }
+        foreach ($removedItems as $remove) {
+            $oldTrader->removeInventory($remove);
+        }
+        foreach ($newTrader->getInventory() as $newItem) {
+            $oldItem = $oldTrader->getInventory()
+                ->filter(fn ($i) => $i->getProductName() == $newItem->getProductName());
+            if ($oldItem->isEmpty()) {
+                $oldTrader->addInventory($newItem);
+            }
+        }
+        $this->entityManager->flush();
     }
 }

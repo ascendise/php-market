@@ -22,7 +22,11 @@ final class DoctrineOfferRepository implements OfferRepository
     public function list(): Offers
     {
         $offers = $this->offerRepo()->findAll();
-        return new Offers(...array_map(fn (Entity\Market\Offer $o) => $o->toEntity(), $offers));
+        foreach ($offers as $offer) {
+            var_dump($offer->getId());
+        }
+        $offers = new Offers(...array_map(fn (Entity\Market\Offer $o) => $o->toEntity(), $offers));
+        return $offers;
     }
     /**
      * @return EntityRepository<Entity\Market\Offer>
