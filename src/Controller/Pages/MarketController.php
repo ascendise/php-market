@@ -22,7 +22,7 @@ final class MarketController extends AbstractController
     #[Route('market')]
     public function index(): Response
     {
-        $id = '0199CFA0-303F-76B3-ADBD-8E7F6FCF88CE';
+        $id = '0199CFD8-A181-7695-8672-EAB62F071847';
         $trader = $this->traderRepo->find($id);
         $trader = TraderDto::fromEntity($trader);
         $offers = $this->marketService->listOffers();

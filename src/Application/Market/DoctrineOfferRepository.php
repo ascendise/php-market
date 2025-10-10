@@ -22,9 +22,6 @@ final class DoctrineOfferRepository implements OfferRepository
     public function list(): Offers
     {
         $offers = $this->offerRepo()->findAll();
-        foreach ($offers as $offer) {
-            var_dump($offer->getId());
-        }
         $offers = new Offers(...array_map(fn (Entity\Market\Offer $o) => $o->toEntity(), $offers));
         return $offers;
     }
@@ -34,23 +31,6 @@ final class DoctrineOfferRepository implements OfferRepository
     private function offerRepo(): EntityRepository
     {
         return $this->entityManager->getRepository(Entity\Market\Offer::class);
-    }
-
-    public function create(CreateOffer $offer): Offer
-    {
-        $seller = $this->traderRepo()->find(Uuid::fromString($offer->seller()->id()));
-        $offerModel = Entity\Market\Offer::fromEntity($offer, $seller);
-        $this->entityManager->persist($offerModel);
-        $this->entityManager->flush();
-        return $offerModel->toEntity();
-    }
-
-    /**
-     * @return EntityRepository<Entity\Market\Trader>
-     */
-    private function traderRepo(): EntityRepository
-    {
-        return $this->entityManager->getRepository(Entity\Market\Trader::class);
     }
 
     public function findById(string $id): ?Offer
@@ -70,5 +50,22 @@ final class DoctrineOfferRepository implements OfferRepository
         }
         $this->entityManager->remove($offer);
         $this->entityManager->persist();
+    }
+
+    public function create(CreateOffer $offer): Offer
+    {
+        $seller = $this->traderRepo()->find(Uuid::fromString($offer->seller()->id()));
+        $offerModel = Entity\Market\Offer::fromEntity($offer, $seller);
+        $this->entityManager->persist($offerModel);
+        $this->entityManager->flush();
+        return $offerModel->toEntity();
+    }
+
+    /**
+     * @return EntityRepository<Entity\Market\Trader>
+     */
+    private function traderRepo(): EntityRepository
+    {
+        return $this->entityManager->getRepository(Entity\Market\Trader::class);
     }
 }

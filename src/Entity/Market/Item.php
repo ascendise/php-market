@@ -6,7 +6,7 @@ use App\Domain;
 use App\Repository\ItemRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Types\UuidType;
-use Symfony\Component\Uid\Uuid;
+use Symfony\Component\Uid\UuidV7;
 
 #[ORM\Entity(repositoryClass: ItemRepository::class)]
 class Item
@@ -15,7 +15,7 @@ class Item
     #[ORM\Column(type: UuidType::NAME, unique: true)]
     #[ORM\GeneratedValue(strategy: 'CUSTOM')]
     #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
-    private ?Uuid $id = null;
+    private ?UuidV7 $id = null;
 
     #[ORM\Column(length: 255)]
     private ?string $productName = null;
@@ -42,7 +42,7 @@ class Item
         return new Domain\Market\Item($product, $this->quantity);
     }
 
-    public function getId(): ?Uuid
+    public function getId(): ?UuidV7
     {
         return $this->id;
     }

@@ -8,7 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Types\UuidType;
-use Symfony\Component\Uid\Uuid;
+use Symfony\Component\Uid\UuidV7;
 
 #[ORM\Entity(repositoryClass: TraderRepository::class)]
 class Trader
@@ -17,7 +17,7 @@ class Trader
     #[ORM\Column(type: UuidType::NAME, unique: true)]
     #[ORM\GeneratedValue(strategy: 'CUSTOM')]
     #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
-    private ?Uuid $id = null;
+    private ?UuidV7 $id = null;
 
     #[ORM\Column]
     private ?int $balance = null;
@@ -43,7 +43,7 @@ class Trader
     public static function fromEntity(Domain\Market\Trader $entity): Trader
     {
         $trader = new Trader();
-        $trader->id = Uuid::fromString($entity->id());
+        $trader->id = UuidV7::fromString($entity->id());
         foreach ($entity->listInventory() as $item) {
             $trader->inventory->add(Item::fromEntity($item, $trader), $entity);
         }
@@ -61,7 +61,7 @@ class Trader
         return new Domain\Market\Trader($this->id, $inventory, $balance);
     }
 
-    public function getId(): ?Uuid
+    public function getId(): ?UuidV7
     {
         return $this->id;
     }

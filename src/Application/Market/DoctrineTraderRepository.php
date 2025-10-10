@@ -8,7 +8,6 @@ use App\Domain\Market\Trader;
 use App\Domain\Market\TraderRepository;
 use App\Entity;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Uid\Uuid;
 
 final class DoctrineTraderRepository implements TraderRepository
 {
@@ -18,8 +17,7 @@ final class DoctrineTraderRepository implements TraderRepository
 
     public function find(string $id): ?Trader
     {
-        $uuid = Uuid::fromString($id);
-        $trader = $this->entityManager->getRepository(Entity\Market\Trader::class)->find($uuid);
+        $trader = $this->entityManager->getRepository(Entity\Market\Trader::class)->find($id);
         if (!$trader) {
             return null;
         }

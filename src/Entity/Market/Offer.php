@@ -4,10 +4,9 @@ namespace App\Entity\Market;
 
 use App\Domain;
 use App\Repository\OfferRepository;
-use Symfony\Bridge\Doctrine\IdGenerator\UuidGenerator;
 use Symfony\Bridge\Doctrine\Types\UuidType;
-use Symfony\Component\Uid\Uuid;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Uid\UuidV7;
 
 #[ORM\Entity(repositoryClass: OfferRepository::class)]
 class Offer
@@ -15,8 +14,8 @@ class Offer
     #[ORM\Id]
     #[ORM\Column(type: UuidType::NAME, unique: true)]
     #[ORM\GeneratedValue(strategy: 'CUSTOM')]
-    #[ORM\CustomIdGenerator(class: UuidGenerator::class)]
-    private ?Uuid $id = null;
+    #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
+    private ?UuidV7 $id = null;
 
     #[ORM\Column(length: 255)]
     private ?string $productName = null;
@@ -58,7 +57,7 @@ class Offer
         );
     }
 
-    public function getId(): ?Uuid
+    public function getId(): ?UuidV7
     {
         return $this->id;
     }
