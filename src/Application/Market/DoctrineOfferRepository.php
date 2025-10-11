@@ -11,7 +11,6 @@ use App\Domain\Market\Offers;
 use App\Entity;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
-use Symfony\Component\Uid\Uuid;
 
 final class DoctrineOfferRepository implements OfferRepository
 {
@@ -39,7 +38,7 @@ final class DoctrineOfferRepository implements OfferRepository
         if (!$offer) {
             return null;
         }
-        return new $offer->toEntity();
+        return $offer->toEntity();
     }
 
     public function remove(string $id): void
@@ -49,12 +48,12 @@ final class DoctrineOfferRepository implements OfferRepository
             return;
         }
         $this->entityManager->remove($offer);
-        $this->entityManager->persist();
+        $this->entityManager->flush();
     }
 
     public function create(CreateOffer $offer): Offer
     {
-        $seller = $this->traderRepo()->find(Uuid::fromString($offer->seller()->id()));
+        $seller = $this->traderRepo()->find($offer->seller()->id());
         $offerModel = Entity\Market\Offer::fromEntity($offer, $seller);
         $this->entityManager->persist($offerModel);
         $this->entityManager->flush();

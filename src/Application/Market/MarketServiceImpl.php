@@ -39,7 +39,7 @@ final class MarketServiceImpl implements MarketService
     {
         $buyer = $this->traderRegister->find($buyerId->toString());
         $offer = $this->market->findOffer($offerId->toString());
-        $buyer->buy($offer);
+        $this->market->transact($buyer, $offer);
         $this->traderRegister->update($offer->seller());
         $this->traderRegister->update($buyer);
         return TraderDto::fromEntity($buyer);

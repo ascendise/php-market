@@ -12,7 +12,7 @@ final class SqliteCustomConnectionDriver extends AbstractDriverMiddleware
     public function connect(array $params): Connection
     {
         $conn = parent::connect($params);
-        $conn->exec('PRAGMA foreign_keys = ON;');
+        //$conn->exec('PRAGMA foreign_keys = ON;');
         return $conn;
     }
 }

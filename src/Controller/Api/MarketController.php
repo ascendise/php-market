@@ -27,7 +27,7 @@ final class MarketController extends AbstractController
     ): JsonResponse {
         $traderId = $request->headers->get('X-Trader-Id');
         $traderId = Uuid::fromString($traderId);
-        $updatedTrader = $this->marketService->buyOffer($offerId, $traderId);
+        $updatedTrader = $this->marketService->buyOffer($traderId, $offerId);
         return $this->json($updatedTrader);
     }
 

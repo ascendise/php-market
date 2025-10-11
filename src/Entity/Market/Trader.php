@@ -54,11 +54,11 @@ class Trader
     public function toEntity(): Domain\Market\Trader
     {
         $inventory = new Domain\Market\Inventory();
-        foreach ($this->inventory as $item) {
+        foreach ($this->getInventory() as $item) {
             $inventory->add($item->toEntity());
         }
-        $balance = new Domain\Market\Balance($this->balance);
-        return new Domain\Market\Trader($this->id, $inventory, $balance);
+        $balance = new Domain\Market\Balance($this->getBalance());
+        return new Domain\Market\Trader($this->getId(), $inventory, $balance);
     }
 
     public function getId(): ?UuidV7

@@ -38,4 +38,10 @@ final class InventoryDto implements IteratorAggregate
         }
         return $inventory;
     }
+
+    public function toEntity(): Inventory
+    {
+        $items = array_map(fn (ItemDto $i) => $i->toEntity(), $this->items);
+        return new Inventory($items);
+    }
 }

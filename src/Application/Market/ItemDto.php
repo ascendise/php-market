@@ -25,4 +25,9 @@ final class ItemDto
             $item->quantity()
         );
     }
+
+    public function toEntity(): Item
+    {
+        return new Item($this->product->toEntity(), $this->quantity);
+    }
 }

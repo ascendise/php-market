@@ -46,10 +46,8 @@
                     <td>{{ offer.totalPrice }}</td>
                     <td>
                         <input type='submit'
-                            name='quantity'
                             hx-post='/api/market/buy/{{ offer.id }}'
-                            hx-headers='{"X-Trader-Id": "{{ trader.id }}"}'
-                            value='Buy'/>
+                            hx-headers='{"X-Trader-Id": "{{ trader.id }}"}'/>
                     </td>
                 </tr>
             {% endfor %}

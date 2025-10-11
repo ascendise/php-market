@@ -44,12 +44,12 @@ class Offer
 
     public function toEntity(): Domain\Market\Offer
     {
-        $product = new Domain\Market\Product($this->productName);
-        $quantity = $this->quantity;
-        $pricePerItem = intdiv($this->totalPrice, $quantity);
-        $seller = $this->seller->toEntity();
+        $product = new Domain\Market\Product($this->getProductName());
+        $quantity = $this->getQuantity();
+        $pricePerItem = intdiv($this->getTotalPrice(), $quantity);
+        $seller = $this->getSeller()->toEntity();
         return new Domain\Market\Offer(
-            $this->id->toString(),
+            $this->getId()->toString(),
             $product,
             $pricePerItem,
             $quantity,

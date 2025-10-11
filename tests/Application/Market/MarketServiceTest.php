@@ -130,6 +130,7 @@ final class MarketServiceTest extends TestCase
         // Assert
         $this->assertEquals(700, $updatedBuyer->balance);
         $this->assertContainsEquals(new ItemDto(new ProductDto('Graphics Card'), 3), $updatedBuyer->inventory);
+        $this->assertEmpty(iterator_to_array($offerRepo->list()), 'Offer was not removed');
     }
 
     public function testBuyOfferShouldUpdateTraders(): void
