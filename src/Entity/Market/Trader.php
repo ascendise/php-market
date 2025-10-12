@@ -25,7 +25,7 @@ class Trader
     /**
      * @var Collection<int, Item>
      */
-    #[ORM\OneToMany(targetEntity: Item::class, mappedBy: 'owner', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: Item::class, mappedBy: 'owner', orphanRemoval: true, cascade: ['persist', 'remove'])]
     private Collection $inventory;
 
     /**

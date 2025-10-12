@@ -1,4 +1,4 @@
-<div id='trader'>
+<div id='trader' hx-get='market/_trader' hx-trigger='trader-update from:#sell-offer'>
     <h1>Trader</h1>
     <h2>Balance: {{ trader.balance }}</h2>
     <h2>Inventory</h2>
@@ -16,7 +16,7 @@
                 <td>{{ item.product.name }}</td>
                 <td>{{ item.quantity }}</td>
                 <td>
-                    <form hx-post='/market/_sell'
+                    <form id='sell-offer' hx-post='/market/_sell'
                         hx-swap='outer-html'
                         hx-target='#offers'>
                         <input type='number' name='quantity' value='1'/>
