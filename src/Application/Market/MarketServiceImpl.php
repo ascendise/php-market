@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Application\Market;
 
 use App\Domain\Market\Market;
+use App\Domain\Market\Offer;
+use App\Domain\Market\Trader;
 use App\Domain\Market\TraderRepository;
 use Symfony\Component\Uid\Uuid;
 
@@ -38,11 +40,26 @@ final class MarketServiceImpl implements MarketService
 
     public function buyOffer(Uuid $buyerId, Uuid $offerId): TraderDto
     {
-        $buyer = $this->traderRegister->find($buyerId->toString());
+        $buyerId = $buyerId->toString();
+        $buyer = $this->traderRegister->find($buyerId);
         $offer = $this->market->findOffer($offerId->toString());
+        if ($offer->seller()->id() == $buyerId) {
+            $offer = MarketServiceImpl::mergeEntities($buyer, $offer);
+        }
         $this->market->transact($buyer, $offer);
         $this->traderRegister->update($offer->seller());
         $this->traderRegister->update($buyer);
         return TraderDto::fromEntity($buyer);
+    }
+
+    public static function mergeEntities(Trader $trader, Offer $offer): Offer
+    {
+        return new Offer(
+            $offer->id(),
+            $offer->product(),
+            $offer->pricePerItem(),
+            $offer->quantity(),
+            $trader
+        );
     }
 }

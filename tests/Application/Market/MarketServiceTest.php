@@ -159,4 +159,21 @@ final class MarketServiceTest extends TestCase
         $this->assertNotEquals($buyer, $updatedBuyer); /* Buyer gets fetched by value
                                                         * initial buyer does not have updated state */
     }
+
+    public function testBuyOfferShouldHandleTraderBuyingOwnOffer(): void
+    {
+        // Arrange
+        $traderId = Uuid::v7();
+        $trader = new Trader($traderId->toString(), new Inventory(), new Balance(1000));
+        $offerId = Uuid::v7();
+        $offer = new Offer($offerId->toString(), new Product('Graphics Card'), 100, 3, $trader);
+        $offerRepo = new MemoryOfferRepository(new Offers($offer));
+        $traderRepo = new MemoryTraderRepository($trader);
+        $sut = $this->setupSut($offerRepo, $traderRepo);
+        // Act
+        $updatedBuyer = $sut->buyOffer($traderId, $offerId);
+        // Assert
+        $this->assertEquals(1000, $updatedBuyer->balance); //Balance should not change as Trader is paying itself
+        $this->assertContainsEquals(new ItemDto(new ProductDto('Graphics Card'), 3), $updatedBuyer->inventory);
+    }
 }

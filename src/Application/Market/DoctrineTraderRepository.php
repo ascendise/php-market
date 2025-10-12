@@ -34,7 +34,8 @@ final class DoctrineTraderRepository implements TraderRepository
             $updatedItem = $newTrader->getInventory()
                 ->filter(fn ($i) => $i->getProductName() == $item->getProductName());
             if ($updatedItem->isEmpty()) {
-                $removedItems[] = $updatedItem;
+                $removedItems[] = $item;
+                continue;
             }
             $item->setQuantity($updatedItem->first()->getQuantity());
         }
