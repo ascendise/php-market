@@ -1,0 +1,29 @@
+<div id='offers' hx-get='/market/_list' hx-trigger='refresh-offers from:#buy-offer'>
+    <h1>Market</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th>Options</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for offer in offers %}
+            <tr>
+                <td>{{ offer.product.name }}</td>
+                <td>{{ offer.quantity }}</td>
+                <td>{{ offer.totalPrice }}</td>
+                <td>
+                    <input id='buy-offer'
+                        type='submit'
+                        hx-post='/market/_buy/{{ offer.id }}'
+                        hx-swap='outerHtml'
+                        hx-target='#trader'/>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>

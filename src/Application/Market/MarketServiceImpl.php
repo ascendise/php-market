@@ -22,7 +22,7 @@ final class MarketServiceImpl implements MarketService
         return OffersDto::fromEntity($offers);
     }
 
-    public function createOffer(Uuid $sellerId, CreateOfferDto $createOffer): OfferDto
+    public function createOffer(Uuid $sellerId, CreateOfferDto $createOffer): CreatedOfferDto
     {
         $seller = $this->traderRegister->find($sellerId->toString());
         $offer = $seller->sell(
@@ -32,7 +32,8 @@ final class MarketServiceImpl implements MarketService
         );
         $newOffer = $this->market->createOffer($offer);
         $this->traderRegister->update($seller);
-        return OfferDto::fromEntity($newOffer);
+        $offers = $this->market->listOffers();
+        return CreatedOfferDto::fromEntity($newOffer, $offers);
     }
 
     public function buyOffer(Uuid $buyerId, Uuid $offerId): TraderDto

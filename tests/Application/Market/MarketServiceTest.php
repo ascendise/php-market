@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Application\Market;
 
+use App\Application\Market\CreatedOfferDto;
 use App\Application\Market\ItemDto;
 use App\Application\Market\MarketServiceImpl;
 use App\Application\Market\OfferDto;
@@ -80,7 +81,7 @@ final class MarketServiceTest extends TestCase
             quantity: 3,
             pricePerItem: 1
         );
-        $createdOffer = $sut->createOffer($traderId, $createOffer);
+        $response = $sut->createOffer($traderId, $createOffer);
         // Assert
         $expectedOffer = new OfferDto(
             Uuid::fromString('0199b524-3672-7650-bbd8-a4d2d4ba43f6'),
@@ -89,7 +90,11 @@ final class MarketServiceTest extends TestCase
             totalPrice: 3,
             sellerId: Uuid::fromString($trader->id())
         );
-        $this->assertEquals($expectedOffer, $createdOffer);
+        $expectedResponse = new CreatedOfferDto(
+            $expectedOffer,
+            new OffersDto($expectedOffer)
+        );
+        $this->assertEquals($expectedResponse, $response);
         $this->assertCount(1, $offerRepository->list());
     }
 
@@ -107,7 +112,7 @@ final class MarketServiceTest extends TestCase
             quantity: 3,
             pricePerItem: 1
         );
-        $createdOffer = $sut->createOffer($traderId, $createOffer);
+        $_ = $sut->createOffer($traderId, $createOffer);
         // Assert
         $updatedTrader = $traderRepository->find($traderId->toString());
         $apples = array_find([...$updatedTrader->listInventory()], fn ($i) => $i->product()->name() == 'Apple');

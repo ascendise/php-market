@@ -1,0 +1,32 @@
+<div id='trader'>
+    <h1>Trader</h1>
+    <h2>Balance: {{ trader.balance }}</h2>
+    <h2>Inventory</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Stocked</th>
+                <th>Options</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for item in trader.inventory %}
+            <tr>
+                <td>{{ item.product.name }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>
+                    <form hx-post='/market/_sell'
+                        hx-swap='outer-html'
+                        hx-target='#offers'>
+                        <input type='number' name='quantity' value='1'/>
+                        <input type='number' name='pricePerItem' value='1'/>
+                        <input hidden type='text' name='product[name]' value='{{ item.product.name }}'/>
+                        <input type='submit' value='Sell'/>
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
