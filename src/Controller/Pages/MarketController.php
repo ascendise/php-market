@@ -10,8 +10,8 @@ use App\Application\Market\TraderDto;
 use App\Domain\Market\TraderRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Uid\Uuid;
 
@@ -21,7 +21,7 @@ final class MarketController extends AbstractController
 
     public function __construct(
         private readonly MarketService $marketService,
-        private readonly TraderRepository $traderRepo
+        private readonly TraderRepository $traderRepo,
     ) {
     }
 
@@ -31,31 +31,33 @@ final class MarketController extends AbstractController
         $trader = $this->traderRepo->find($this->id);
         $trader = TraderDto::fromEntity($trader);
         $offers = $this->marketService->listOffers();
+
         return $this->render('market/index.html.twig', [
             'trader' => $trader,
-            'offers' => $offers
+            'offers' => $offers,
         ]);
     }
 
     #[Route('market/_buy/{offerId}', methods: 'POST')]
     public function buy(
         Uuid $offerId,
-        Request $request
+        Request $request,
     ): Response {
         $traderId = $request->headers->get('X-Trader-Id');
         $traderId = Uuid::fromString($traderId);
         $updatedTrader = $this->marketService->buyOffer($traderId, $offerId);
         $response = $this->render('market/_trader.html.twig', [
-            'trader' => $updatedTrader
+            'trader' => $updatedTrader,
         ]);
         $response->headers->set('HX-Trigger', 'offers-update');
+
         return $response;
     }
 
     #[Route('market/_sell', methods: 'POST')]
     public function sell(
         #[MapRequestPayload] CreateOfferDto $createOfferRequest,
-        Request $request
+        Request $request,
     ): Response {
         $traderId = $request->headers->get('X-Trader-Id');
         $traderId = Uuid::fromString($traderId);
@@ -63,10 +65,11 @@ final class MarketController extends AbstractController
         $response = $this->render(
             'market/_offers.html.twig',
             [
-                'offers' => $createdOffer->offers
+                'offers' => $createdOffer->offers,
             ]
         );
         $response->headers->set('HX-Trigger', 'trader-update');
+
         return $response;
     }
 
@@ -74,10 +77,11 @@ final class MarketController extends AbstractController
     public function offers(): Response
     {
         $offers = $this->marketService->listOffers();
+
         return $this->render(
             'market/_offers.html.twig',
             [
-                'offers' => $offers
+                'offers' => $offers,
             ]
         );
     }
@@ -87,10 +91,11 @@ final class MarketController extends AbstractController
     {
         $trader = $this->traderRepo->find($this->id);
         $trader = TraderDto::fromEntity($trader);
+
         return $this->render(
             'market/_trader.html.twig',
             [
-                'trader' => $trader
+                'trader' => $trader,
             ]
         );
     }

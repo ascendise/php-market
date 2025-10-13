@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace App\Tests\Application\Market;
 
 use App\Application\Market\CreatedOfferDto;
+use App\Application\Market\CreateOfferDto;
 use App\Application\Market\ItemDto;
 use App\Application\Market\MarketServiceImpl;
 use App\Application\Market\OfferDto;
-use App\Application\Market\CreateOfferDto;
 use App\Application\Market\OffersDto;
 use App\Application\Market\ProductDto;
 use App\Domain\Market\Balance;
@@ -24,7 +24,6 @@ use App\Domain\Market\TraderRepository;
 use App\Tests\Domain\Market\MemoryOfferRepository;
 use App\Tests\Domain\Market\MemoryTraderRepository;
 use App\Tests\Domain\Market\StubTrader;
-use ArrayIterator;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Uid\Uuid;
 
@@ -32,11 +31,12 @@ final class MarketServiceTest extends TestCase
 {
     private function setupSut(
         ?OfferRepository $offerRepository = null,
-        ?TraderRepository $traderRepository = null
+        ?TraderRepository $traderRepository = null,
     ): MarketServiceImpl {
         $offerRepository = $offerRepository ?? new MemoryOfferRepository(new Offers());
         $market = new Market($offerRepository);
         $traderRepository = $traderRepository ?? new MemoryTraderRepository();
+
         return new MarketServiceImpl($market, $traderRepository);
     }
 
@@ -46,7 +46,7 @@ final class MarketServiceTest extends TestCase
         $seller = new StubTrader();
         $offerId = '0199b516-1865-7121-b57c-1f24e5ee703e';
         $storedOffers = new Offers(
-            new Offer($offerId, new Product("Apple"), pricePerItem: 2, quantity: 5, seller: $seller)
+            new Offer($offerId, new Product('Apple'), pricePerItem: 2, quantity: 5, seller: $seller)
         );
         $sut = $this->setupSut(new MemoryOfferRepository($storedOffers));
         // Act
@@ -70,7 +70,7 @@ final class MarketServiceTest extends TestCase
         $inventory = new Inventory(new Item(new Product('Apple'), quantity: 5));
         $offerRepository = new MemoryOfferRepository(
             new Offers(),
-            new ArrayIterator([Uuid::fromString('0199b524-3672-7650-bbd8-a4d2d4ba43f6')])
+            new \ArrayIterator([Uuid::fromString('0199b524-3672-7650-bbd8-a4d2d4ba43f6')])
         );
         $traderId = Uuid::v7();
         $trader = new Trader($traderId->toString(), $inventory, new Balance(1000));
@@ -115,7 +115,7 @@ final class MarketServiceTest extends TestCase
         $_ = $sut->createOffer($traderId, $createOffer);
         // Assert
         $updatedTrader = $traderRepository->find($traderId->toString());
-        $apples = array_find([...$updatedTrader->listInventory()], fn ($i) => $i->product()->name() == 'Apple');
+        $apples = array_find([...$updatedTrader->listInventory()], fn ($i) => 'Apple' == $i->product()->name());
         $this->assertEquals(2, $apples->quantity(), 'Trader inventory was not updated!');
     }
 
@@ -173,7 +173,7 @@ final class MarketServiceTest extends TestCase
         // Act
         $updatedBuyer = $sut->buyOffer($traderId, $offerId);
         // Assert
-        $this->assertEquals(1000, $updatedBuyer->balance); //Balance should not change as Trader is paying itself
+        $this->assertEquals(1000, $updatedBuyer->balance); // Balance should not change as Trader is paying itself
         $this->assertContainsEquals(new ItemDto(new ProductDto('Graphics Card'), 3), $updatedBuyer->inventory);
     }
 }

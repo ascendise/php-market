@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Domain\Market;
 
-use InvalidArgumentException;
-
 final class Balance
 {
     private int $amount;
@@ -13,7 +11,7 @@ final class Balance
     public function __construct(int $initialAmount)
     {
         if ($initialAmount < 0) {
-            throw new InvalidArgumentException("Balance can't be less than zero!");
+            throw new \InvalidArgumentException("Balance can't be less than zero!");
         }
         $this->amount = $initialAmount;
     }
@@ -29,6 +27,7 @@ final class Balance
             throw new InsufficientBalanceException($amount, $this->amount());
         }
         $this->amount -= $amount;
+
         return new Payment($amount);
     }
 

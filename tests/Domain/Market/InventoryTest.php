@@ -2,10 +2,10 @@
 
 namespace App\Tests\Domain\Market;
 
+use App\Domain\Market\InsufficientStockException;
 use App\Domain\Market\Inventory;
 use App\Domain\Market\Item;
 use App\Domain\Market\Product;
-use App\Domain\Market\InsufficientStockException;
 use PHPUnit\Framework\TestCase;
 
 final class InventoryTest extends TestCase

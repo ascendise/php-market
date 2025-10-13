@@ -4,16 +4,14 @@ declare(strict_types=1);
 
 namespace App\Domain\Market;
 
-use ArrayIterator;
-use App\Domain\Market\InsufficientStockException;
-use IteratorAggregate;
-use Traversable;
-
 /**
- * @implements IteratorAggregate<string,Item>
+ * @implements \IteratorAggregate<string,Item>
  */
-final class Inventory implements IteratorAggregate
+final class Inventory implements \IteratorAggregate
 {
+    /**
+     * @var array<int, Item>
+     */
     private array $items;
 
     public function __construct(Item ...$items)
@@ -24,9 +22,9 @@ final class Inventory implements IteratorAggregate
         }
     }
 
-    public function getIterator(): Traversable
+    public function getIterator(): \Iterator
     {
-        return new ArrayIterator($this->items);
+        return new \ArrayIterator($this->items);
     }
 
     public function add(Item $item): void
@@ -39,7 +37,7 @@ final class Inventory implements IteratorAggregate
         }
     }
 
-    public function remove(Product $product, int $quantity): ?Item
+    public function remove(Product $product, int $quantity): Item
     {
         $productName = $product->name();
         if (!$this->itemExists($productName)) {
@@ -47,11 +45,12 @@ final class Inventory implements IteratorAggregate
         }
         $removed = new Item($product, $quantity);
         $leftItems = $this->items[$productName]->remove($removed);
-        if ($leftItems == null) {
+        if (null == $leftItems) {
             unset($this->items[$productName]);
         } else {
             $this->items[$productName] = $leftItems;
         }
+
         return $removed;
     }
 
@@ -66,6 +65,7 @@ final class Inventory implements IteratorAggregate
             return 0;
         }
         $item = $this->items[$product->name()];
+
         return $item->quantity();
     }
 }

@@ -23,22 +23,24 @@ final class MarketController extends AbstractController
     #[Route('api/market/buy/{offerId}', methods: 'POST', format: 'json')]
     public function buy(
         Uuid $offerId,
-        Request $request
+        Request $request,
     ): JsonResponse {
         $traderId = $request->headers->get('X-Trader-Id');
         $traderId = Uuid::fromString($traderId);
         $updatedTrader = $this->marketService->buyOffer($traderId, $offerId);
+
         return $this->json($updatedTrader);
     }
 
     #[Route('api/market/sell', methods: 'POST', format: 'json')]
     public function sell(
         #[MapRequestPayload] CreateOfferDto $createOfferRequest,
-        Request $request
+        Request $request,
     ): JsonResponse {
         $traderId = $request->headers->get('X-Trader-Id');
         $traderId = Uuid::fromString($traderId);
         $createdOffer = $this->marketService->createOffer($traderId, $createOfferRequest);
+
         return $this->json($createdOffer);
     }
 }

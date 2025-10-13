@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace App\Domain\Market;
 
-use Exception;
-
-final class InsufficientBalanceException extends Exception
+final class InsufficientBalanceException extends \Exception
 {
     private readonly int $askedPrice;
     private readonly int $balance;
@@ -15,12 +13,13 @@ final class InsufficientBalanceException extends Exception
         int $askedPrice,
         int $balance,
         int $code = 0,
-        ?Exception $previous = null
+        ?\Exception $previous = null,
     ) {
         $this->askedPrice = $askedPrice;
         $this->balance = $balance;
         $message = "You are too poor to pay this offer. Price: $askedPrice < Balance: $balance";
-        return parent::__construct($message, $code, $previous);
+
+        parent::__construct($message, $code, $previous);
     }
 
     public function askedPrice(): int

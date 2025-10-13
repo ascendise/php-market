@@ -6,13 +6,13 @@ namespace App\Tests\Domain\Market;
 
 use App\Domain\Market\Balance;
 use App\Domain\Market\CreateOffer;
-use App\Domain\Market\Offer;
-use App\Domain\Market\Trader;
-use App\Domain\Market\Product;
+use App\Domain\Market\InsufficientBalanceException;
+use App\Domain\Market\InsufficientStockException;
 use App\Domain\Market\Inventory;
 use App\Domain\Market\Item;
-use App\Domain\Market\InsufficientStockException;
-use App\Domain\Market\InsufficientBalanceException;
+use App\Domain\Market\Offer;
+use App\Domain\Market\Product;
+use App\Domain\Market\Trader;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
@@ -32,12 +32,12 @@ final class TraderTest extends TestCase
         $this->assertEquals(7, $inventory->quantityOf($product));
     }
 
-    #[DataProvider("providerNoResourceCases")]
+    #[DataProvider('providerNoResourceCases')]
     public function testSellShouldThrowIfTraderHasInsufficientStock(
         Inventory $inventory,
         Product $product,
         int $quantity,
-        int $stocked
+        int $stocked,
     ): void {
         // Assert
         $expected_exception = new InsufficientStockException($quantity, $stocked, $product);
@@ -57,18 +57,19 @@ final class TraderTest extends TestCase
         $product = new Product('Apple');
         $lowQuantityInventory = new Inventory(new Item($product, quantity: 5));
         $wrongProductQuantity = new Inventory(new Item($product, quantity: 5));
-        return array(
-            array($lowQuantityInventory, $product, 10, 5), // Not enough product
-            array($lowQuantityInventory, new Product('Banana'), 5, 0), // Wrong product
-            array(new Inventory(), $product, 5, 0), // Empty inventory
-        );
+
+        return [
+            [$lowQuantityInventory, $product, 10, 5], // Not enough product
+            [$lowQuantityInventory, new Product('Banana'), 5, 0], // Wrong product
+            [new Inventory(), $product, 5, 0], // Empty inventory
+        ];
     }
 
     public function testBuyShouldAddOfferToInventoryWhenSuccesful(): void
     {
         // Arrange
         $sut = new Trader('id', new Inventory(), new Balance(1000));
-        $computer = new Product("Computer");
+        $computer = new Product('Computer');
         $seller = new StubTrader();
         $offer = new Offer('id', $computer, 300, 3, $seller);
         // Act
@@ -83,7 +84,7 @@ final class TraderTest extends TestCase
     {
         // Arrange
         $sut = new Trader('id', new Inventory(), new Balance(1000));
-        $computer = new Product("Computer");
+        $computer = new Product('Computer');
         $seller = new Trader('id2', new Inventory(), new Balance(0));
         $offer = new Offer('id', $computer, 300, 3, $seller);
         // Act
@@ -98,7 +99,7 @@ final class TraderTest extends TestCase
         $this->expectException(InsufficientBalanceException::class);
         // Arrange
         $sut = new Trader('id', new Inventory(), new Balance(100));
-        $computer = new Product("Computer");
+        $computer = new Product('Computer');
         $seller = new StubTrader();
         $offer = new Offer('id', $computer, 300, 3, $seller);
         // Act

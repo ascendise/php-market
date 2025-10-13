@@ -4,16 +4,14 @@ declare(strict_types=1);
 
 namespace App\Domain\Market;
 
-use ArrayIterator;
-use IteratorAggregate;
-use Traversable;
-
 /**
- * @implements IteratorAggregate<string,Offer>
+ * @implements \IteratorAggregate<string,Offer>
  */
-final class Offers implements IteratorAggregate
+final class Offers implements \IteratorAggregate
 {
-    /* @param array<string, Offer> */
+    /**
+     * @var array<string, Offer>
+     */
     private array $offers = [];
 
     public function __construct(Offer ...$offers)
@@ -23,8 +21,8 @@ final class Offers implements IteratorAggregate
         }
     }
 
-    public function getIterator(): Traversable
+    public function getIterator(): \Traversable
     {
-        return new ArrayIterator($this->offers);
+        return new \ArrayIterator($this->offers);
     }
 }

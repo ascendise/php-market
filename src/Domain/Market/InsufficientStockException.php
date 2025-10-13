@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace App\Domain\Market;
 
-use Exception;
-
-final class InsufficientStockException extends Exception
+final class InsufficientStockException extends \Exception
 {
     private readonly int $askedQuantity;
     private readonly int $stockedQuantity;
@@ -17,14 +15,15 @@ final class InsufficientStockException extends Exception
         int $stockedQuantity,
         Product $product,
         int $code = 0,
-        ?Exception $previous = null
+        ?\Exception $previous = null,
     ) {
         $this->askedQuantity = $askedQuantity;
         $this->stockedQuantity = $stockedQuantity;
         $this->product = $product;
         $message = "Tried to create offer for {$product->name()} with quantity {$askedQuantity} 
         but stocked is {$stockedQuantity}";
-        return parent::__construct($message, $code, $previous);
+
+        parent::__construct($message, $code, $previous);
     }
 
     public function askedQuantity(): int

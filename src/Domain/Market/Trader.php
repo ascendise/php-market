@@ -11,13 +11,14 @@ final class Trader implements Seller, Buyer
     public function __construct(
         private readonly string $id,
         private readonly Inventory $inventory,
-        private readonly Balance $balance
+        private readonly Balance $balance,
     ) {
     }
 
     public function sell(Product $product, int $price, int $quantity): CreateOffer
     {
         $item = $this->inventory->remove($product, $quantity);
+
         return new CreateOffer($item->product(), $price, $item->quantity(), $this);
     }
 
@@ -37,7 +38,7 @@ final class Trader implements Seller, Buyer
     /*
     * @return IteratorAggregate<string, Item>
     */
-    public function listInventory(): IteratorAggregate
+    public function listInventory(): \IteratorAggregate
     {
         return $this->inventory;
     }

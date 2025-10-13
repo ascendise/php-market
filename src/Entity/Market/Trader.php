@@ -45,9 +45,10 @@ class Trader
         $trader = new Trader();
         $trader->id = UuidV7::fromString($entity->id());
         foreach ($entity->listInventory() as $item) {
-            $trader->inventory->add(Item::fromEntity($item, $trader), $entity);
+            $trader->inventory->add(Item::fromEntity($item, $trader));
         }
         $trader->setBalance($entity->balance());
+
         return $trader;
     }
 
@@ -58,6 +59,7 @@ class Trader
             $inventory->add($item->toEntity());
         }
         $balance = new Domain\Market\Balance($this->getBalance());
+
         return new Domain\Market\Trader($this->getId(), $inventory, $balance);
     }
 

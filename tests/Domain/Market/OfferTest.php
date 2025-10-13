@@ -7,7 +7,6 @@ namespace App\Tests\Domain\Market;
 use App\Domain\Market\Offer;
 use App\Domain\Market\Product;
 use App\Domain\Market\Seller;
-use InvalidArgumentException;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
@@ -22,7 +21,7 @@ final class OfferTest extends TestCase
     public function testConstructShouldRejectNegativePrice(int $invalidPrice): void
     {
         // Assert
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
         // Arrange
         $stubSeller = OfferTest::setupSeller();
         // Act
@@ -30,14 +29,14 @@ final class OfferTest extends TestCase
     }
 
     /**
-     * @return array<int,int>
+     * @return array<int,list<int>>
      */
     public static function invalidNumberProvider(): array
     {
         return [
             [0],
             [-1],
-            [-512]
+            [-512],
         ];
     }
 
@@ -45,7 +44,7 @@ final class OfferTest extends TestCase
     public function testConstructShouldRejectNegativeQuantity(int $invalidQuantity): void
     {
         // Assert
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
         // Arrange
         $stubSeller = OfferTest::setupSeller();
         // Act

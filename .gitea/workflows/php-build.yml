@@ -1,0 +1,86 @@
+name: php-jobs
+on:
+  pull_request:
+    branches: main
+
+jobs:
+  setup: 
+    runs-on: ubuntu-latest
+    container:
+        image: docker.ascendise.ch/ascendise/php-runner:1.0.0
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@v4
+      - name: Restore cache
+        id: php-cache
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            ./var
+            ./vendor
+          key: php-cache
+      - name: Composer install
+        run: composer install
+      - name: Save cache
+        id: php-cache
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            ./var
+            ./vendor
+          key: php-cache
+  linter:
+    needs: [setup]
+    runs-on: ubuntu-latest
+    container:
+        image: docker.ascendise.ch/ascendise/php-runner:1.0.0
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@v4
+      - name: Restore cache
+        id: php-cache
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            ./var
+            ./vendor
+          key: php-cache
+      - name: Run phpstan
+        run: ./vendor/bin/phpstan analyse src tests
+      - name: Run php-cs-fixer
+        run: ./vendor/bin/php-cs-fixer check --diff
+      - name: Save cache
+        id: php-cache
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            ./var
+            ./vendor
+          key: php-cache
+  unittests:
+    needs: [setup]
+    runs-on: ubuntu-latest
+    container:
+        image: docker.ascendise.ch/ascendise/php-runner:1.0.0
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@v4
+      - name: Restore cache
+        id: php-cache
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            ./var
+            ./vendor
+          key: php-cache
+      - name: Run phpunit
+        run: php bin/phpunit tests
+      - name: Save cache
+        id: php-cache
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            ./var
+            ./vendor
+          key: php-cache
+

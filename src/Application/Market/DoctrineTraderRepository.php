@@ -21,6 +21,7 @@ final class DoctrineTraderRepository implements TraderRepository
         if (!$trader) {
             return null;
         }
+
         return $trader->toEntity();
     }
 

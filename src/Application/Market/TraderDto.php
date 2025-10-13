@@ -6,7 +6,6 @@ namespace App\Application\Market;
 
 use App\Domain\Market\Balance;
 use App\Domain\Market\Trader;
-use InvalidArgumentException;
 use Symfony\Component\Uid\Uuid;
 
 final class TraderDto
@@ -17,7 +16,7 @@ final class TraderDto
         public readonly InventoryDto $inventory,
     ) {
         if ($balance < 0) {
-            throw new InvalidArgumentException("Trader can't have balance less than zero!");
+            throw new \InvalidArgumentException("Trader can't have balance less than zero!");
         }
     }
 

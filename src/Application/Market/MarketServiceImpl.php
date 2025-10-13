@@ -21,6 +21,7 @@ final class MarketServiceImpl implements MarketService
     public function listOffers(): OffersDto
     {
         $offers = $this->market->listOffers();
+
         return OffersDto::fromEntity($offers);
     }
 
@@ -35,6 +36,7 @@ final class MarketServiceImpl implements MarketService
         $newOffer = $this->market->createOffer($offer);
         $this->traderRegister->update($seller);
         $offers = $this->market->listOffers();
+
         return CreatedOfferDto::fromEntity($newOffer, $offers);
     }
 
@@ -47,8 +49,13 @@ final class MarketServiceImpl implements MarketService
             $offer = MarketServiceImpl::mergeEntities($buyer, $offer);
         }
         $this->market->transact($buyer, $offer);
-        $this->traderRegister->update($offer->seller());
+        if ($offer->seller() instanceof Trader) {
+            $this->traderRegister->update($offer->seller());
+        } else {
+            throw new \Exception('Not implemented?! How did you trigger that?');
+        }
         $this->traderRegister->update($buyer);
+
         return TraderDto::fromEntity($buyer);
     }
 

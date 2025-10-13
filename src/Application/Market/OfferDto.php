@@ -6,7 +6,6 @@ namespace App\Application\Market;
 
 use App\Domain\Market\Offer;
 use App\Domain\Market\Seller;
-use InvalidArgumentException;
 use Symfony\Component\Uid\Uuid;
 
 final class OfferDto
@@ -16,13 +15,13 @@ final class OfferDto
         public readonly ProductDto $product,
         public readonly int $quantity,
         public readonly int $totalPrice,
-        public readonly Uuid $sellerId
+        public readonly Uuid $sellerId,
     ) {
         if ($quantity <= 0) {
-            throw new InvalidArgumentException('Quantity cannot be less than zero!');
+            throw new \InvalidArgumentException('Quantity cannot be less than zero!');
         }
         if ($totalPrice <= 0) {
-            throw new InvalidArgumentException('Price cannot be less than zero!');
+            throw new \InvalidArgumentException('Price cannot be less than zero!');
         }
     }
 

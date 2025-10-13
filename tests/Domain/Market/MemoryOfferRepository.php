@@ -6,29 +6,34 @@ use App\Domain\Market\CreateOffer;
 use App\Domain\Market\Offer;
 use App\Domain\Market\OfferRepository;
 use App\Domain\Market\Offers;
-use Generator;
-use Iterator;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Uid\UuidV7;
 
 class MemoryOfferRepository implements OfferRepository
 {
-    /* @var array<string, Offer> $offers */
+    /**
+     * @var array<string, Offer>
+     */
     private array $offers = [];
 
-    /* @var Iterator<mixed, Uuid> $uuidGenerator */
-    private Iterator $uuidGenerator;
+    /**
+     * @var \Iterator<UuidV7>
+     */
+    private \Iterator $uuidGenerator;
 
-    /* @param Iterator<mixed,mixed> $uuidGenerator */
-    public function __construct(Offers $initOffers, ?Iterator $uuidGenerator = null)
+    /**
+     * @param \Iterator<UuidV7> $uuidGenerator
+     */
+    public function __construct(Offers $initOffers, ?\Iterator $uuidGenerator = null)
     {
         $this->offers = iterator_to_array($initOffers);
         $this->uuidGenerator = $uuidGenerator ?? $this->randomGenerator();
     }
 
-    /* @return Generator<UuidV7> */
-    private function randomGenerator(): Iterator
+    /* @return \Iterator<UuidV7> */
+    private function randomGenerator(): \Iterator
     {
+        // @phpstan-ignore while.alwaysTrue
         while (true) {
             yield Uuid::v7();
         }
@@ -44,6 +49,7 @@ class MemoryOfferRepository implements OfferRepository
         $id = $this->getId();
         $offer = $createOffer->toOffer($id);
         $this->offers += [$offer->id() => $offer];
+
         return $offer;
     }
 
@@ -51,16 +57,18 @@ class MemoryOfferRepository implements OfferRepository
     {
         $uuid = $this->uuidGenerator->current();
         $this->uuidGenerator->next();
-        if (!$uuid) {
+        if (null == $uuid) {
             $this->uuidGenerator->rewind();
             $uuid = $this->uuidGenerator->current();
         }
+
         return $uuid->toString();
     }
 
     public function findById(string $id): ?Offer
     {
         $offer = $this->offers[$id];
+
         return new Offer(
             $offer->id(),
             $offer->product(),

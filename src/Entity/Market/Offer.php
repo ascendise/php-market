@@ -4,8 +4,8 @@ namespace App\Entity\Market;
 
 use App\Domain;
 use App\Repository\OfferRepository;
-use Symfony\Bridge\Doctrine\Types\UuidType;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Component\Uid\UuidV7;
 
 #[ORM\Entity(repositoryClass: OfferRepository::class)]
@@ -15,6 +15,7 @@ class Offer
     #[ORM\Column(type: UuidType::NAME, unique: true)]
     #[ORM\GeneratedValue(strategy: 'CUSTOM')]
     #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
+    // @phpstan-ignore property.unusedType
     private ?UuidV7 $id = null;
 
     #[ORM\Column(length: 255)]
@@ -30,7 +31,6 @@ class Offer
     #[ORM\JoinColumn(nullable: false)]
     private ?Trader $seller = null;
 
-
     public static function fromEntity(Domain\Market\CreateOffer $entity, Trader $seller): Offer
     {
         $offer = new Offer();
@@ -39,6 +39,7 @@ class Offer
         $offer->setTotalPrice($entity->totalPrice());
         $offer->setSeller($seller);
         $seller->addOffer($offer);
+
         return $offer;
     }
 
@@ -48,6 +49,7 @@ class Offer
         $quantity = $this->getQuantity();
         $pricePerItem = intdiv($this->getTotalPrice(), $quantity);
         $seller = $this->getSeller()->toEntity();
+
         return new Domain\Market\Offer(
             $this->getId()->toString(),
             $product,

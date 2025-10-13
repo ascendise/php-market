@@ -22,8 +22,10 @@ final class DoctrineOfferRepository implements OfferRepository
     {
         $offers = $this->offerRepo()->findAll();
         $offers = new Offers(...array_map(fn (Entity\Market\Offer $o) => $o->toEntity(), $offers));
+
         return $offers;
     }
+
     /**
      * @return EntityRepository<Entity\Market\Offer>
      */
@@ -38,6 +40,7 @@ final class DoctrineOfferRepository implements OfferRepository
         if (!$offer) {
             return null;
         }
+
         return $offer->toEntity();
     }
 
@@ -57,6 +60,7 @@ final class DoctrineOfferRepository implements OfferRepository
         $offerModel = Entity\Market\Offer::fromEntity($offer, $seller);
         $this->entityManager->persist($offerModel);
         $this->entityManager->flush();
+
         return $offerModel->toEntity();
     }
 

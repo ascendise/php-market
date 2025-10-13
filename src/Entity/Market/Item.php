@@ -15,6 +15,7 @@ class Item
     #[ORM\Column(type: UuidType::NAME, unique: true)]
     #[ORM\GeneratedValue(strategy: 'CUSTOM')]
     #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
+    // @phpstan-ignore property.unusedType
     private ?UuidV7 $id = null;
 
     #[ORM\Column(length: 255)]
@@ -33,12 +34,14 @@ class Item
         $item->setProductName($entity->product()->name());
         $item->setQuantity($entity->quantity());
         $item->setOwner($owner);
+
         return $item;
     }
 
     public function toEntity(): Domain\Market\Item
     {
         $product = new Domain\Market\Product($this->productName);
+
         return new Domain\Market\Item($product, $this->quantity);
     }
 
