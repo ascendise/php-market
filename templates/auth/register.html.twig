@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Register{% endblock %}
+
+{% block body %}
+<h1>Create new account</h1>
+<form hx-post='/auth/_register'>
+    <label for='email'>Email Address</label>
+    <input type='text' name='email' />
+    <label for='email'>Password</label>
+    <input type='text' name='password' />
+    <input type='submit' value='Create Account' />
+</form>
+{% endblock %}
