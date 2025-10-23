@@ -19,7 +19,14 @@ final class InventoryDto implements \IteratorAggregate
 
     public function __construct(ItemDto ...$items)
     {
-        $this->items = $items;
+        foreach ($items as $item) {
+            $this->addItem($item);
+        }
+    }
+
+    private function addItem(ItemDto $item): void
+    {
+        $this->items += [$item->product->name => $item];
     }
 
     public function getIterator(): \Iterator
@@ -34,7 +41,7 @@ final class InventoryDto implements \IteratorAggregate
     {
         $inventory = new InventoryDto();
         foreach ($items as $item) {
-            $inventory->items += [$item->product()->name() => ItemDto::fromEntity($item)];
+            $inventory->addItem(ItemDto::fromEntity($item));
         }
 
         return $inventory;

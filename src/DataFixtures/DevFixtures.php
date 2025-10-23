@@ -5,16 +5,27 @@ namespace App\DataFixtures;
 use App\Entity\Market\Item;
 use App\Entity\Market\Offer;
 use App\Entity\Market\Trader;
+use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class DevFixtures extends Fixture
 {
+    public function __construct(private readonly UserPasswordHasherInterface $hasher)
+    {
+    }
+
     public function load(ObjectManager $manager): void
     {
+        $bot = new User();
+        $bot->setEmail('bot@ascendise.ch');
+        $bot->setPassword($this->hasher->hashPassword($bot, 'bot'));
         $trader = new Trader();
         $trader->setBalance(1000);
+        $bot->setTrader($trader);
         $manager->persist($trader);
+        $manager->persist($bot);
         $item1 = new Item();
         $item1->setProductName('Tarcola');
         $item1->setQuantity(5);

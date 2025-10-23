@@ -16,11 +16,13 @@
                 <td>{{ offer.quantity }}</td>
                 <td>{{ offer.totalPrice }}</td>
                 <td>
-                    <input id='buy-offer'
-                        type='submit'
-                        hx-post='/market/_buy/{{ offer.id }}'
-                        hx-swap='outerHtml'
-                        hx-target='#trader'/>
+                    <form id='buy-offer'
+                            hx-post='/market/_buy/{{ offer.id }}'
+                            hx-swap='outerHtml'
+                            hx-target='#trader'>
+                        <input type='submit' value='Buy' />
+                        <input type="hidden" name="_token" data-controller="csrf-protection" value="{{ csrf_token('buy') }}" />
+                    </form>
                 </td>
             </tr>
         {% endfor %}

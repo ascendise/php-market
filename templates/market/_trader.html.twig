@@ -22,6 +22,7 @@
                         <input type='number' name='quantity' value='1'/>
                         <input type='number' name='pricePerItem' value='1'/>
                         <input hidden type='text' name='product[name]' value='{{ item.product.name }}'/>
+                        <input type="hidden" name="_token" data-controller="csrf-protection" value="{{ csrf_token('sell') }}">
                         <input type='submit' value='Sell'/>
                     </form>
                 </td>

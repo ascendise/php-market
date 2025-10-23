@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Register{% endblock %}
+
+{% block body %}
+
+<h1>Create new account</h1>
+<form action='/auth/_register' method='POST' hx-boost='true'>
+    <label for='email'>Email Address</label>
+    <input type='text' name='email' />
+    <label for='password'>Password</label>
+    <input type='text' name='password' />
+    <input type="hidden" name="_token" data-controller="csrf-protection" value="{{ csrf_token('register') }}">
+    <input type='submit' value='Create Account' />
+</form>
+
+{% if error is defined and error %}
+<p>{{ error }}</p>
+{% endif %}
+
+{% endblock %}

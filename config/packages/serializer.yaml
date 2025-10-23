@@ -1,4 +1,4 @@
 framework:
     serializer:
         default_context:
-            allow_extra_attributes: false
+            allow_extra_attributes: true

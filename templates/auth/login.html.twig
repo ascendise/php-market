@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Login{% endblock %}
+
+{% block body %}
+
+<h1>Log into your account</h1>
+<form action='/auth/login' method='POST' hx-boost='true'>
+    <label for='email'>Email Address</label>
+    <input type='text' name='_username' value='{{ lastEmail|default('') }}' />
+    <label for='password'>Password</label>
+    <input type='text' name='_password' />
+    <input type="hidden" name="_csrf_token" data-controller="csrf-protection" value="{{ csrf_token('authenticate') }}">
+    <input type='submit' value='Log In' />
+</form>
+
+{% if error is defined and error %}
+<p> {{ error.messageKey|trans(error.messageData, 'security') }} </p>
+{% endif %}
+
+{% endblock %}
