@@ -1,12 +1,30 @@
-$bg-color: whitesmoke;
+$bg-color: aliceblue;
 
 body {
     background-color: $bg-color;
 }
 
 button {
-    background-color: darkslategray;
-    color: ghostwhite;
+    $text: aliceblue;
+    $main: darkslategray;
+    background-color: $main;
+    color: $text;
     text-align: center;
     cursor: pointer;
+    border: 3px solid $main;
+    border-radius: 1px;
+    outline-style: solid;
+    outline-color: $text;
+    outline-width: 1px;
+    outline-offset: -2px;
+
+    &:hover {
+        animation: hover 100ms forwards;
+    }
+
+    @keyframes hover {
+        100% {
+            outline-color: $main
+        }
+    }
 }
