@@ -11,7 +11,7 @@
     <label for='password'>Password</label>
     <input type='text' name='password' />
     <input type="hidden" name="_token" data-controller="csrf-protection" value="{{ csrf_token('register') }}">
-    <input type='submit' value='Create Account' />
+    <button>Create Account</button>
 </form>
 
 {% if error is defined and error %}

@@ -3,3 +3,10 @@ $bg-color: whitesmoke;
 body {
     background-color: $bg-color;
 }
+
+button {
+    background-color: darkslategray;
+    color: ghostwhite;
+    text-align: center;
+    cursor: pointer;
+}
