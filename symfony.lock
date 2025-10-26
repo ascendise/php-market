@@ -224,6 +224,9 @@
         },
         "files": []
     },
+    "symfonycasts/sass-bundle": {
+        "version": "v0.8.3"
+    },
     "twig/extra-bundle": {
         "version": "v3.21.0"
     }
