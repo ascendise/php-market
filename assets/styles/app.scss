@@ -1,20 +1,21 @@
-$bg-color: aliceblue;
+$bg-color: slategray;
+$text-color: aliceblue;
+$main-color: darkslategray;
 
 body {
     background-color: $bg-color;
+    color: $text-color;
 }
 
 button {
-    $text: aliceblue;
-    $main: darkslategray;
-    background-color: $main;
-    color: $text;
+    background-color: $main-color;
+    color: $text-color;
     text-align: center;
     cursor: pointer;
-    border: 3px solid $main;
+    border: 3px solid $main-color;
     border-radius: 1px;
     outline-style: solid;
-    outline-color: $text;
+    outline-color: $text-color;
     outline-width: 1px;
     outline-offset: -2px;
 
@@ -24,7 +25,7 @@ button {
 
     @keyframes hover {
         100% {
-            outline-color: $main
+            outline-color: $main-color
         }
     }
 }
