@@ -3,64 +3,65 @@
 $bg-color: #3e4f4f;
 $text-color: aliceblue;
 $main-color: #324545;
+$test: red;
 
 body {
-  background-color: $bg-color;
-  color: $text-color;
+    background-color: $bg-color;
+    color: $text-color;
 }
 
 button {
-  background-color: $main-color;
-  color: $text-color;
-  text-align: center;
-  cursor: pointer;
-  border: 3px solid $main-color;
-  border-radius: 1px;
-  outline-style: solid;
-  outline-color: $text-color;
-  outline-width: 1px;
-  outline-offset: -2px;
+    background-color: $main-color;
+    color: $text-color;
+    text-align: center;
+    cursor: pointer;
+    border: 3px solid $main-color;
+    border-radius: 1px;
+    outline-style: solid;
+    outline-color: $text-color;
+    outline-width: 1px;
+    outline-offset: -2px;
 
-  &:hover {
-    animation: hover 100ms forwards;
-  }
-
-  @keyframes hover {
-    100% {
-      outline-color: $main-color
+    &:hover {
+        animation: hover 100ms forwards;
     }
-  }
+
+    @keyframes hover {
+        100% {
+            outline-color: $main-color
+        }
+    }
 }
 
 table {
-  background-color: $main-color;
-  border: 1px solid $text-color;
-  border-collapse: collapse;
+    background-color: $main-color;
+    border: 1px solid $text-color;
+    border-collapse: collapse;
 }
 
 thead {
-  background-color: $main-color
+    background-color: $main-color
 }
 
 th,
 td {
-  border-bottom: 1px solid $text-color;
+    border-bottom: 1px solid $text-color;
 }
 
 tbody {
-  $bg: color.adjust($main-color, $lightness: 10%);
-  background-color: $bg;
+    $bg: color.adjust($main-color, $lightness: 10%);
+    background-color: $bg;
 
-  tr:nth-child(odd) {
-    background-color: color.adjust($bg, $lightness: 5%);
-  }
+    tr:nth-child(odd) {
+        background-color: color.adjust($bg, $lightness: 5%);
+    }
 }
 
 input[type=number],
 input[type=text] {
-  appearance: textfield;
-  background-color: $main-color;
-  color: $text-color;
-  border: none;
-  border-radius: 3px;
+    appearance: textfield;
+    background-color: $main-color;
+    color: $text-color;
+    border: none;
+    border-radius: 3px;
 }
