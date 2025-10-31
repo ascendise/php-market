@@ -19,8 +19,19 @@ td {
     padding: 5px;
 }
 
-td.centered {
+.centered {
     text-align: center;
+}
+
+.right-align {
+    text-align: right;
+}
+
+.icon {
+    height: 1em;
+    position: absolute;
+    padding: 5px 2px;
+    color: #80A7A7;
 }
 
 td.product-name {
