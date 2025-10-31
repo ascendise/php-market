@@ -4,6 +4,11 @@ $bg-color: #3e4f4f;
 $text-color: aliceblue;
 $main-color: #324545;
 
+* {
+    font-family: "Terminess Nerd Font";
+    font-weight: bold;
+}
+
 body {
     background-color: $bg-color;
     color: $text-color;
