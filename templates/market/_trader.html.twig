@@ -1,7 +1,9 @@
-<div id='trader' class='test' hx-get='market/_trader' hx-trigger='trader-update from:#sell-offer'>
-    <h1>Trader</h1>
-    <h2>Balance: {{ trader.balance }}</h2>
-    <h2>Inventory</h2>
+<div id='trader' class='trader' hx-get='market/_trader' hx-trigger='trader-update from:#sell-offer'>
+    <div>
+        <h1>Trader</h1>
+        <h2>Balance: {{ trader.balance }}</h2>
+        <h2>Inventory</h2>
+    </div>
     <table>
         <thead>
             <tr>
@@ -14,8 +16,8 @@
         {% for item in trader.inventory %}
             <tr>
                 <td>{{ item.product.name }}</td>
-                <td>{{ item.quantity }}</td>
-                <td>
+                <td class='centered'>{{ item.quantity }}</td>
+                <td class='centered'>
                     <form id='sell-offer' hx-post='/market/_sell'
                         hx-swap='outer-html'
                         hx-target='#offers'>
