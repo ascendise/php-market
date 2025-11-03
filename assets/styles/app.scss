@@ -1,0 +1,87 @@
+@use 'sass:color';
+
+$bg-color: #3e4f4f;
+$text-color: aliceblue;
+$main-color: #324545;
+
+* {
+    font-family: "Terminess Nerd Font";
+    font-weight: bold;
+}
+
+html {
+    font-size: 2em;
+}
+
+body {
+    background-color: $bg-color;
+    color: $text-color;
+    overflow: hidden;
+}
+
+table {
+    background-color: $main-color;
+    border: 1px solid $text-color;
+    border-collapse: collapse;
+}
+
+thead {
+    background-color: $main-color
+}
+
+tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+}
+
+th,
+td {
+    border-bottom: 1px solid $text-color;
+}
+
+tbody {
+    display: block;
+    overflow: auto;
+    $bg: color.adjust($main-color, $lightness: 10%);
+    background-color: $bg;
+
+    tr:nth-child(odd) {
+        background-color: color.adjust($bg, $lightness: 5%);
+    }
+}
+
+input[type=number],
+input[type=password],
+input[type=text] {
+    appearance: textfield;
+    background-color: $main-color;
+    color: $text-color;
+    border: none;
+    border-radius: 3px;
+    font-size: 1em;
+}
+
+button {
+    font-size: 1em;
+    background-color: $main-color;
+    color: $text-color;
+    text-align: center;
+    cursor: pointer;
+    border: 3px solid $main-color;
+    border-radius: 1px;
+    outline-style: solid;
+    outline-color: $text-color;
+    outline-width: 1px;
+    outline-offset: -2px;
+
+    &:hover {
+        animation: hover 100ms forwards;
+    }
+
+    @keyframes hover {
+        100% {
+            outline-color: $main-color
+        }
+    }
+}

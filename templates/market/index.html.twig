@@ -1,8 +1,14 @@
 {% extends 'base.html.twig' %}
 
+{% block styles %}
+    <link rel='stylesheet' href="{{ asset('styles/pages/market.scss') }}" />
+{% endblock %}
+
 {% block body %}
 
-{{ include('market/_trader.html.twig') }}
-{{ include('market/_offers.html.twig') }}
+<div class='main'>
+    {{ include('market/_trader.html.twig') }}
+    {{ include('market/_offers.html.twig') }}
+</div>
 
 {% endblock %}

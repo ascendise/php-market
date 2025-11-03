@@ -1,9 +1,9 @@
-<div id='offers' hx-get='/market/_offers' hx-trigger='offers-update from:#buy-offer'>
+<div id='offers' class='market' hx-get='/market/_offers' hx-trigger='offers-update from:#buy-offer'>
     <h1>Market</h1>
     <table>
         <thead>
             <tr>
-                <th>Product</th>
+                <th class="product-name">Product</th>
                 <th>Quantity</th>
                 <th>Price</th>
                 <th>Options</th>
@@ -12,15 +12,15 @@
         <tbody>
         {% for offer in offers %}
             <tr>
-                <td>{{ offer.product.name }}</td>
-                <td>{{ offer.quantity }}</td>
-                <td>{{ offer.totalPrice }}</td>
-                <td>
+                <td class='product-name'> <span>{{ offer.product.name }}</span> </td>
+                <td class='centered'>{{ offer.quantity }}</td>
+                <td class='centered'>{{ offer.totalPrice }}</td>
+                <td class='centered'>
                     <form id='buy-offer'
                             hx-post='/market/_buy/{{ offer.id }}'
                             hx-swap='outerHtml'
                             hx-target='#trader'>
-                        <input type='submit' value='Buy' />
+                        <button>Buy</button>
                         <input type="hidden" name="_token" data-controller="csrf-protection" value="{{ csrf_token('buy') }}" />
                     </form>
                 </td>

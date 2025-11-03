@@ -1,29 +1,37 @@
-<div id='trader' hx-get='market/_trader' hx-trigger='trader-update from:#sell-offer'>
-    <h1>Trader</h1>
-    <h2>Balance: {{ trader.balance }}</h2>
-    <h2>Inventory</h2>
+<div id='trader' class='trader' hx-get='market/_trader' hx-trigger='trader-update from:#sell-offer'>
+    <div>
+        <h1>Trader</h1>
+        <h2>Balance: {{ trader.balance }}</h2>
+        <h2>Inventory</h2>
+    </div>
     <table>
         <thead>
             <tr>
-                <th>Product</th>
-                <th>Stocked</th>
+                <th class='product-name'>Product</th>
+                <th class='stocked'>Stocked</th>
                 <th>Options</th>
             </tr>
         </thead>
         <tbody>
         {% for item in trader.inventory %}
             <tr>
-                <td>{{ item.product.name }}</td>
-                <td>{{ item.quantity }}</td>
-                <td>
+                <td class='product-name'>{{ item.product.name }}</td>
+                <td class='stocked centered'>{{ item.quantity }}</td>
+                <td class='options centered'>
                     <form id='sell-offer' hx-post='/market/_sell'
                         hx-swap='outer-html'
                         hx-target='#offers'>
-                        <input type='number' name='quantity' value='1'/>
-                        <input type='number' name='pricePerItem' value='1'/>
+                        <span>
+                            {{ ux_icon('iconoir:cube', {class: 'icon'}) }}
+                            <input class='right-align' type='number' name='quantity' value='1'/>
+                        </span>
+                        <span>
+                            {{ ux_icon('iconoir:dollar-circle', {class: 'icon'}) }}
+                            <input class='right-align' type='number' name='pricePerItem' value='1'/>
+                        </span>
                         <input hidden type='text' name='product[name]' value='{{ item.product.name }}'/>
                         <input type="hidden" name="_token" data-controller="csrf-protection" value="{{ csrf_token('sell') }}">
-                        <input type='submit' value='Sell'/>
+                        <button>Sell</button>
                     </form>
                 </td>
             </tr>

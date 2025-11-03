@@ -1,0 +1,60 @@
+.main {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.trader {
+    display: flex;
+    flex-direction: column;
+
+    tbody {
+        max-height: 50vh;
+    }
+
+    th.product-name,
+    td.product-name {
+        width: 25%;
+    }
+
+    td.product-name {
+        padding-left: 1%;
+    }
+
+    th.stocked,
+    td.stocked {
+        width: 10%;
+    }
+}
+
+.market {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+
+    tbody {
+        max-height: 70vh;
+    }
+
+    th.product-name,
+    td.product-name {
+        width: 40%;
+        padding-left: 10%;
+    }
+
+}
+
+.centered {
+    text-align: center;
+}
+
+.right-align {
+    text-align: right;
+}
+
+.icon {
+    height: 0.9em;
+    position: absolute;
+    padding: 7px 3px;
+    color: #80A7A7;
+}
