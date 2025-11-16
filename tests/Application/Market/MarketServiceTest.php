@@ -34,10 +34,10 @@ final class MarketServiceTest extends TestCase
         ?TraderRepository $traderRepository = null,
     ): MarketServiceImpl {
         $offerRepository = $offerRepository ?? new MemoryOfferRepository(new Offers());
-        $market = new Market($offerRepository);
         $traderRepository = $traderRepository ?? new MemoryTraderRepository();
+        $market = new Market($offerRepository, $traderRepository);
 
-        return new MarketServiceImpl($market, $traderRepository);
+        return new MarketServiceImpl($market);
     }
 
     public function testListOffersShouldReturnAllOffers(): void
@@ -58,7 +58,7 @@ final class MarketServiceTest extends TestCase
                 new ProductDto('Apple'),
                 quantity: 5,
                 totalPrice: 10,
-                sellerId: Uuid::fromString($seller->id())
+                sellerId: $seller->id()
             )
         );
         $this->assertEquals($expectedOffers, $offers);
@@ -88,7 +88,7 @@ final class MarketServiceTest extends TestCase
             new ProductDto('Apple'),
             quantity: 3,
             totalPrice: 3,
-            sellerId: Uuid::fromString($trader->id())
+            sellerId: $trader->id()
         );
         $expectedResponse = new CreatedOfferDto(
             $expectedOffer,

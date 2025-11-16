@@ -7,14 +7,12 @@ namespace App\Application\Market;
 use App\Domain\Market\Market;
 use App\Domain\Market\Offer;
 use App\Domain\Market\Trader;
-use App\Domain\Market\TraderRepository;
 use Symfony\Component\Uid\Uuid;
 
 final class MarketServiceImpl implements MarketService
 {
     public function __construct(
         private readonly Market $market,
-        private readonly TraderRepository $traderRegister,
     ) {
     }
 
@@ -27,14 +25,13 @@ final class MarketServiceImpl implements MarketService
 
     public function createOffer(Uuid $sellerId, CreateOfferDto $createOffer): CreatedOfferDto
     {
-        $seller = $this->traderRegister->find($sellerId->toString());
+        $seller = $this->market->findTrader($sellerId->toString());
         $offer = $seller->sell(
             $createOffer->product->toEntity(),
             $createOffer->pricePerItem,
             $createOffer->quantity
         );
         $newOffer = $this->market->createOffer($offer);
-        $this->traderRegister->update($seller);
         $offers = $this->market->listOffers();
 
         return CreatedOfferDto::fromEntity($newOffer, $offers);
@@ -43,23 +40,19 @@ final class MarketServiceImpl implements MarketService
     public function buyOffer(Uuid $buyerId, Uuid $offerId): TraderDto
     {
         $buyerId = $buyerId->toString();
-        $buyer = $this->traderRegister->find($buyerId);
+        $buyer = $this->market->findTrader($buyerId);
         $offer = $this->market->findOffer($offerId->toString());
         if ($offer->seller()->id() == $buyerId) {
             $offer = MarketServiceImpl::mergeEntities($buyer, $offer);
         }
         $this->market->transact($buyer, $offer);
-        if ($offer->seller() instanceof Trader) {
-            $this->traderRegister->update($offer->seller());
-        } else {
-            throw new \Exception('Not implemented?! How did you trigger that?');
-        }
-        $this->traderRegister->update($buyer);
 
         return TraderDto::fromEntity($buyer);
     }
 
-    public static function mergeEntities(Trader $trader, Offer $offer): Offer
+    // If Offer->seller and Trader are actually the same entity, this makes sure we are
+    // acting on the same reference for easier processing
+    private static function mergeEntities(Trader $trader, Offer $offer): Offer
     {
         return new Offer(
             $offer->id(),

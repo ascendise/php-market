@@ -46,19 +46,19 @@ class DevFixtures extends Fixture
         $offer1->setProductName('SIG P223');
         $offer1->setQuantity(1);
         $offer1->setTotalPrice(199);
-        $offer1->setSeller($trader);
+        $offer1->setSellerId($trader->getId());
         $manager->persist($offer1);
         $offer2 = new Offer();
         $offer2->setProductName('Gameboy Color');
         $offer2->setQuantity(3);
         $offer2->setTotalPrice(150);
-        $offer2->setSeller($trader);
+        $offer2->setSellerId($trader->getId());
         $manager->persist($offer2);
         $offer3 = new Offer();
         $offer3->setProductName('Beer');
         $offer3->setQuantity(12);
         $offer3->setTotalPrice(24);
-        $offer3->setSeller($trader);
+        $offer3->setSellerId($trader->getId());
         $manager->persist($offer3);
 
         $manager->flush();

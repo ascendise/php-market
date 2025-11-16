@@ -122,7 +122,7 @@ class Trader
     {
         if (!$this->offers->contains($offer)) {
             $this->offers->add($offer);
-            $offer->setSeller($this);
+            $offer->setSellerId($this->getId());
         }
 
         return $this;
@@ -132,8 +132,8 @@ class Trader
     {
         if ($this->offers->removeElement($offer)) {
             // set the owning side to null (unless already changed)
-            if ($offer->getSeller() === $this) {
-                $offer->setSeller(null);
+            if ($offer->getSellerId() === $this->getId()) {
+                $offer->setSellerId(null);
             }
         }
 

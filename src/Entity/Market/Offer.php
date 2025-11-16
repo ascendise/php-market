@@ -3,6 +3,7 @@
 namespace App\Entity\Market;
 
 use App\Domain;
+use App\Domain\Market\Seller;
 use App\Repository\OfferRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Types\UuidType;
@@ -27,28 +28,25 @@ class Offer
     #[ORM\Column]
     private ?int $totalPrice = null;
 
-    #[ORM\ManyToOne(inversedBy: 'offers')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Trader $seller = null;
+    #[ORM\Column(length: 127)]
+    private ?string $sellerId = null;
 
-    public static function fromEntity(Domain\Market\CreateOffer $entity, Trader $seller): Offer
+    public static function fromEntity(Domain\Market\CreateOffer $entity, Seller $seller): Offer
     {
         $offer = new Offer();
         $offer->setProductName($entity->product()->name());
         $offer->setQuantity($entity->quantity());
         $offer->setTotalPrice($entity->totalPrice());
-        $offer->setSeller($seller);
-        $seller->addOffer($offer);
+        $offer->setSellerId($seller->id());
 
         return $offer;
     }
 
-    public function toEntity(): Domain\Market\Offer
+    public function toEntity(Seller $seller): Domain\Market\Offer
     {
         $product = new Domain\Market\Product($this->getProductName());
         $quantity = $this->getQuantity();
         $pricePerItem = intdiv($this->getTotalPrice(), $quantity);
-        $seller = $this->getSeller()->toEntity();
 
         return new Domain\Market\Offer(
             $this->getId()->toString(),
@@ -100,14 +98,14 @@ class Offer
         return $this;
     }
 
-    public function getSeller(): ?Trader
+    public function getSellerId(): ?string
     {
-        return $this->seller;
+        return $this->sellerId;
     }
 
-    public function setSeller(?Trader $seller): static
+    public function setSellerId(?string $sellerId): static
     {
-        $this->seller = $seller;
+        $this->sellerId = $sellerId;
 
         return $this;
     }

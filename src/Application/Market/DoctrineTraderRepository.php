@@ -9,13 +9,13 @@ use App\Domain\Market\TraderRepository;
 use App\Entity;
 use Doctrine\ORM\EntityManagerInterface;
 
-final class DoctrineTraderRepository implements TraderRepository
+final class DoctrineTraderRepository extends TraderRepository
 {
     public function __construct(private readonly EntityManagerInterface $entityManager)
     {
     }
 
-    public function find(string $id): ?Trader
+    protected function findFromStore(string $id): ?Trader
     {
         $trader = $this->entityManager->getRepository(Entity\Market\Trader::class)->find($id);
         if (!$trader) {
@@ -25,7 +25,7 @@ final class DoctrineTraderRepository implements TraderRepository
         return $trader->toEntity();
     }
 
-    public function update(Trader $trader): void
+    protected function updateFromStore(Trader $trader): void
     {
         $oldTrader = $this->entityManager->getRepository(Entity\Market\Trader::class)->find($trader->id());
         $newTrader = Entity\Market\Trader::fromEntity($trader);

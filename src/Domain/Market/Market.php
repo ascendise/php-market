@@ -6,11 +6,10 @@ namespace App\Domain\Market;
 
 final class Market
 {
-    private OfferRepository $offerRepository;
-
-    public function __construct(OfferRepository $offerRepository)
-    {
-        $this->offerRepository = $offerRepository;
+    public function __construct(
+        private readonly OfferRepository $offerRepository,
+        private readonly TraderRepository $traderRepository,
+    ) {
     }
 
     public function listOffers(): Offers
@@ -23,14 +22,31 @@ final class Market
         return $this->offerRepository->findById($id);
     }
 
-    public function createOffer(CreateOffer $offer): Offer
+    public function findTrader(string $id): ?Trader
     {
-        return $this->offerRepository->create($offer);
+        return $this->traderRepository->find($id);
+    }
+
+    public function createOffer(CreateOffer $createOffer): Offer
+    {
+        $offer = $this->offerRepository->create($createOffer);
+        $this->persistTrader($createOffer->seller());
+
+        return $offer;
+    }
+
+    private function persistTrader(mixed $trader): void
+    {
+        if ($trader instanceof Trader) {
+            $this->traderRepository->update($trader);
+        }
     }
 
     public function transact(Buyer $buyer, Offer $offer): void
     {
         $buyer->buy($offer);
         $this->offerRepository->remove($offer->id());
+        $this->persistTrader($buyer);
+        $this->persistTrader($offer->seller());
     }
 }

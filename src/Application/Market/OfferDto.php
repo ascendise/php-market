@@ -15,7 +15,7 @@ final class OfferDto
         public readonly ProductDto $product,
         public readonly int $quantity,
         public readonly int $totalPrice,
-        public readonly Uuid $sellerId,
+        public readonly string $sellerId,
     ) {
         if ($quantity <= 0) {
             throw new \InvalidArgumentException('Quantity cannot be less than zero!');
@@ -32,7 +32,7 @@ final class OfferDto
             ProductDto::fromEntity($offer->product()),
             quantity: $offer->quantity(),
             totalPrice: $offer->totalPrice(),
-            sellerId: Uuid::fromString($offer->seller()->id())
+            sellerId: $offer->seller()->id()
         );
     }
 

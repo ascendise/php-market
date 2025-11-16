@@ -10,7 +10,7 @@ use App\Domain\Market\Item;
 use App\Domain\Market\Trader;
 use App\Domain\Market\TraderRepository;
 
-final class MemoryTraderRepository implements TraderRepository
+final class MemoryTraderRepository extends TraderRepository
 {
     /**
      * @var array<string, Trader>
@@ -20,16 +20,18 @@ final class MemoryTraderRepository implements TraderRepository
     public function __construct(Trader ...$traders)
     {
         foreach ($traders as $trader) {
+            $this->addCopy($trader);
             $this->traders += [$trader->id() => $trader];
         }
     }
 
-    public function find(string $id): ?Trader
+    private function addCopy(Trader $trader): void
     {
-        if (!array_key_exists($id, $this->traders)) {
-            return null;
-        }
-        $trader = $this->traders[$id];
+        $this->traders += [$trader->id() => $this->copyTrader($trader)];
+    }
+
+    private function copyTrader(Trader $trader): Trader
+    {
         $inventory = new Inventory();
         foreach ($trader->listInventory() as $item) {
             $new = new Item($item->product(), $item->quantity());
@@ -39,7 +41,17 @@ final class MemoryTraderRepository implements TraderRepository
         return new Trader($trader->id(), $inventory, new Balance($trader->balance()));
     }
 
-    public function update(Trader $trader): void
+    protected function findFromStore(string $id): ?Trader
+    {
+        if (!array_key_exists($id, $this->traders)) {
+            return null;
+        }
+        $trader = $this->traders[$id];
+
+        return $this->copyTrader($trader);
+    }
+
+    protected function updateFromStore(Trader $trader): void
     {
         $this->traders[$trader->id()] = $trader;
     }
