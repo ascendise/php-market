@@ -6,6 +6,7 @@ namespace App\Controller\Api;
 
 use App\Application\Market\CreateOfferDto;
 use App\Application\Market\MarketService;
+use App\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,14 +21,25 @@ final class MarketController extends AbstractController
     ) {
     }
 
+    #[Route('api/market', methods: 'GET', format: 'json')]
+    public function list(User $user): JsonResponse
+    {
+        $offers = $this->marketService->listOffers();
+
+        return $this->json([
+            'user' => $user->getTrader()->getId(),
+            'offers' => $offers,
+        ]);
+    }
+
     #[Route('api/market/buy/{offerId}', methods: 'POST', format: 'json')]
     public function buy(
         Uuid $offerId,
         Request $request,
+        User $user,
     ): JsonResponse {
-        $traderId = $request->headers->get('X-Trader-Id');
-        $traderId = Uuid::fromString($traderId);
-        $updatedTrader = $this->marketService->buyOffer($traderId, $offerId);
+        $trader = $user->getTrader();
+        $updatedTrader = $this->marketService->buyOffer($trader->getId(), $offerId);
 
         return $this->json($updatedTrader);
     }
@@ -36,10 +48,10 @@ final class MarketController extends AbstractController
     public function sell(
         #[MapRequestPayload] CreateOfferDto $createOfferRequest,
         Request $request,
+        User $user,
     ): JsonResponse {
-        $traderId = $request->headers->get('X-Trader-Id');
-        $traderId = Uuid::fromString($traderId);
-        $createdOffer = $this->marketService->createOffer($traderId, $createOfferRequest);
+        $trader = $user->getTrader();
+        $createdOffer = $this->marketService->createOffer($trader->getId(), $createOfferRequest);
 
         return $this->json($createdOffer);
     }
