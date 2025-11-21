@@ -13,7 +13,7 @@ use App\Domain\Market\Offers;
 final class OffersDto implements \IteratorAggregate
 {
     /**
-     * @var array<string, OffersDto>
+     * @var array<string, OfferDto>
      */
     private array $offers = [];
 
