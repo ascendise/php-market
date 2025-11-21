@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace App\Application\Market;
 
+use App\Application\HAL\HALResource;
 use App\Domain\Market\Balance;
 use App\Domain\Market\Trader;
 use Symfony\Component\Uid\Uuid;
 
-final class TraderDto
+final class TraderDto extends HALResource
 {
     public function __construct(
         public readonly Uuid $id,

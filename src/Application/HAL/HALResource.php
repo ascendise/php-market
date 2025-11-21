@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Application\HAL;
 
+use Symfony\Component\Serializer\Attribute\SerializedName;
+
 abstract class HALResource
 {
     /**
@@ -17,11 +19,10 @@ abstract class HALResource
     private ?array $halEmbedded = null;
 
     /**
-     * @SerializedName("_links")
-     *
      * @return array<string, Link>
      */
-    public function halLinks(): array
+    #[SerializedName('_links')]
+    public function halLinks(): ?array
     {
         return $this->halLinks;
     }
@@ -35,10 +36,9 @@ abstract class HALResource
     }
 
     /**
-     * @SerializedName("_embedded")
-     *
      * @return array<string, HALResource>
      */
+    #[SerializedName('_embedded')]
     public function halEmbedded(): ?array
     {
         return $this->halEmbedded;

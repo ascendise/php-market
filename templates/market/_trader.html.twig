@@ -18,7 +18,7 @@
                 <td class='product-name'>{{ item.product.name }}</td>
                 <td class='stocked centered'>{{ item.quantity }}</td>
                 <td class='options centered'>
-                    <form id='sell-offer' hx-post='/market/_sell'
+                    <form id='sell-offer' hx-post={{ trader.halLinks.sell.href }}
                         hx-swap='outer-html'
                         hx-target='#offers'>
                         <span>

@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace App\Controller\Pages;
 
+use App\Application\HAL\Link;
 use App\Application\Market\CreateOfferDto;
 use App\Application\Market\MarketService;
+use App\Application\Market\OfferDto;
+use App\Application\Market\OffersDto;
 use App\Application\Market\TraderDto;
 use App\Entity\Market\Trader;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -29,7 +32,9 @@ final class MarketController extends AbstractController
     {
         $trader = $this->fetchTrader($security);
         $trader = TraderDto::fromEntity($trader->toEntity());
+        MarketController::addLinksToTrader($trader);
         $offers = $this->marketService->listOffers();
+        MarketController::addLinksToOffers($offers);
 
         return $this->render('market/index.html.twig', [
             'trader' => $trader,
@@ -45,6 +50,27 @@ final class MarketController extends AbstractController
         return $user->getTrader();
     }
 
+    private static function addLinksToTrader(TraderDto $trader): void
+    {
+        $trader->setHalLinks([
+            'sell' => new Link('market/_sell'),
+        ]);
+    }
+
+    private static function addLinksToOffers(OffersDto $offers): void
+    {
+        foreach ($offers as $offer) {
+            MarketController::addLinksToOffer($offer);
+        }
+    }
+
+    private static function addLinksToOffer(OfferDto $offer): void
+    {
+        $offer->setHalLinks([
+            'buy' => new Link("market/_buy/{$offer->id}"),
+        ]);
+    }
+
     #[Route('market/_buy/{offerId}', methods: 'POST')]
     #[IsCsrfTokenValid('buy')]
     public function buy(
@@ -54,6 +80,7 @@ final class MarketController extends AbstractController
     ): Response {
         $traderId = $this->fetchTrader($security)->getId();
         $updatedTrader = $this->marketService->buyOffer($traderId, $offerId);
+        MarketController::addLinksToTrader($updatedTrader);
         $response = $this->render('market/_trader.html.twig', [
             'trader' => $updatedTrader,
         ]);
@@ -71,6 +98,8 @@ final class MarketController extends AbstractController
     ): Response {
         $traderId = $this->fetchTrader($security)->getId();
         $createdOffer = $this->marketService->createOffer($traderId, $createOfferRequest);
+        MarketController::addLinksToOffer($createdOffer->createdOffer);
+        MarketController::addLinksToOffers($createdOffer->offers);
         $response = $this->render(
             'market/_offers.html.twig',
             [
@@ -86,6 +115,7 @@ final class MarketController extends AbstractController
     public function offers(): Response
     {
         $offers = $this->marketService->listOffers();
+        MarketController::addLinksToOffers($offers);
 
         return $this->render(
             'market/_offers.html.twig',
@@ -100,6 +130,7 @@ final class MarketController extends AbstractController
     {
         $trader = $this->fetchTrader($security);
         $trader = TraderDto::fromEntity($trader->toEntity());
+        MarketController::addLinksToTrader($trader);
 
         return $this->render(
             'market/_trader.html.twig',

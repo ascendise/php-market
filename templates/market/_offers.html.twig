@@ -17,7 +17,7 @@
                 <td class='centered'>{{ offer.totalPrice }}</td>
                 <td class='centered'>
                     <form id='buy-offer'
-                            hx-post='/market/_buy/{{ offer.id }}'
+                            hx-post={{ offer.halLinks.buy.href }}
                             hx-swap='outerHtml'
                             hx-target='#trader'>
                         <button>Buy</button>
