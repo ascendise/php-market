@@ -4,11 +4,15 @@ declare(strict_types=1);
 
 namespace App\Application\Market;
 
+use App\Application\HAL\HALResource;
+use App\Application\HAL\Link;
+use App\Application\HAL\RestLinksProvider;
+use App\Application\HAL\WebLinksProvider;
 use App\Domain\Market\Balance;
 use App\Domain\Market\Trader;
 use Symfony\Component\Uid\Uuid;
 
-final class TraderDto
+final class TraderDto extends HALResource implements WebLinksProvider, RestLinksProvider
 {
     public function __construct(
         public readonly Uuid $id,
@@ -36,5 +40,21 @@ final class TraderDto
             $this->inventory->toEntity(),
             new Balance($this->balance)
         );
+    }
+
+    public function getWebLinks(): array
+    {
+        return [
+            'self' => new Link('/market/_trader'),
+            'sell' => new Link('/market/_sell'),
+        ];
+    }
+
+    public function getRestLinks(): array
+    {
+        return [
+            'sell' => new Link('/api/market/sell'),
+            'market' => new Link('/api/market'),
+        ];
     }
 }

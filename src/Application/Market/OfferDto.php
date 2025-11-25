@@ -4,11 +4,15 @@ declare(strict_types=1);
 
 namespace App\Application\Market;
 
+use App\Application\HAL\HALResource;
+use App\Application\HAL\Link;
+use App\Application\HAL\RestLinksProvider;
+use App\Application\HAL\WebLinksProvider;
 use App\Domain\Market\Offer;
 use App\Domain\Market\Seller;
 use Symfony\Component\Uid\Uuid;
 
-final class OfferDto
+final class OfferDto extends HALResource implements WebLinksProvider, RestLinksProvider
 {
     public function __construct(
         public readonly Uuid $id,
@@ -50,5 +54,15 @@ final class OfferDto
     public function pricePerItem(): int
     {
         return $this->totalPrice / $this->quantity;
+    }
+
+    public function getWebLinks(): array
+    {
+        return ['buy' => new Link("/market/_buy/{$this->id}")];
+    }
+
+    public function getRestLinks(): array
+    {
+        return ['buy' => new Link("/api/market/buy/{$this->id}")];
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\Pages;
 
 use App\Application\Auth\AuthenticationService;
 use App\Application\Auth\CreateUserDto;

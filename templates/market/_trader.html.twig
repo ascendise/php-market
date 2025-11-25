@@ -1,4 +1,4 @@
-<div id='trader' class='trader' hx-get='market/_trader' hx-trigger='trader-update from:#sell-offer'>
+<div id='trader' class='trader' hx-get={{ trader.halLinks.self.href }} hx-trigger='trader-update from:#sell-offer'>
     <div>
         <h1>Trader</h1>
         <h2>Balance: {{ trader.balance }}</h2>
@@ -18,7 +18,7 @@
                 <td class='product-name'>{{ item.product.name }}</td>
                 <td class='stocked centered'>{{ item.quantity }}</td>
                 <td class='options centered'>
-                    <form id='sell-offer' hx-post='/market/_sell'
+                    <form id='sell-offer' hx-post={{ trader.halLinks.sell.href }}
                         hx-swap='outer-html'
                         hx-target='#offers'>
                         <span>

@@ -1,4 +1,4 @@
-<div id='offers' class='market' hx-get='/market/_offers' hx-trigger='offers-update from:#buy-offer'>
+<div id='offers' class='market' hx-get={{ market.halLinks.offers.href }} hx-trigger='offers-update from:#buy-offer'>
     <h1>Market</h1>
     <table>
         <thead>
@@ -10,14 +10,14 @@
             </tr>
         </thead>
         <tbody>
-        {% for offer in offers %}
+        {% for offer in market.offers %}
             <tr>
                 <td class='product-name'> <span>{{ offer.product.name }}</span> </td>
                 <td class='centered'>{{ offer.quantity }}</td>
                 <td class='centered'>{{ offer.totalPrice }}</td>
                 <td class='centered'>
                     <form id='buy-offer'
-                            hx-post='/market/_buy/{{ offer.id }}'
+                            hx-post={{ offer.halLinks.buy.href }}
                             hx-swap='outerHtml'
                             hx-target='#trader'>
                         <button>Buy</button>
