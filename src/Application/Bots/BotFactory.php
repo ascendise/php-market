@@ -16,12 +16,12 @@ final class BotFactory
 
     public function create(BotBlueprint $blueprint): Bot
     {
-        $id = $blueprint->id();
+        $type = $blueprint->type();
 
-        return match ($id) {
-            'producer' => new Producer($this->market, $blueprint->args()[0], new RNG()),
-            'consumer' => new Consumer($this->market, $blueprint->args()[0], new RNG()),
-            default => throw new \InvalidArgumentException("Unknown blueprint id: $id"),
+        return match ($type) {
+            Producer::class => new Producer($this->market, $blueprint->args()[0], new RNG()),
+            Consumer::class => new Consumer($this->market, $blueprint->args()[0], new RNG()),
+            default => throw new \InvalidArgumentException("Unknown blueprint type: $type"),
         };
     }
 }

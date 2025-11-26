@@ -10,9 +10,15 @@ class CreateBotBlueprint
      * @param array<int,mixed> $botArgs
      */
     public function __construct(
+        private readonly string $type,
         private readonly array $botArgs,
         private readonly string|int|\DateInterval $frequency,
     ) {
+    }
+
+    public function type(): string
+    {
+        return $this->type;
     }
 
     /**

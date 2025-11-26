@@ -11,6 +11,7 @@ final class BotBlueprint
      */
     public function __construct(
         private readonly string $id,
+        private readonly string $type,
         private readonly array $args,
         private readonly string|int|\DateInterval $frequency,
     ) {
@@ -19,6 +20,11 @@ final class BotBlueprint
     public function id(): string
     {
         return $this->id;
+    }
+
+    public function type(): string
+    {
+        return $this->type;
     }
 
     /**
