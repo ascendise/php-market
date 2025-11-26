@@ -34,7 +34,7 @@ class Offer
     public static function fromEntity(Domain\Market\CreateOffer $entity, Seller $seller): Offer
     {
         $offer = new Offer();
-        $offer->setProductName($entity->product()->name());
+        $offer->setProductName($entity->product()->name);
         $offer->setQuantity($entity->quantity());
         $offer->setTotalPrice($entity->totalPrice());
         $offer->setSellerId($seller->id());

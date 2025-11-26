@@ -2,6 +2,13 @@
 
 namespace App\DataFixtures;
 
+use App\Domain\Bots\Consumer;
+use App\Domain\Bots\ConsumeRate;
+use App\Domain\Bots\Producer;
+use App\Domain\Bots\ProduceRate;
+use App\Domain\Bots\Range;
+use App\Domain\Market\Product;
+use App\Entity\BotBlueprint;
 use App\Entity\Market\Item;
 use App\Entity\Market\Offer;
 use App\Entity\Market\Trader;
@@ -17,6 +24,14 @@ class DevFixtures extends Fixture
     }
 
     public function load(ObjectManager $manager): void
+    {
+        $this->seedTradersWithOffers($manager);
+        $this->seedBotBlueprints($manager);
+
+        $manager->flush();
+    }
+
+    private function seedTradersWithOffers(ObjectManager $manager): void
     {
         $bot = new User();
         $bot->setEmail('bot@ascendise.ch');
@@ -60,7 +75,28 @@ class DevFixtures extends Fixture
         $offer3->setTotalPrice(24);
         $offer3->setSellerId($trader->getId());
         $manager->persist($offer3);
+    }
 
-        $manager->flush();
+    private function seedBotBlueprints(ObjectManager $manager): void
+    {
+        $producer = new BotBlueprint()
+            ->setType(Producer::class)
+            ->setArgs([[new ProduceRate(
+                new Product('Apple'),
+                tradingVolume: new Range(80, 100),
+                offerQuantity: new Range(5, 20),
+                pricePerItem: new Range(1, 3)
+            )]])
+            ->setFrequency(\DateInterval::createFromDateString('3 seconds'));
+        $manager->persist($producer);
+        $consumer = new BotBlueprint()
+            ->setType(Consumer::class)
+            ->setArgs([[new ConsumeRate(
+                new Product('Apple'),
+                budget: new Range(100, 300),
+                buyingVolume: new Range(40, 120)
+            )]])
+            ->setFrequency(\DateInterval::createFromDateString('5 seconds'));
+        $manager->persist($consumer);
     }
 }

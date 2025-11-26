@@ -115,7 +115,7 @@ final class MarketServiceTest extends TestCase
         $_ = $sut->createOffer($traderId, $createOffer);
         // Assert
         $updatedTrader = $traderRepository->find($traderId->toString());
-        $apples = array_find([...$updatedTrader->listInventory()], fn ($i) => 'Apple' == $i->product()->name());
+        $apples = array_find([...$updatedTrader->listInventory()], fn ($i) => 'Apple' == $i->product()->name);
         $this->assertEquals(2, $apples->quantity(), 'Trader inventory was not updated!');
     }
 

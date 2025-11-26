@@ -4,14 +4,8 @@ declare(strict_types=1);
 
 namespace App;
 
-use App\Application\Bots\BotBlueprint;
+use App\Application\Bots\BotBlueprintRepository;
 use App\Application\Bots\RunBotsMessage;
-use App\Domain\Bots\Consumer;
-use App\Domain\Bots\ConsumeRate;
-use App\Domain\Bots\Producer;
-use App\Domain\Bots\ProduceRate;
-use App\Domain\Bots\Range;
-use App\Domain\Market\Product;
 use Symfony\Component\Scheduler\Attribute\AsSchedule;
 use Symfony\Component\Scheduler\RecurringMessage;
 use Symfony\Component\Scheduler\Schedule as SymfonySchedule;
@@ -22,40 +16,21 @@ use Symfony\Contracts\Cache\CacheInterface;
 class Schedule implements ScheduleProviderInterface
 {
     public function __construct(
-        private CacheInterface $cache,
+        private readonly CacheInterface $cache,
+        private readonly BotBlueprintRepository $blueprintRepo,
     ) {
     }
 
     public function getSchedule(): SymfonySchedule
     {
-        $producer = new BotBlueprint(
-            'bot1',
-            Producer::class,
-            [[new ProduceRate(
-                new Product('Apple'),
-                tradingVolume: new Range(80, 100),
-                offerQuantity: new Range(5, 20),
-                pricePerItem: new Range(1, 3)
-            )]],
-            '3 seconds'
-        );
-        $producerTrigger = RecurringMessage::every($producer->frequency(), new RunBotsMessage([$producer]));
-        $consumer = new BotBlueprint(
-            'bot2',
-            Consumer::class,
-            [[new ConsumeRate(
-                new Product('Apple'),
-                budget: new Range(100, 300),
-                buyingVolume: new Range(40, 120)
-            )]],
-            '5 seconds'
-        );
-        $consumerTrigger = RecurringMessage::every($consumer->frequency(), new RunBotsMessage([$consumer]));
+        $schedule = new SymfonySchedule();
+        foreach ($this->blueprintRepo->list() as $blueprint) {
+            $trigger = RecurringMessage::every($blueprint->frequency(), new RunBotsMessage([$blueprint]));
+            $schedule->add($trigger);
+        }
 
-        return (new SymfonySchedule())
+        return $schedule
             ->stateful($this->cache) // ensure missed tasks are executed
-            ->processOnlyLastMissedRun(true) // ensure only last missed task is run
-            ->add($producerTrigger)
-            ->add($consumerTrigger);
+            ->processOnlyLastMissedRun(true); // ensure only last missed task is run
     }
 }

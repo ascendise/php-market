@@ -26,7 +26,7 @@ final class Producer implements Bot, Seller
     public function act(): void
     {
         foreach ($this->produceRates as $produceRate) {
-            $volume = Range::getValue($produceRate->tradingVolume(), $this->rng);
+            $volume = Range::getValue($produceRate->tradingVolume, $this->rng);
             while ($volume > 0) {
                 $this->createOffer($produceRate, $volume);
             }
@@ -35,10 +35,10 @@ final class Producer implements Bot, Seller
 
     private function createOffer(ProduceRate $produceRate, int &$volume): void
     {
-        $quantity = min($volume, Range::getValue($produceRate->offerQuantity(), $this->rng));
+        $quantity = min($volume, Range::getValue($produceRate->offerQuantity, $this->rng));
         $offer = $this->sell(
-            $produceRate->product(),
-            Range::getValue($produceRate->pricePerItem(), $this->rng),
+            $produceRate->product,
+            Range::getValue($produceRate->pricePerItem, $this->rng),
             $quantity
         );
         $this->market->createOffer($offer);

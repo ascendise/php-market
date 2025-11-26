@@ -33,8 +33,8 @@ final class Consumer implements Bot, Buyer
     private function buyProducts(ConsumeRate $rate): void
     {
         $offers = $this->fetchMatchingOffers($rate);
-        $balance = new Balance(Range::getValue($rate->budget(), $this->rng));
-        $volume = Range::getValue($rate->buyingVolume(), $this->rng);
+        $balance = new Balance(Range::getValue($rate->budget, $this->rng));
+        $volume = Range::getValue($rate->buyingVolume, $this->rng);
         foreach ($offers as $offer) {
             $this->buyOffer($offer, $balance, $volume);
             $isOutOfFunds = 0 == $balance->amount() || 0 == $volume;
@@ -52,13 +52,13 @@ final class Consumer implements Bot, Buyer
         $offers = $this->market->listOffers();
         $offers = array_filter(
             iterator_to_array($offers),
-            fn ($o) => $o->product()->name() == $rate->product()->name()
+            fn ($o) => $o->product()->name == $rate->product->name
         );
 
         return $offers;
     }
 
-    private function buyOffer(Offer $offer, Balance $balance, int &$volume): void
+    private function buyOffer(Offer $offer, Balance &$balance, int &$volume): void
     {
         if ($balance->amount() >= $offer->totalPrice()) {
             $_ = $balance->withdraw($offer->totalPrice());

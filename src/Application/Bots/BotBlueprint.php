@@ -13,7 +13,7 @@ final class BotBlueprint
         private readonly string $id,
         private readonly string $type,
         private readonly array $args,
-        private readonly string|int|\DateInterval $frequency,
+        private readonly \DateInterval $frequency,
     ) {
     }
 
@@ -35,7 +35,7 @@ final class BotBlueprint
         return $this->args;
     }
 
-    public function frequency(): string|int|\DateInterval
+    public function frequency(): \DateInterval
     {
         return $this->frequency;
     }

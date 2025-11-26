@@ -7,12 +7,12 @@ namespace App\Application\Bots;
 class CreateBotBlueprint
 {
     /**
-     * @param array<int,mixed> $botArgs
+     * @param array<int,mixed> $args
      */
     public function __construct(
         private readonly string $type,
-        private readonly array $botArgs,
-        private readonly string|int|\DateInterval $frequency,
+        private readonly array $args,
+        private readonly \DateInterval $frequency,
     ) {
     }
 
@@ -24,12 +24,12 @@ class CreateBotBlueprint
     /**
      * @return array<int,mixed>
      */
-    public function botArgs(): array
+    public function args(): array
     {
-        return $this->botArgs;
+        return $this->args;
     }
 
-    public function frequency(): string|int|\DateInterval
+    public function frequency(): \DateInterval
     {
         return $this->frequency;
     }

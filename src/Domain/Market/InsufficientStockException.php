@@ -20,7 +20,7 @@ final class InsufficientStockException extends \Exception
         $this->askedQuantity = $askedQuantity;
         $this->stockedQuantity = $stockedQuantity;
         $this->product = $product;
-        $message = "Tried to create offer for {$product->name()} with quantity {$askedQuantity} 
+        $message = "Tried to create offer for {$product->name} with quantity {$askedQuantity} 
         but stocked is {$stockedQuantity}";
 
         parent::__construct($message, $code, $previous);

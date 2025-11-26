@@ -2,27 +2,52 @@
 
 namespace App\Entity;
 
+use App\Application;
 use App\Repository\BotBlueprintRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Types\UuidType;
+use Symfony\Component\Uid\UuidV7;
 
 #[ORM\Entity(repositoryClass: BotBlueprintRepository::class)]
 class BotBlueprint
 {
     #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
+    #[ORM\Column(type: UuidType::NAME, unique: true)]
+    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
+    #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
+    private ?UuidV7 $id = null;
 
     #[ORM\Column(length: 255)]
     private ?string $type = null;
 
-    #[ORM\Column]
+    #[ORM\Column(type: 'json_document')]
     private array $args = [];
 
     #[ORM\Column]
     private ?\DateInterval $frequency = null;
 
-    public function getId(): ?int
+    public static function fromEntity(Application\Bots\BotBlueprint $entity): BotBlueprint
+    {
+        $blueprint = new BotBlueprint();
+        $blueprint->id = UuidV7::fromString($entity->id());
+        $blueprint->setType($entity->type());
+        $blueprint->setArgs($entity->args());
+        $blueprint->setFrequency($entity->frequency());
+
+        return $blueprint;
+    }
+
+    public function toEntity(): Application\Bots\BotBlueprint
+    {
+        return new Application\Bots\BotBlueprint(
+            $this->getId(),
+            $this->getType(),
+            $this->getArgs(),
+            $this->getFrequency()
+        );
+    }
+
+    public function getId(): ?UuidV7
     {
         return $this->id;
     }
