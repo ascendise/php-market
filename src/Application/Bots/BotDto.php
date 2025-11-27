@@ -8,6 +8,7 @@ use App\Application\HAL\HALResource;
 use App\Application\HAL\Link;
 use App\Application\HAL\RestLinksProvider;
 use App\Application\HAL\WebLinksProvider;
+use App\Domain\Bots\Schedule\BotBlueprint;
 use Symfony\Component\Uid\Uuid;
 
 final class BotDto extends HALResource implements WebLinksProvider, RestLinksProvider
@@ -35,5 +36,15 @@ final class BotDto extends HALResource implements WebLinksProvider, RestLinksPro
             'self' => new Link("/api/admin/bots/$this->id"),
             'bots' => new Link('/api/admin/bots'),
         ];
+    }
+
+    public static function fromEntity(BotBlueprint $blueprint): BotDto
+    {
+        return new BotDto(
+            Uuid::fromString($blueprint->id()),
+            BotType::{$blueprint->type()},
+            $blueprint->args(),
+            $blueprint->frequency()
+        );
     }
 }
