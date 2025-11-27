@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use App\Application;
+use App\Domain;
 use App\Repository\BotBlueprintRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Types\UuidType;
@@ -20,13 +20,16 @@ class BotBlueprint
     #[ORM\Column(length: 255)]
     private ?string $type = null;
 
+    /**
+     * @var array<int, mixed> $args
+     */
     #[ORM\Column(type: 'json_document')]
     private array $args = [];
 
     #[ORM\Column]
     private ?\DateInterval $frequency = null;
 
-    public static function fromEntity(Application\Bots\BotBlueprint $entity): BotBlueprint
+    public static function fromEntity(Domain\Bots\Schedule\BotBlueprint $entity): BotBlueprint
     {
         $blueprint = new BotBlueprint();
         $blueprint->id = UuidV7::fromString($entity->id());
@@ -37,9 +40,9 @@ class BotBlueprint
         return $blueprint;
     }
 
-    public function toEntity(): Application\Bots\BotBlueprint
+    public function toEntity(): Domain\Bots\Schedule\BotBlueprint
     {
-        return new Application\Bots\BotBlueprint(
+        return new Domain\Bots\Schedule\BotBlueprint(
             $this->getId(),
             $this->getType(),
             $this->getArgs(),
@@ -64,6 +67,9 @@ class BotBlueprint
         return $this;
     }
 
+    /**
+     * @param array<int, mixed> $args
+     */
     public function setArgs(array $args): static
     {
         $this->args = $args;
@@ -71,6 +77,9 @@ class BotBlueprint
         return $this;
     }
 
+    /**
+     * @return array<int, mixed> $args
+     */
     public function getArgs(): array
     {
         return $this->args;

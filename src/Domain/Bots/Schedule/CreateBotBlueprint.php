@@ -2,24 +2,18 @@
 
 declare(strict_types=1);
 
-namespace App\Application\Bots;
+namespace App\Domain\Bots\Schedule;
 
-final class BotBlueprint
+class CreateBotBlueprint
 {
     /**
      * @param array<int,mixed> $args
      */
     public function __construct(
-        private readonly string $id,
         private readonly string $type,
         private readonly array $args,
         private readonly \DateInterval $frequency,
     ) {
-    }
-
-    public function id(): string
-    {
-        return $this->id;
     }
 
     public function type(): string
@@ -38,5 +32,10 @@ final class BotBlueprint
     public function frequency(): \DateInterval
     {
         return $this->frequency;
+    }
+
+    public function toBlueprint(string $id): BotBlueprint
+    {
+        return new BotBlueprint($id, $this->type, $this->args, $this->frequency);
     }
 }

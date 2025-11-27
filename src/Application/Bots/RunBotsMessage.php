@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Application\Bots;
 
+use App\Domain\Bots\Schedule\BotBlueprint;
+
 final class RunBotsMessage
 {
     /**

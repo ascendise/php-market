@@ -10,7 +10,7 @@ namespace App\Domain\Market;
 final class Inventory implements \IteratorAggregate
 {
     /**
-     * @var array<int, Item>
+     * @var array<string, Item>
      */
     private array $items;
 

@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Application\Bots;
+declare(strict_types=1);
+
+namespace App\Domain\Bots\Schedule;
 
 use App\Domain\Bots\Bot;
 use App\Domain\Bots\Consumer;

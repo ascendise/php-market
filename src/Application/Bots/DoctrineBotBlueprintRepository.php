@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Application\Bots;
 
+use App\Domain\Bots\Schedule\BotBlueprint;
+use App\Domain\Bots\Schedule\BotBlueprintRepository;
+use App\Domain\Bots\Schedule\CreateBotBlueprint;
 use App\Entity;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Application\Bots;
+namespace App\Domain\Bots\Schedule;
 
 interface BotBlueprintRepository
 {

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Application\Bots;
 
 use App\Domain\Bots\BotRunner;
+use App\Domain\Bots\Schedule\BotFactory;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 #[AsMessageHandler]

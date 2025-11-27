@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App;
 
-use App\Application\Bots\BotBlueprintRepository;
 use App\Application\Bots\RunBotsMessage;
+use App\Domain\Bots\Schedule\BotBlueprintRepository;
 use Symfony\Component\Scheduler\Attribute\AsSchedule;
 use Symfony\Component\Scheduler\RecurringMessage;
 use Symfony\Component\Scheduler\Schedule as SymfonySchedule;
