@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Application\Market;
 
-use App\Domain\Market\CreateOffer;
 use App\Domain\Market\Offer;
+use App\Domain\Market\OfferCommand;
 use App\Domain\Market\OfferRepository;
 use App\Domain\Market\Offers;
 use App\Domain\Market\Seller;
@@ -78,7 +78,7 @@ final class DoctrineOfferRepository implements OfferRepository
         $this->entityManager->flush();
     }
 
-    public function create(CreateOffer $offer): Offer
+    public function create(OfferCommand $offer): Offer
     {
         $seller = $this->traderRepo->find($offer->seller()->id());
         $offerModel = Entity\Market\Offer::fromEntity($offer, $seller);

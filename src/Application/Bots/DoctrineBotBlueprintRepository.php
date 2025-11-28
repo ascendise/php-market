@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Application\Bots;
 
 use App\Domain\Bots\Schedule\BotBlueprint;
+use App\Domain\Bots\Schedule\BotBlueprintCommand;
 use App\Domain\Bots\Schedule\BotBlueprintRepository;
-use App\Domain\Bots\Schedule\CreateBotBlueprint;
 use App\Entity;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
@@ -32,30 +32,23 @@ final class DoctrineBotBlueprintRepository implements BotBlueprintRepository
         return $this->entityManager->getRepository(Entity\BotBlueprint::class);
     }
 
-    public function create(CreateBotBlueprint $createBlueprint): BotBlueprint
+    public function create(BotBlueprintCommand $createBlueprint): BotBlueprint
     {
         $blueprint = new Entity\BotBlueprint();
-        $blueprint = $this->updateFrom($blueprint, $createBlueprint);
+        $blueprint = $blueprint->update($createBlueprint);
         $this->entityManager->persist($blueprint);
         $this->entityManager->flush();
 
         return $blueprint->toEntity();
     }
 
-    private function updateFrom(Entity\BotBlueprint $target, CreateBotBlueprint $source): Entity\BotBlueprint
-    {
-        return $target->setType($source->type())
-            ->setArgs($source->args())
-            ->setFrequency($source->frequency());
-    }
-
-    public function update(string $id, CreateBotBlueprint $blueprint): ?BotBlueprint
+    public function update(string $id, BotBlueprintCommand $blueprint): ?BotBlueprint
     {
         $old = $this->blueprintRepo()->find($id);
         if (!$old) {
             return null;
         }
-        $updated = $this->updateFrom($old, $blueprint);
+        $updated = $old->update($blueprint);
         $this->entityManager->flush();
 
         return $updated->toEntity();

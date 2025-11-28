@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Domain\Market;
 
-final class CreateOffer
+final class OfferCommand
 {
     public function __construct(
         private readonly Product $product,

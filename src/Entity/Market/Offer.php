@@ -31,7 +31,7 @@ class Offer
     #[ORM\Column(length: 127)]
     private ?string $sellerId = null;
 
-    public static function fromEntity(Domain\Market\CreateOffer $entity, Seller $seller): Offer
+    public static function fromEntity(Domain\Market\OfferCommand $entity, Seller $seller): Offer
     {
         $offer = new Offer();
         $offer->setProductName($entity->product()->name);

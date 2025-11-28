@@ -9,7 +9,7 @@ interface AuthenticationService
     /**
      * @exception RegistrationException
      */
-    public function createUser(CreateUserDto $createUser): UserDto;
+    public function createUser(UserCommandDto $createUser): UserDto;
 
     public function login(LoginDto $login): ?UserDto;
 }

@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Tests\Application\Market;
 
 use App\Application\Market\CreatedOfferDto;
-use App\Application\Market\CreateOfferDto;
 use App\Application\Market\ItemDto;
 use App\Application\Market\MarketServiceImpl;
+use App\Application\Market\OfferCommandDto;
 use App\Application\Market\OfferDto;
 use App\Application\Market\OffersDto;
 use App\Application\Market\ProductDto;
@@ -76,7 +76,7 @@ final class MarketServiceTest extends TestCase
         $trader = new Trader($traderId->toString(), $inventory, new Balance(1000));
         $sut = $this->setupSut($offerRepository, new MemoryTraderRepository($trader));
         // Act
-        $createOffer = new CreateOfferDto(
+        $createOffer = new OfferCommandDto(
             new ProductDto('Apple'),
             quantity: 3,
             pricePerItem: 1
@@ -107,7 +107,7 @@ final class MarketServiceTest extends TestCase
         $traderRepository = new MemoryTraderRepository($trader);
         $sut = $this->setupSut(traderRepository: $traderRepository);
         // Act
-        $createOffer = new CreateOfferDto(
+        $createOffer = new OfferCommandDto(
             new ProductDto('Apple'),
             quantity: 3,
             pricePerItem: 1

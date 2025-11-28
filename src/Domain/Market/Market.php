@@ -27,7 +27,7 @@ final class Market
         return $this->traderRepository->find($id);
     }
 
-    public function createOffer(CreateOffer $createOffer): Offer
+    public function createOffer(OfferCommand $createOffer): Offer
     {
         $offer = $this->offerRepository->create($createOffer);
         $this->persistTrader($createOffer->seller());

@@ -10,9 +10,9 @@ interface BotAdministrationService
 {
     public function list(): BotsDto;
 
-    public function create(CreateBotDto $createBot): BotDto;
+    public function create(BotCommandDto $createBot): BotDto;
 
-    public function update(Uuid $id, CreateBotDto $updateBot): ?BotDto;
+    public function update(Uuid $id, BotCommandDto $updateBot): ?BotDto;
 
     public function delete(Uuid $id): void;
 }

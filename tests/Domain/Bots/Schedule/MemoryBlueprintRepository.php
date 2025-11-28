@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Tests\Domain\Bots\Schedule;
 
 use App\Domain\Bots\Schedule\BotBlueprint;
+use App\Domain\Bots\Schedule\BotBlueprintCommand;
 use App\Domain\Bots\Schedule\BotBlueprintRepository;
-use App\Domain\Bots\Schedule\CreateBotBlueprint;
 use Symfony\Component\Uid\Uuid;
 
 final class MemoryBlueprintRepository implements BotBlueprintRepository
@@ -26,7 +26,7 @@ final class MemoryBlueprintRepository implements BotBlueprintRepository
         return array_values($this->blueprints);
     }
 
-    public function create(CreateBotBlueprint $blueprint): BotBlueprint
+    public function create(BotBlueprintCommand $blueprint): BotBlueprint
     {
         $blueprint = new BotBlueprint(
             Uuid::v7()->toString(),
@@ -39,7 +39,7 @@ final class MemoryBlueprintRepository implements BotBlueprintRepository
         return $blueprint;
     }
 
-    public function update(string $id, CreateBotBlueprint $blueprint): ?BotBlueprint
+    public function update(string $id, BotBlueprintCommand $blueprint): ?BotBlueprint
     {
         if (!array_key_exists($id, $this->blueprints)) {
             return null;

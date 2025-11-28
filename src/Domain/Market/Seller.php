@@ -14,7 +14,7 @@ interface Seller
      *
      * @throws InsufficientStockException when trying to create an offer without enough product in your inventory
      */
-    public function sell(Product $product, int $pricePerItem, int $quantity): CreateOffer;
+    public function sell(Product $product, int $pricePerItem, int $quantity): OfferCommand;
 
     /**
      * Transfers payment (presumably from a completed sale) from the source to the Seller.

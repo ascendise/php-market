@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Domain\Bots;
 
-use App\Domain\Market\CreateOffer;
 use App\Domain\Market\Market;
+use App\Domain\Market\OfferCommand;
 use App\Domain\Market\Payment;
 use App\Domain\Market\Product;
 use App\Domain\Market\Seller;
@@ -45,9 +45,9 @@ final class Producer implements Bot, Seller
         $volume -= $offer->quantity();
     }
 
-    public function sell(Product $product, int $pricePerItem, int $quantity): CreateOffer
+    public function sell(Product $product, int $pricePerItem, int $quantity): OfferCommand
     {
-        return new CreateOffer($product, $pricePerItem, $quantity, $this);
+        return new OfferCommand($product, $pricePerItem, $quantity, $this);
     }
 
     public function receivePayment(Payment $payment): void

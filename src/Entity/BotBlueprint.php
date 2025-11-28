@@ -96,4 +96,11 @@ class BotBlueprint
 
         return $this;
     }
+
+    public function update(Domain\Bots\Schedule\BotBlueprintCommand $updateBlueprint): static
+    {
+        return $this->setType($updateBlueprint->type())
+            ->setArgs($updateBlueprint->args())
+            ->setFrequency($updateBlueprint->frequency());
+    }
 }

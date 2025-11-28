@@ -22,7 +22,7 @@ final class BotAdministrationServiceImpl implements BotAdministrationService
         return new BotsDto($blueprints);
     }
 
-    public function create(CreateBotDto $createBot): BotDto
+    public function create(BotCommandDto $createBot): BotDto
     {
         $newBlueprint = $createBot->toEntity();
         $newBlueprint = $this->blueprintRepository->create($newBlueprint);
@@ -30,7 +30,7 @@ final class BotAdministrationServiceImpl implements BotAdministrationService
         return BotDto::fromEntity($newBlueprint);
     }
 
-    public function update(Uuid $id, CreateBotDto $updateBot): ?BotDto
+    public function update(Uuid $id, BotCommandDto $updateBot): ?BotDto
     {
         $updatedBlueprint = $updateBot->toEntity();
         $updatedBlueprint = $this->blueprintRepository->update($id->toString(), $updatedBlueprint);

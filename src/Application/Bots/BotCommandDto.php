@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Application\Bots;
 
-use App\Domain\Bots\Schedule\CreateBotBlueprint;
+use App\Domain\Bots\Schedule\BotBlueprintCommand;
 
-final class CreateBotDto
+final class BotCommandDto
 {
     /** @param array<int, mixed> $args */
     public function __construct(
@@ -16,8 +16,8 @@ final class CreateBotDto
     ) {
     }
 
-    public function toEntity(): CreateBotBlueprint
+    public function toEntity(): BotBlueprintCommand
     {
-        return new CreateBotBlueprint($this->type->value, $this->args, $this->frequency);
+        return new BotBlueprintCommand($this->type->value, $this->args, $this->frequency);
     }
 }

@@ -3,8 +3,8 @@
 namespace App\Controller\Pages;
 
 use App\Application\Auth\AuthenticationService;
-use App\Application\Auth\CreateUserDto;
 use App\Application\Auth\RegistrationException;
+use App\Application\Auth\UserCommandDto;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
@@ -26,7 +26,7 @@ final class AuthController extends AbstractController
 
     #[Route('auth/_register', methods: ['POST'])]
     #[IsCsrfTokenValid('register')]
-    public function createAccount(#[MapRequestPayload] CreateUserDto $createUser): Response
+    public function createAccount(#[MapRequestPayload] UserCommandDto $createUser): Response
     {
         try {
             $user = $this->authService->createUser($createUser);

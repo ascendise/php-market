@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Domain\Bots\Schedule;
 
-class CreateBotBlueprint
+class BotBlueprintCommand
 {
     /**
      * @param array<int,mixed> $args
