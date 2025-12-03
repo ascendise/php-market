@@ -1,29 +1,113 @@
 {% extends 'base.html.twig' %}
 
+{% block styles %}
+    <link rel='stylesheet' href="{{ asset('styles/pages/admin.scss') }}" />
+{% endblock %}
+
 {% block title %}Market Administration{% endblock %}
 
 {% block body %}
 
-<h1>Bots</h1>
-<table>
-    <thead>
-        <tr>
-           <th>Id</th>
-           <th>Type</th>
-           <th>Frequency</th>
-           <th>Args</th>
-        </tr>
-    </thead>
-    <tbody>
-    {% for bot in bots %}
-        <tr>
-            <td class='centered'>{{ bot.id }}</td>
-            <td class='centered'>{{ bot.type.name }}</td>
-            <td class='centered'>{{ bot.frequency }}</td>
-            <td>{{ bot.args|json_encode }}</td>
-        </tr>
-    {% endfor %}
-    </tbody>
-</table>
+<div class='bots'>
+    <div class='list'>
+        <h1>Bots</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Type</th>
+                    <th>Frequency</th>
+                    <th>Args</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for bot in bots %}
+                <tr>
+                    <td class='centered'>{{ bot.id }}</td>
+                    <td class='centered'>{{ bot.type.name }}</td>
+                    <td class='centered'>{{ bot.frequency }}</td>
+                    <td>{{ bot.args|json_encode }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class='editor'>
+        <h1>Create New Bot</h1>
+        <form>
+            <select name='type'>
+            {% for type in enum('App\\Application\\Bots\\BotType').cases %}
+                <option value='{{ type.value }}'>{{ type.name }}</option>
+            {% endfor %}
+            </select>
+            <input name='frequency' type='time' step=1 />
+            <!-- TODO: Make args more concrete... -->
+            <table id='producer-args'>
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Trading Volume</th>
+                        <th>Offer Quantity</th>
+                        <th>Price Per Item</th>
+                        <th>Options</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr name='args[]'>
+                        <td class='centered'>
+                            <input type='text' name='product[name]'/>
+                        </td>
+                        <td class='centered'>
+                            <input type='number' name='tradingVolume[min]'/>
+                            <input type='number' name='tradingVolume[max]'/>
+                        </td>
+                        <td class='centered'>
+                            <input type='number' name='offerQuantity[min]'/>
+                            <input type='number' name='offerQuantity[max]'/>
+                        </td>
+                        <td class='centered'>
+                            <input type='number' name='pricePerItem[min]'/>
+                            <input type='number' name='pricePerItem[max]'/>
+                        </td>
+                        <td class='centered'>
+                            <button onclick="deleteRow('producer-args', this)" type='button'>Delete Row</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <button type='button' onclick="newRow('producer-args')">Add Row</button>
+        </form>
+    </div>
+</div>
 
+{% endblock %}
+
+{% block javascript %}
+<script>
+    function newRow(tableId) {
+        let table = document.getElementById(tableId);
+        let templateRow = table.rows[1];
+        let newRow = table.insertRow(-1);
+        for (let cell of templateRow.cells) {
+            let newCell = newRow.insertCell(-1);
+            Array.from(cell.attributes).forEach(
+                node => newCell.setAttributeNode(node.cloneNode(true))
+            );
+            newCell.innerHTML = cell.innerHTML;
+        }
+    }
+
+    function deleteRow(tableId, childElement) {
+        let table = document.getElementById(tableId);
+        let rows = Array.from(table.rows).slice(1); //Ignore Header Row
+        if(rows.length <= 1) {
+            console.log('Tried to delete last row, which is required for cloning');
+            return;
+        }
+        let row = rows.filter(r => r.contains(childElement));
+        if(row[0]) {
+            row[0].remove();
+        }
+    }
+</script>
 {% endblock %}

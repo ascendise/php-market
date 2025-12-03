@@ -10,7 +10,6 @@ final class FrequencyDto
         public readonly int $seconds = 0,
         public readonly int $minutes = 0,
         public readonly int $hours = 0,
-        public readonly int $days = 0,
     ) {
     }
 
@@ -20,7 +19,6 @@ final class FrequencyDto
             seconds: $interval->s,
             minutes: $interval->i,
             hours: $interval->h,
-            days: $interval->d,
         );
     }
 
@@ -29,17 +27,13 @@ final class FrequencyDto
         $s = $this->seconds;
         $m = $this->minutes;
         $h = $this->hours;
-        $d = $this->days;
 
-        return new \DateInterval("P{$d}DT{$h}H{$m}M{$s}S");
+        return new \DateInterval("PT{$h}H{$m}M{$s}S");
     }
 
     public function __toString(): string
     {
         $str = '';
-        if ($this->days > 0) {
-            $str .= " {$this->days} days";
-        }
         if ($this->hours > 0) {
             $str .= " {$this->hours} hours";
         }
