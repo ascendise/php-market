@@ -18,7 +18,7 @@ final class BotDto extends HALResource implements WebLinksProvider, RestLinksPro
         public readonly Uuid $id,
         public readonly BotType $type,
         public readonly array $args,
-        public readonly \DateInterval $frequency,
+        public readonly FrequencyDto $frequency,
     ) {
     }
 
@@ -42,9 +42,9 @@ final class BotDto extends HALResource implements WebLinksProvider, RestLinksPro
     {
         return new BotDto(
             Uuid::fromString($blueprint->id()),
-            BotType::{$blueprint->type()},
+            BotType::from($blueprint->type()),
             $blueprint->args(),
-            $blueprint->frequency()
+            FrequencyDto::fromDateInterval($blueprint->frequency())
         );
     }
 }

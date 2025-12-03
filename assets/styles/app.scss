@@ -38,6 +38,11 @@ tr {
 th,
 td {
     border-bottom: 1px solid $text-color;
+
+}
+
+td.centered {
+    text-align: center;
 }
 
 tbody {

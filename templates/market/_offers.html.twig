@@ -1,9 +1,9 @@
-<div id='offers' class='market' hx-get={{ market.halLinks.offers.href }} hx-trigger='offers-update from:#buy-offer'>
+<div id='offers' class='market' hx-get='{{ market.halLinks.offers.href }}' hx-trigger='offers-update from:#buy-offer'>
     <h1>Market</h1>
     <table>
         <thead>
             <tr>
-                <th class="product-name">Product</th>
+                <th class='product-name'>Product</th>
                 <th>Quantity</th>
                 <th>Price</th>
                 <th>Options</th>
@@ -21,7 +21,7 @@
                             hx-swap='outerHtml'
                             hx-target='#trader'>
                         <button>Buy</button>
-                        <input type="hidden" name="_token" data-controller="csrf-protection" value="{{ csrf_token('buy') }}" />
+                        <input type='hidden' name='_token' data-controller='csrf-protection' value='{{ csrf_token('buy') }}' />
                     </form>
                 </td>
             </tr>
