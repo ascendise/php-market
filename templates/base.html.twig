@@ -8,6 +8,7 @@
     <body>
         {% if app.user %}
         <p>Logged in as {{ app.user.email }}</p>
+        <button hx-get='/admin' hx-target='body' hx-push-url='true'>Admin</button>
         <button hx-post='/auth/_logout' hx-target='body' hx-push-url='true'>Log out</button>
         {% endif %}
         {% block body %}{% endblock %}
