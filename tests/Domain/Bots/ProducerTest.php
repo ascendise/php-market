@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Domain\Bots;
 
 use App\Domain\Bots\Producer;
+use App\Domain\Bots\ProducerArgs;
 use App\Domain\Bots\ProduceRate;
 use App\Domain\Bots\Range;
 use App\Domain\Bots\RNG;
@@ -36,7 +37,7 @@ final class ProducerTest extends TestCase
         $uuidgen = array_fill(0, 3, Uuid::v7());
         $market = $this->setupMarket($uuidgen);
         $produceRate = new ProduceRate(new Product('Apple'), tradingVolume: 7, offerQuantity: 3, pricePerItem: 5);
-        $sut = new Producer($market, [$produceRate], new RNG());
+        $sut = new Producer($market, new ProducerArgs([$produceRate]), new RNG());
         // Act
         $sut->act();
         // Assert
@@ -60,7 +61,7 @@ final class ProducerTest extends TestCase
             offerQuantity: new Range(2, 5),
             pricePerItem: new Range(3, 5)
         );
-        $sut = new Producer($market, [$produceRate], new FakeRNG(FakeRNGStrategy::UseMin));
+        $sut = new Producer($market, new ProducerArgs([$produceRate]), new FakeRNG(FakeRNGStrategy::UseMin));
         // Act
         $sut->act();
         // Assert

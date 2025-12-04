@@ -34,7 +34,7 @@
     </div>
     <div class='editor'>
         <h1>Create New Bot</h1>
-        <form>
+        <form hx-post='/admin/_create-bot' hx-target='body'>
             <select name='type'>
             {% for type in enum('App\\Application\\Bots\\BotType').cases %}
                 <option value='{{ type.value }}'>{{ type.name }}</option>
@@ -53,21 +53,21 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr name='args[]'>
+                    <tr>
                         <td class='centered'>
-                            <input type='text' name='product[name]'/>
+                            <input type='text' name='args[]product[name]'/>
                         </td>
                         <td class='centered'>
-                            <input type='number' name='tradingVolume[min]'/>
-                            <input type='number' name='tradingVolume[max]'/>
+                            <input type='number' name='args[]tradingVolume[min]'/>
+                            <input type='number' name='args[]tradingVolume[max]'/>
                         </td>
                         <td class='centered'>
-                            <input type='number' name='offerQuantity[min]'/>
-                            <input type='number' name='offerQuantity[max]'/>
+                            <input type='number' name='args[]offerQuantity[min]'/>
+                            <input type='number' name='args[]offerQuantity[max]'/>
                         </td>
                         <td class='centered'>
-                            <input type='number' name='pricePerItem[min]'/>
-                            <input type='number' name='pricePerItem[max]'/>
+                            <input type='number' name='args[]pricePerItem[min]'/>
+                            <input type='number' name='args[]pricePerItem[max]'/>
                         </td>
                         <td class='centered'>
                             <button onclick="deleteRow('producer-args', this)" type='button'>Delete Row</button>
@@ -76,6 +76,7 @@
                 </tbody>
             </table>
             <button type='button' onclick="newRow('producer-args')">Add Row</button>
+            <button>Create Bot</button>
         </form>
     </div>
 </div>

@@ -13,19 +13,17 @@ use App\Domain\Market\TraderRepository;
 
 final class Consumer implements Bot, Buyer
 {
-    /**
-     * @param array<int,ConsumeRate> $consumeRates
-     */
     public function __construct(
         private readonly Market $market,
-        private readonly array $consumeRates,
+        private readonly ConsumerArgs $args,
         private readonly RNG $rng,
     ) {
     }
 
     public function act(): void
     {
-        foreach ($this->consumeRates as $consumeRate) {
+        $consumeRates = $this->args->consumeRates();
+        foreach ($consumeRates as $consumeRate) {
             $this->buyProducts($consumeRate);
         }
     }

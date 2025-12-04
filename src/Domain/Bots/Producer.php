@@ -13,19 +13,17 @@ use App\Domain\Market\TraderRepository;
 
 final class Producer implements Bot, Seller
 {
-    /**
-     * @param array<int,ProduceRate> $produceRates
-     */
     public function __construct(
         private readonly Market $market,
-        private readonly array $produceRates,
+        private readonly ProducerArgs $args,
         private readonly ?RNG $rng,
     ) {
     }
 
     public function act(): void
     {
-        foreach ($this->produceRates as $produceRate) {
+        $produceRates = $this->args->produceRates();
+        foreach ($produceRates as $produceRate) {
             $volume = Range::getValue($produceRate->tradingVolume, $this->rng);
             while ($volume > 0) {
                 $this->createOffer($produceRate, $volume);

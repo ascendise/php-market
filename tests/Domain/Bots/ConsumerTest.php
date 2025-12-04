@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Domain\Bots;
 
 use App\Domain\Bots\Consumer;
+use App\Domain\Bots\ConsumerArgs;
 use App\Domain\Bots\ConsumeRate;
 use App\Domain\Bots\Range;
 use App\Domain\Bots\RNG;
@@ -22,14 +23,11 @@ use Symfony\Component\Uid\Uuid;
 
 final class ConsumerTest extends TestCase
 {
-    /**
-     * @param array<int,ConsumeRate> $consumeRates
-     */
-    private function setupSut(Market $market, array $consumeRates, ?RNG $rng = null): Consumer
+    private function setupSut(Market $market, ConsumerArgs $consumerArgs, ?RNG $rng = null): Consumer
     {
         $rng = $rng ?? new RNG();
 
-        return new Consumer($market, $consumeRates, $rng);
+        return new Consumer($market, $consumerArgs, $rng);
     }
 
     /**
@@ -61,7 +59,7 @@ final class ConsumerTest extends TestCase
             budget: 100,
             buyingVolume: 50
         );
-        $consumer = $this->setupSut($market, [$consumeRate]);
+        $consumer = $this->setupSut($market, new ConsumerArgs([$consumeRate]));
         // Act
         $consumer->act();
         // Assert
@@ -93,7 +91,7 @@ final class ConsumerTest extends TestCase
             budget: new Range(100, 200),
             buyingVolume: new Range(50, 100)
         );
-        $consumer = $this->setupSut($market, [$consumeRate], new FakeRNG(FakeRNGStrategy::UseMin));
+        $consumer = $this->setupSut($market, new ConsumerArgs([$consumeRate]), new FakeRNG(FakeRNGStrategy::UseMin));
         // Act
         $consumer->act();
         // Assert
@@ -111,7 +109,7 @@ final class ConsumerTest extends TestCase
             budget: 100,
             buyingVolume: 1
         );
-        $consumer = new Consumer($market, [$consumeRate], new RNG());
+        $consumer = new Consumer($market, new ConsumerArgs([$consumeRate]), new RNG());
         // Act
         $consumer->act();
         // Assert

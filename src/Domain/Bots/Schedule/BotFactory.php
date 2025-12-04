@@ -21,8 +21,8 @@ final class BotFactory
         $type = $blueprint->type();
 
         return match ($type) {
-            Producer::class => new Producer($this->market, $blueprint->args()[0], new RNG()),
-            Consumer::class => new Consumer($this->market, $blueprint->args()[0], new RNG()),
+            Producer::class => new Producer($this->market, $blueprint->args(), new RNG()),
+            Consumer::class => new Consumer($this->market, $blueprint->args(), new RNG()),
             default => throw new \InvalidArgumentException("Unknown blueprint type: $type"),
         };
     }
