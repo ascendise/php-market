@@ -19,6 +19,7 @@ final class BotFactory
     public function create(BotBlueprint $blueprint): Bot
     {
         $type = $blueprint->type();
+        var_dump($blueprint->args());
 
         return match ($type) {
             Producer::class => new Producer($this->market, $blueprint->args(), new RNG()),

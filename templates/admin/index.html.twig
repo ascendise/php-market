@@ -55,19 +55,19 @@
                 <tbody>
                     <tr>
                         <td class='centered'>
-                            <input type='text' name='args[]product[name]'/>
+                            <input type='text' name='args[produceRates][0][product][name]'/>
                         </td>
                         <td class='centered'>
-                            <input type='number' name='args[]tradingVolume[min]'/>
-                            <input type='number' name='args[]tradingVolume[max]'/>
+                            <input type='number' name='args[produceRates][0][tradingVolume][min]'/>
+                            <input type='number' name='args[produceRates][0][tradingVolume][max]'/>
                         </td>
                         <td class='centered'>
-                            <input type='number' name='args[]offerQuantity[min]'/>
-                            <input type='number' name='args[]offerQuantity[max]'/>
+                            <input type='number' name='args[produceRates][0][offerQuantity][min]'/>
+                            <input type='number' name='args[produceRates][0][offerQuantity][max]'/>
                         </td>
                         <td class='centered'>
-                            <input type='number' name='args[]pricePerItem[min]'/>
-                            <input type='number' name='args[]pricePerItem[max]'/>
+                            <input type='number' name='args[produceRates][0][pricePerItem][min]'/>
+                            <input type='number' name='args[produceRates][0][pricePerItem][max]'/>
                         </td>
                         <td class='centered'>
                             <button onclick="deleteRow('producer-args', this)" type='button'>Delete Row</button>
@@ -86,29 +86,45 @@
 {% block javascript %}
 <script>
     function newRow(tableId) {
-        let table = document.getElementById(tableId);
-        let templateRow = table.rows[1];
-        let newRow = table.insertRow(-1);
-        for (let cell of templateRow.cells) {
-            let newCell = newRow.insertCell(-1);
+        const table = document.getElementById(tableId);
+        const templateRow = table.rows[1];
+        const newRow = table.insertRow(-1);
+        for (const cell of templateRow.cells) {
+            const newCell = newRow.insertCell(-1);
             Array.from(cell.attributes).forEach(
                 node => newCell.setAttributeNode(node.cloneNode(true))
             );
             newCell.innerHTML = cell.innerHTML;
         }
+        updateArgsIndex(table);
     }
 
     function deleteRow(tableId, childElement) {
-        let table = document.getElementById(tableId);
-        let rows = Array.from(table.rows).slice(1); //Ignore Header Row
+        const table = document.getElementById(tableId);
+        const rows = Array.from(table.rows).slice(1); //Ignore Header Row
         if(rows.length <= 1) {
             console.log('Tried to delete last row, which is required for cloning');
             return;
         }
-        let row = rows.filter(r => r.contains(childElement));
+        const row = rows.filter(r => r.contains(childElement));
         if(row[0]) {
             row[0].remove();
         }
+        updateArgsIndex(table);
+    }
+
+    function updateArgsIndex(table) {
+        let index = 0;
+        for(const row of table.rows) {
+            const inputs = row.getElementsByTagName('input');
+            for(const input of inputs) {
+                const name = input.attributes['name'].nodeValue;
+                const newName = name.replace(/\d+/gm, index);
+                input.attributes['name'].nodeValue = newName;
+            }
+            index++;
+        }
+
     }
 </script>
 {% endblock %}

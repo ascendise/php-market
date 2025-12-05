@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller\Pages;
 
 use App\Application\Bots\BotAdministrationService;
-use App\Application\Bots\BotCommandDto;
+use App\Controller\Pages\Admin\BotCommandFormData;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
@@ -27,9 +29,9 @@ final class AdminController extends AbstractController
 
     #[Route('/admin/_create-bot', methods: 'POST')]
     public function createBot(
-        #[MapRequestPayload] BotCommandDto $createBotRequest,
+        #[MapRequestPayload] BotCommandFormData $createBotRequest,
     ): Response {
-        $this->botAdminService->create($createBotRequest);
+        $this->botAdminService->create($createBotRequest->toDto());
 
         return $this->index();
     }
