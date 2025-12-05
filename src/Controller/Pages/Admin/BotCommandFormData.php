@@ -47,13 +47,14 @@ final class BotCommandFormData
         );
     }
 
-    private function toRange(mixed $e): Range|int
+    private function toRange(string $e): Range|int
     {
-        $min = (int) $e['min'];
-        $max = (int) $e['max'];
-        if ($min == $max) {
-            return $min;
+        if (!str_contains($e, '-')) {
+            return (int) $e;
         }
+        $range = explode('-', $e);
+        $min = (int) $range[0];
+        $max = (int) $range[1];
 
         return new Range($min, $max);
     }

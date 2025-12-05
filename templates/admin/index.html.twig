@@ -58,16 +58,13 @@
                             <input type='text' name='args[produceRates][0][product][name]'/>
                         </td>
                         <td class='centered'>
-                            <input type='number' name='args[produceRates][0][tradingVolume][min]'/>
-                            <input type='number' name='args[produceRates][0][tradingVolume][max]'/>
+                            <input type='text' pattern='^\d+(-\d+)?$' name='args[produceRates][0][tradingVolume]'/>
                         </td>
                         <td class='centered'>
-                            <input type='number' name='args[produceRates][0][offerQuantity][min]'/>
-                            <input type='number' name='args[produceRates][0][offerQuantity][max]'/>
+                            <input type='text' pattern='^\d+(-\d+)?$' name='args[produceRates][0][offerQuantity]'/>
                         </td>
                         <td class='centered'>
-                            <input type='number' name='args[produceRates][0][pricePerItem][min]'/>
-                            <input type='number' name='args[produceRates][0][pricePerItem][max]'/>
+                            <input type='text' pattern='^\d+(-\d+)?$' name='args[produceRates][0][pricePerItem]'/>
                         </td>
                         <td class='centered'>
                             <button onclick="deleteRow('producer-args', this)" type='button'>Delete Row</button>
