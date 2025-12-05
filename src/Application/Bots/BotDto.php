@@ -13,7 +13,9 @@ use Symfony\Component\Uid\Uuid;
 
 final class BotDto extends HALResource implements WebLinksProvider, RestLinksProvider
 {
-    /** @param array<int, mixed> $args */
+    /**
+     * @param array<int,mixed> $args
+     */
     public function __construct(
         public readonly Uuid $id,
         public readonly BotType $type,
@@ -43,7 +45,7 @@ final class BotDto extends HALResource implements WebLinksProvider, RestLinksPro
         return new BotDto(
             Uuid::fromString($blueprint->id()),
             BotType::from($blueprint->type()),
-            $blueprint->args(),
+            (array) $blueprint->args(),
             FrequencyDto::fromDateInterval($blueprint->frequency())
         );
     }

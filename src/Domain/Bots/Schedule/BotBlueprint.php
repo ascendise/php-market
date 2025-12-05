@@ -6,13 +6,10 @@ namespace App\Domain\Bots\Schedule;
 
 final class BotBlueprint
 {
-    /**
-     * @param array<int,mixed> $args
-     */
     public function __construct(
         private readonly string $id,
         private readonly string $type,
-        private readonly array $args,
+        private readonly mixed $args,
         private readonly \DateInterval $frequency,
     ) {
     }
@@ -27,10 +24,7 @@ final class BotBlueprint
         return $this->type;
     }
 
-    /**
-     * @return array<int,mixed>
-     */
-    public function args(): array
+    public function args(): mixed
     {
         return $this->args;
     }

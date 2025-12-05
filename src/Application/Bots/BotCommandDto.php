@@ -10,7 +10,6 @@ use App\Domain\Bots\Schedule\BotBlueprintCommand;
 
 final class BotCommandDto
 {
-    /** @param array<int, mixed> $args */
     public function __construct(
         public readonly BotType $type,
         public readonly ProducerArgs|ConsumerArgs $args,
@@ -20,6 +19,6 @@ final class BotCommandDto
 
     public function toEntity(): BotBlueprintCommand
     {
-        return new BotBlueprintCommand($this->type->value, (array) $this->args, $this->frequency->toDateInterval());
+        return new BotBlueprintCommand($this->type->value, $this->args, $this->frequency->toDateInterval());
     }
 }

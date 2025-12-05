@@ -91,7 +91,7 @@ class DevFixtures extends Fixture
         ]);
         $producer = new BotBlueprint()
             ->setType(Producer::class)
-            ->setArgs((array) $producerArgs)
+            ->setArgs($producerArgs)
             ->setFrequency(\DateInterval::createFromDateString('3 seconds'));
         $manager->persist($producer);
         $consumerArgs = new ConsumerArgs([
@@ -103,7 +103,7 @@ class DevFixtures extends Fixture
         ]);
         $consumer = new BotBlueprint()
             ->setType(Consumer::class)
-            ->setArgs((array) $consumerArgs)
+            ->setArgs($consumerArgs)
             ->setFrequency(\DateInterval::createFromDateString('5 seconds'));
         $manager->persist($consumer);
     }

@@ -20,11 +20,8 @@ class BotBlueprint
     #[ORM\Column(length: 255)]
     private ?string $type = null;
 
-    /**
-     * @var array<int, mixed> $args
-     */
-    #[ORM\Column(type: 'json_document')]
-    private array $args = [];
+    #[ORM\Column(type: 'object')]
+    private mixed $args = [];
 
     #[ORM\Column]
     private ?\DateInterval $frequency = null;
@@ -67,20 +64,14 @@ class BotBlueprint
         return $this;
     }
 
-    /**
-     * @param array<int, mixed> $args
-     */
-    public function setArgs(array $args): static
+    public function setArgs(mixed $args): static
     {
         $this->args = $args;
 
         return $this;
     }
 
-    /**
-     * @return array<int, mixed> $args
-     */
-    public function getArgs(): array
+    public function getArgs(): mixed
     {
         return $this->args;
     }
