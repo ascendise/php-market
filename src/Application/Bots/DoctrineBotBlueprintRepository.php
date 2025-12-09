@@ -61,5 +61,6 @@ final class DoctrineBotBlueprintRepository implements BotBlueprintRepository
             return;
         }
         $this->entityManager->remove($blueprint);
+        $this->entityManager->flush();
     }
 }

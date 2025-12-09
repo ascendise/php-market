@@ -18,6 +18,7 @@
                     <th>Type</th>
                     <th>Frequency</th>
                     <th>Args</th>
+                    <th>Options</th>
                 </tr>
             </thead>
             <tbody>
@@ -27,6 +28,9 @@
                     <td class='centered'>{{ bot.type.name }}</td>
                     <td class='centered'>{{ bot.frequency }}</td>
                     <td>{{ bot.args|json_encode }}</td>
+                    <td class='centered'>
+                        <button hx-delete='{{ bot.halLinks.self.href }}' hx-target='body'>Delete</button>
+                    </td>
                 </tr>
             {% endfor %}
             </tbody>
@@ -34,7 +38,7 @@
     </div>
     <div class='editor'>
         <h1>Create New Bot</h1>
-        <form hx-post='/admin/_create-bot' hx-target='body'>
+        <form hx-post='{{ bots.halLinks.bots.href }}' hx-target='body'>
             <select name='type'>
             {% for type in enum('App\\Application\\Bots\\BotType').cases %}
                 <option value='{{ type.value }}'>{{ type.name }}</option>
