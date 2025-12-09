@@ -44,7 +44,7 @@
                 <option value='{{ type.value }}'>{{ type.name }}</option>
             {% endfor %}
             </select>
-            <input name='frequency' type='time' step=1 />
+            <input name='frequency' type='time' step=1 value='00:05:00' min='00:00:01' max='24:00:00' required />
             <table id='producer-args'>
                 <thead>
                     <tr>
@@ -58,16 +58,16 @@
                 <tbody>
                     <tr>
                         <td class='centered'>
-                            <input type='text' name='args[produceRates][0][product][name]'/>
+                            <input type='text' name='args[produceRates][0][product][name]' required/>
                         </td>
                         <td class='centered'>
-                            <input type='text' pattern='^\d+(-\d+)?$' name='args[produceRates][0][tradingVolume]'/>
+                            <input type='text' pattern='^\d+(-\d+)?$' name='args[produceRates][0][tradingVolume]' required/>
                         </td>
                         <td class='centered'>
-                            <input type='text' pattern='^\d+(-\d+)?$' name='args[produceRates][0][offerQuantity]'/>
+                            <input type='text' pattern='^\d+(-\d+)?$' name='args[produceRates][0][offerQuantity]' required/>
                         </td>
                         <td class='centered'>
-                            <input type='text' pattern='^\d+(-\d+)?$' name='args[produceRates][0][pricePerItem]'/>
+                            <input type='text' pattern='^\d+(-\d+)?$' name='args[produceRates][0][pricePerItem]' required/>
                         </td>
                         <td class='centered'>
                             <button onclick="deleteRow('producer-args', this)" type='button'>Delete Row</button>
