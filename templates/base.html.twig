@@ -8,8 +8,12 @@
     <body>
     {% if app.user %}
         <p>Logged in as {{ app.user.email }}</p>
-        <button hx-get='/' hx-target='body' hx-push-url='true'>Market</button>
-        <button hx-get='/admin' hx-target='body' hx-push-url='true'>Admin</button>
+        <a href='/'>
+            <button>Market</button>
+        </a>
+        <a href='/admin'>
+            <button>Admin</button>
+        </a>
         <button hx-post='/auth/_logout' hx-target='body' hx-push-url='true'>Log out</button>
     {% endif %}
         {% block body %}{% endblock %}
