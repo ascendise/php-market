@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controller\Pages;
 
 use App\Application\Bots\BotAdministrationService;
+use App\Application\Bots\BotType;
 use App\Application\HAL\LinkPopulator;
 use App\Controller\Pages\Admin\BotCommandFormData;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -46,5 +47,15 @@ final class AdminController extends AbstractController
         $this->botAdminService->delete($botId);
 
         return $this->index();
+    }
+
+    #[Route('/admin/bots/_create/{type}', methods: 'GET')]
+    public function getBotForm(string $type): Response
+    {
+        return match (BotType::{$type}) {
+            BotType::Consumer => $this->render('admin/_edit_consumer.html.twig'),
+            BotType::Producer => $this->render('admin/_edit_producer.html.twig'),
+            _ => new Response(status: Response::HTTP_BAD_REQUEST)
+        };
     }
 }
