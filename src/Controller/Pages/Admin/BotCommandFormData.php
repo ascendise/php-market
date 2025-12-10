@@ -7,6 +7,8 @@ namespace App\Controller\Pages\Admin;
 use App\Application\Bots\BotCommandDto;
 use App\Application\Bots\BotType;
 use App\Application\Bots\FrequencyDto;
+use App\Domain\Bots\ConsumerArgs;
+use App\Domain\Bots\ConsumeRate;
 use App\Domain\Bots\ProducerArgs;
 use App\Domain\Bots\ProduceRate;
 use App\Domain\Bots\Range;
@@ -26,10 +28,46 @@ final class BotCommandFormData
         $botType = BotType::from($this->type);
         $times = explode(':', $this->frequency); // hh:mm:ss
         $frequency = new FrequencyDto((int) $times[2], (int) $times[1], (int) $times[0]);
+        $args = $this->getArgs($botType);
+
+        return new BotCommandDto($botType, $args, $frequency);
+    }
+
+    private function getArgs(BotType $type): mixed
+    {
+        return match ($type) {
+            BotType::Consumer => $this->getConsumerArgs(),
+            BotType::Producer => $this->getProducerArgs(),
+        };
+    }
+
+    private function getConsumerArgs(): ConsumerArgs
+    {
+        $consumeRates = array_map(fn ($e) => $this->toConsumeRate($e), $this->args['consumeRates']);
+        $consumerArgs = new ConsumerArgs($consumeRates);
+
+        return $consumerArgs;
+    }
+
+    private function toConsumeRate(mixed $e): ConsumeRate
+    {
+        $product = new Product($e['product']['name']);
+        $budget = $this->toRange($e['budget']);
+        $buyingVolume = $this->toRange($e['buyingVolume']);
+
+        return new ConsumeRate(
+            $product,
+            $budget,
+            $buyingVolume
+        );
+    }
+
+    private function getProducerArgs(): ConsumerArgs
+    {
         $produceRates = array_map(fn ($e) => $this->toProduceRate($e), $this->args['produceRates']);
         $producerArgs = new ProducerArgs($produceRates);
 
-        return new BotCommandDto($botType, $producerArgs, $frequency);
+        return $producerArgs;
     }
 
     private function toProduceRate(mixed $e): ProduceRate
