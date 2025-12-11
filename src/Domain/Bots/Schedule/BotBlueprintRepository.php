@@ -11,6 +11,8 @@ interface BotBlueprintRepository
      */
     public function list(): array;
 
+    public function findById(string $id): ?BotBlueprint;
+
     public function create(BotBlueprintCommand $blueprint): BotBlueprint;
 
     public function update(string $id, BotBlueprintCommand $blueprint): ?BotBlueprint;

@@ -62,7 +62,7 @@ final class BotCommandFormData
         );
     }
 
-    private function getProducerArgs(): ConsumerArgs
+    private function getProducerArgs(): ProducerArgs
     {
         $produceRates = array_map(fn ($e) => $this->toProduceRate($e), $this->args['produceRates']);
         $producerArgs = new ProducerArgs($produceRates);

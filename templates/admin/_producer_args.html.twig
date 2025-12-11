@@ -10,6 +10,27 @@
         </tr>
     </thead>
     <tbody>
+        {% if bot is defined %}
+        {% for rate in bot.args.produceRates %}
+        <tr>
+            <td class='centered'>
+                <input type='text' name='args[produceRates][{{ loop.index }}][product][name]' value='{{ rate.product.name }}' required/>
+            </td>
+            <td class='centered'>
+                <input type='text' pattern='^\d+(-\d+)?$' name='args[produceRates][{{ loop.index }}][tradingVolume]' value='{{ rate.tradingVolume }}' required/>
+            </td>
+            <td class='centered'>
+                <input type='text' pattern='^\d+(-\d+)?$' name='args[produceRates][{{ loop.index }}][offerQuantity]' value='{{ rate.offerQuantity }}' required/>
+            </td>
+            <td class='centered'>
+                <input type='text' pattern='^\d+(-\d+)?$' name='args[produceRates][{{ loop.index }}][pricePerItem]' value='{{ rate.pricePerItem }}' required/>
+            </td>
+            <td class='centered'>
+                <button onclick="deleteRow('producer-args', this)" type='button'>Delete Row</button>
+            </td>
+        </tr>
+        {% endfor %}
+        {% else %}
         <tr>
             <td class='centered'>
                 <input type='text' name='args[produceRates][0][product][name]' required/>
@@ -27,6 +48,7 @@
                 <button onclick="deleteRow('producer-args', this)" type='button'>Delete Row</button>
             </td>
         </tr>
+        {% endif %}
     </tbody>
 </table>
 <button type='button' onclick="newRow('producer-args')">Add Row</button>
@@ -35,12 +57,12 @@
 <script>
     function newRow(tableId) {
         const table = document.getElementById(tableId);
-        const templateRow = table.rows[1];
+        const templateRow = table.rows[table.rows.length - 1];
         const newRow = table.insertRow(-1);
         for (const cell of templateRow.cells) {
             const newCell = newRow.insertCell(-1);
-            Array.from(cell.attributes).forEach(
-                node => newCell.setAttributeNode(node.cloneNode(true))
+            Array.from(cell.attributes).forEach(node =>
+                newCell.setAttributeNode(node.cloneNode(true))
             );
             newCell.innerHTML = cell.innerHTML;
         }

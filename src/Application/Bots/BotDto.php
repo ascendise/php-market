@@ -42,11 +42,25 @@ final class BotDto extends HALResource implements WebLinksProvider, RestLinksPro
 
     public static function fromEntity(BotBlueprint $blueprint): BotDto
     {
+        $args = self::getNormalizedArgs($blueprint);
+
         return new BotDto(
             Uuid::fromString($blueprint->id()),
             BotType::from($blueprint->type()),
-            (array) $blueprint->args(),
+            $args,
             FrequencyDto::fromDateInterval($blueprint->frequency())
         );
+    }
+
+    /** Removes namespace from keys **/
+    private static function getNormalizedArgs(BotBlueprint $blueprint): array
+    {
+        $args = (array) $blueprint->args();
+        $rootKey = array_key_first($args);
+        $normalizedKey = preg_replace('#\x00.+\x00#', '', $rootKey);
+        $args[$normalizedKey] = $args[$rootKey];
+        unset($args[$rootKey]);
+
+        return $args;
     }
 }

@@ -10,6 +10,8 @@ interface BotAdministrationService
 {
     public function list(): BotsDto;
 
+    public function findById(Uuid $id): ?BotDto;
+
     public function create(BotCommandDto $createBot): BotDto;
 
     public function update(Uuid $id, BotCommandDto $updateBot): ?BotDto;

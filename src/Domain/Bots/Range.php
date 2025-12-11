@@ -34,4 +34,13 @@ final class Range
             return $range;
         }
     }
+
+    public function __toString(): string
+    {
+        if ($this->min == $this->max) {
+            return $this->min;
+        } else {
+            return "$this->min-$this->max";
+        }
+    }
 }

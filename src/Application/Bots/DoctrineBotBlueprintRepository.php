@@ -32,6 +32,16 @@ final class DoctrineBotBlueprintRepository implements BotBlueprintRepository
         return $this->entityManager->getRepository(Entity\BotBlueprint::class);
     }
 
+    public function findById(string $id): ?BotBlueprint
+    {
+        $blueprint = $this->blueprintRepo()->find($id);
+        if (!$blueprint) {
+            return null;
+        }
+
+        return $blueprint->toEntity();
+    }
+
     public function create(BotBlueprintCommand $createBlueprint): BotBlueprint
     {
         $blueprint = new Entity\BotBlueprint();

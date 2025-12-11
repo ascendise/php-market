@@ -26,6 +26,13 @@ final class BotAdministrationServiceImpl implements BotAdministrationService
         return new BotsDto($blueprints);
     }
 
+    public function findById(Uuid $botId): ?BotDto
+    {
+        $blueprint = $this->blueprintRepository->findById($botId->toString());
+
+        return BotDto::fromEntity($blueprint);
+    }
+
     public function create(BotCommandDto $createBot): BotDto
     {
         $newBlueprint = $createBot->toEntity();

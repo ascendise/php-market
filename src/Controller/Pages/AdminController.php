@@ -22,7 +22,7 @@ final class AdminController extends AbstractController
     ) {
     }
 
-    #[Route('/admin')]
+    #[Route('/admin', methods: 'GET')]
     public function index(): Response
     {
         $bots = $this->botAdminService->list();
@@ -41,21 +41,45 @@ final class AdminController extends AbstractController
         return $this->index();
     }
 
+    #[Route('/admin/bots/{botId}', methods: 'GET')]
+    public function getBot(Uuid $botId): Response
+    {
+        $bot = $this->botAdminService->findById($botId);
+        if (!$bot) {
+            return new Response(status: Response::HTTP_NOT_FOUND);
+        }
+
+        return $this->render('admin/_update_bot.html.twig', [
+            'bot' => $this->linkPopulator->populateWebLinks($bot),
+        ]);
+    }
+
+    #[Route('/admin/bots/_args-editor/{type}', methods: 'GET')]
+    public function getBotForm(string $type): Response
+    {
+        return match (BotType::{$type}) {
+            BotType::Consumer => $this->render('admin/_consumer_args.html.twig'),
+            BotType::Producer => $this->render('admin/_producer_args.html.twig'),
+            _ => new Response(status: Response::HTTP_BAD_REQUEST)
+        };
+    }
+
+    #[Route('/admin/bots/{botId}', methods: 'PUT')]
+    public function updateBot(Uuid $botId, #[MapRequestPayload] BotCommandFormData $updateBotRequest): Response
+    {
+        $bot = $this->botAdminService->update($botId, $updateBotRequest->toDto());
+        if (!$bot) {
+            return new Response(status: Response::HTTP_NOT_FOUND);
+        }
+
+        return $this->index();
+    }
+
     #[Route('/admin/bots/{botId}', methods: 'DELETE')]
     public function deleteBot(Uuid $botId): Response
     {
         $this->botAdminService->delete($botId);
 
         return $this->index();
-    }
-
-    #[Route('/admin/bots/_create/{type}', methods: 'GET')]
-    public function getBotForm(string $type): Response
-    {
-        return match (BotType::{$type}) {
-            BotType::Consumer => $this->render('admin/consumer_args.html.twig'),
-            BotType::Producer => $this->render('admin/producer_args.html.twig'),
-            _ => new Response(status: Response::HTTP_BAD_REQUEST)
-        };
     }
 }

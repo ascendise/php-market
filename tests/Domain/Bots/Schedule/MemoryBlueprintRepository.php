@@ -26,6 +26,15 @@ final class MemoryBlueprintRepository implements BotBlueprintRepository
         return array_values($this->blueprints);
     }
 
+    public function findById(string $id): ?BotBlueprint
+    {
+        if (!isset($this->blueprints[$id])) {
+            return null;
+        }
+
+        return $this->blueprint[$id];
+    }
+
     public function create(BotBlueprintCommand $blueprint): BotBlueprint
     {
         $blueprint = new BotBlueprint(
