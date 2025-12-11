@@ -53,8 +53,8 @@ final class AdminController extends AbstractController
     public function getBotForm(string $type): Response
     {
         return match (BotType::{$type}) {
-            BotType::Consumer => $this->render('admin/_edit_consumer.html.twig'),
-            BotType::Producer => $this->render('admin/_edit_producer.html.twig'),
+            BotType::Consumer => $this->render('admin/consumer_args.html.twig'),
+            BotType::Producer => $this->render('admin/producer_args.html.twig'),
             _ => new Response(status: Response::HTTP_BAD_REQUEST)
         };
     }
