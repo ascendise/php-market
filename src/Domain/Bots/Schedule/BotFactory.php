@@ -31,7 +31,7 @@ final class BotFactory implements BotBlueprintValidator
     {
         $result = $this->tryCreateBot($blueprint);
         if ($result instanceof InvalidBlueprintException) {
-            throw $result;
+            return $result;
         }
 
         return null;
