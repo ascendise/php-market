@@ -1,11 +1,13 @@
+{% set bot_types = enum('App\\Application\\Bots\\BotType') %}
 <h1>Create New Bot</h1>
 <form hx-post='{{ bots.halLinks.bots.href }}' hx-target='body'>
-    <select name='type'>
-    {% for type in enum('App\\Application\\Bots\\BotType').cases %}
+    <select name='type' autocomplete='off'>
+    {% for type in bot_types.cases %}
         <option hx-get='admin/bots/_args-editor/{{ type.name }}'
                 hx-target='#args-editor'
                 hx-trigger='click'
-                value='{{ type.value }}'>
+                value='{{ type.value }}'
+                {% if type == bot_types.Producer %}selected='true'{% endif %}>
                 {{ type.name }}
         </option>
     {% endfor %}
