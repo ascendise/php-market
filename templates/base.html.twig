@@ -11,9 +11,11 @@
         <a href='/'>
             <button>Market</button>
         </a>
+        {% if 'ROLE_ADMIN' in app.user.roles %}
         <a href='/admin'>
             <button>Admin</button>
         </a>
+        {% endif %}
         <button hx-post='/auth/_logout' hx-target='body' hx-push-url='true'>Log out</button>
     {% endif %}
         {% block body %}{% endblock %}

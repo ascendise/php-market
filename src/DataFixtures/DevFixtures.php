@@ -35,14 +35,15 @@ class DevFixtures extends Fixture
 
     private function seedTradersWithOffers(ObjectManager $manager): void
     {
-        $bot = new User();
-        $bot->setEmail('bot@ascendise.ch');
-        $bot->setPassword($this->hasher->hashPassword($bot, 'bot'));
+        // Normal User
+        $traderUser = new User();
+        $traderUser->setEmail('trader@ascendise.ch');
+        $traderUser->setPassword($this->hasher->hashPassword($traderUser, 'trader'));
         $trader = new Trader();
         $trader->setBalance(1000);
-        $bot->setTrader($trader);
+        $traderUser->setTrader($trader);
         $manager->persist($trader);
-        $manager->persist($bot);
+        $manager->persist($traderUser);
         $item1 = new Item();
         $item1->setProductName('Tarcola');
         $item1->setQuantity(5);
@@ -59,6 +60,18 @@ class DevFixtures extends Fixture
         $manager->persist($item3);
         $trader->addInventory($item3);
 
+        // Admin user
+        $admin = new User();
+        $admin->setEmail('admin@ascendise.ch');
+        $admin->setPassword($this->hasher->hashPassword($admin, 'admin'));
+        $admin->setRoles(['ROLE_ADMIN']);
+        $adminTrader = new Trader();
+        $adminTrader->setBalance(999999);
+        $admin->setTrader($adminTrader);
+        $manager->persist($adminTrader);
+        $manager->persist($admin);
+
+        // Initial offers
         $offer1 = new Offer();
         $offer1->setProductName('SIG P223');
         $offer1->setQuantity(1);
