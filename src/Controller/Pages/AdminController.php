@@ -62,7 +62,7 @@ final class AdminController extends AbstractController
         return match (BotType::{$type}) {
             BotType::Consumer => $this->render('admin/_consumer_args.html.twig'),
             BotType::Producer => $this->render('admin/_producer_args.html.twig'),
-            _ => new Response(status: Response::HTTP_BAD_REQUEST)
+            default => new Response(status: Response::HTTP_BAD_REQUEST)
         };
     }
 

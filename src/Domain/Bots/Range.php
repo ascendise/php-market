@@ -38,7 +38,7 @@ final class Range
     public function __toString(): string
     {
         if ($this->min == $this->max) {
-            return $this->min;
+            return (string) $this->min;
         } else {
             return "$this->min-$this->max";
         }

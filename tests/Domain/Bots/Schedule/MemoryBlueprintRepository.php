@@ -32,7 +32,7 @@ final class MemoryBlueprintRepository implements BotBlueprintRepository
             return null;
         }
 
-        return $this->blueprint[$id];
+        return $this->blueprints[$id];
     }
 
     public function create(BotBlueprintCommand $blueprint): BotBlueprint

@@ -52,7 +52,10 @@ final class BotDto extends HALResource implements WebLinksProvider, RestLinksPro
         );
     }
 
-    /** Removes namespace from keys **/
+    /**
+    * Removes namespace from keys
+    * @return array<int, mixed>
+    **/
     private static function getNormalizedArgs(BotBlueprint $blueprint): array
     {
         $args = (array) $blueprint->args();
