@@ -14,7 +14,7 @@ final class ProductDto
 
     public static function fromEntity(Product $product): ProductDto
     {
-        return new ProductDto($product->name());
+        return new ProductDto($product->name);
     }
 
     public function toEntity(): Product

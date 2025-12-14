@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20251114170515 extends AbstractMigration
+final class Version20251126233722 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -20,6 +20,10 @@ final class Version20251114170515 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
+        $this->addSql('CREATE TABLE bot_blueprint (id BLOB NOT NULL --(DC2Type:uuid)
+        , type VARCHAR(255) NOT NULL, args CLOB NOT NULL --(DC2Type:json)
+        , frequency VARCHAR(255) NOT NULL --(DC2Type:dateinterval)
+        , PRIMARY KEY(id))');
         $this->addSql('CREATE TABLE item (id BLOB NOT NULL --(DC2Type:uuid)
         , owner_id BLOB NOT NULL --(DC2Type:uuid)
         , product_name VARCHAR(255) NOT NULL, quantity INTEGER NOT NULL, PRIMARY KEY(id), CONSTRAINT FK_1F1B251E7E3C61F9 FOREIGN KEY (owner_id) REFERENCES trader (id) NOT DEFERRABLE INITIALLY IMMEDIATE)');
@@ -39,6 +43,7 @@ final class Version20251114170515 extends AbstractMigration
     public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
+        $this->addSql('DROP TABLE bot_blueprint');
         $this->addSql('DROP TABLE item');
         $this->addSql('DROP TABLE offer');
         $this->addSql('DROP TABLE trader');

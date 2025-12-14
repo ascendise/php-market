@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Controller\Pages;
 
 use App\Application\HAL\LinkPopulator;
-use App\Application\Market\CreateOfferDto;
 use App\Application\Market\MarketDto;
 use App\Application\Market\MarketService;
+use App\Application\Market\OfferCommandDto;
 use App\Application\Market\TraderDto;
 use App\Application\RateLimit\RateLimitGuard;
 use App\Entity\Market\Trader;
@@ -73,7 +73,7 @@ final class MarketController extends AbstractController
     #[Route('market/_sell', methods: 'POST')]
     #[IsCsrfTokenValid('sell')]
     public function sell(
-        #[MapRequestPayload] CreateOfferDto $createOfferRequest,
+        #[MapRequestPayload] OfferCommandDto $createOfferRequest,
         UserInterface $user,
     ): Response {
         return $this->rateLimiter->guard(function () use ($createOfferRequest, $user) {

@@ -23,7 +23,7 @@ final class MarketServiceImpl implements MarketService
         return OffersDto::fromEntity($offers);
     }
 
-    public function createOffer(Uuid $sellerId, CreateOfferDto $createOffer): CreatedOfferDto
+    public function createOffer(Uuid $sellerId, OfferCommandDto $createOffer): CreatedOfferDto
     {
         $seller = $this->market->findTrader($sellerId->toString());
         $offer = $seller->sell(

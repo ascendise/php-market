@@ -17,7 +17,7 @@ class AuthenticationServiceImpl implements AuthenticationService
     ) {
     }
 
-    public function createUser(CreateUserDto $createUser): UserDto
+    public function createUser(UserCommandDto $createUser): UserDto
     {
         $userExists = null != $this->userRepo->load($createUser->email);
         if ($userExists) {

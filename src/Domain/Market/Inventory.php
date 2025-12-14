@@ -10,7 +10,7 @@ namespace App\Domain\Market;
 final class Inventory implements \IteratorAggregate
 {
     /**
-     * @var array<int, Item>
+     * @var array<string, Item>
      */
     private array $items;
 
@@ -29,7 +29,7 @@ final class Inventory implements \IteratorAggregate
 
     public function add(Item $item): void
     {
-        $productName = $item->product()->name();
+        $productName = $item->product()->name;
         if ($this->itemExists($productName)) {
             $this->items[$productName] = $this->items[$productName]->add($item);
         } else {
@@ -39,7 +39,7 @@ final class Inventory implements \IteratorAggregate
 
     public function remove(Product $product, int $quantity): Item
     {
-        $productName = $product->name();
+        $productName = $product->name;
         if (!$this->itemExists($productName)) {
             throw new InsufficientStockException($quantity, 0, $product);
         }
@@ -61,10 +61,10 @@ final class Inventory implements \IteratorAggregate
 
     public function quantityOf(Product $product): int
     {
-        if (!$this->itemExists($product->name())) {
+        if (!$this->itemExists($product->name)) {
             return 0;
         }
-        $item = $this->items[$product->name()];
+        $item = $this->items[$product->name];
 
         return $item->quantity();
     }

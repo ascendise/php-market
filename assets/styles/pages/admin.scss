@@ -1,0 +1,27 @@
+.bot-admin {
+    display: flex;
+    flex-direction: row;
+
+}
+
+.bots {
+    flex: 1 1;
+
+    tbody {
+        max-height: 80vh;
+    }
+}
+
+.editor {
+    flex: 1 1;
+}
+
+.editor>form {
+    display: flex;
+    flex-direction: column;
+}
+
+.args-editor {
+    display: flex;
+    flex-direction: column;
+}

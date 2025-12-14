@@ -1,0 +1,25 @@
+{% set bot_types = enum('App\\Application\\Bots\\BotType') %}
+<h1>Edit {{ bot.type.name }} {{ bot.id }}</h1>
+<form hx-put='{{ bot.halLinks.self.href }}' hx-target='body'>
+    <select name='type'>
+    {% for type in bot_types.cases %}
+        <option hx-get='admin/bots/_args-editor/{{ type.name }}'
+                hx-target='#args-editor'
+                hx-trigger='click'
+                value='{{ type.value }}'
+                {% if bot.type == type %}selected{% endif %}>
+                {{ type.name }}
+        </option>
+    {% endfor %}
+    </select>
+    <div id='args-editor' class='args-editor'>
+        {% if bot.type.name == bot_types.Producer.name %}
+            {{ include('admin/_producer_args.html.twig') }}
+        {% elseif bot.type.name == bot_types.Consumer.name %}
+            {{ include('admin/_consumer_args.html.twig') }}
+        {% else %}
+            <p>You managed to load a non-existing bot type. Congrats! (Please report this)</p>
+        {% endif %}
+    </div>
+    <button>Update Bot</button>
+</form>

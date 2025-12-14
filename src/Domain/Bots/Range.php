@@ -7,22 +7,12 @@ namespace App\Domain\Bots;
 final class Range
 {
     public function __construct(
-        private readonly int $min,
-        private readonly int $max,
+        public readonly int $min,
+        public readonly int $max,
     ) {
         if ($min >= $max) {
             throw new \InvalidArgumentException("\$min($min) has to be less than \$max($max)");
         }
-    }
-
-    public function min(): int
-    {
-        return $this->min;
-    }
-
-    public function max(): int
-    {
-        return $this->max;
     }
 
     /*
@@ -42,6 +32,15 @@ final class Range
             return $range->value($rng);
         } else {
             return $range;
+        }
+    }
+
+    public function __toString(): string
+    {
+        if ($this->min == $this->max) {
+            return (string) $this->min;
+        } else {
+            return "$this->min-$this->max";
         }
     }
 }

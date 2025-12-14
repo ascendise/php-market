@@ -7,7 +7,7 @@ jobs:
   setup: 
     runs-on: ubuntu-latest
     container:
-        image: docker.ascendise.ch/ascendise/php-runner:1.0.0
+        image: docker.ascendise.ch/ascendise/php-runner:1.0.1-php84
     steps:
       - name: Checkout project
         uses: actions/checkout@v4
@@ -33,7 +33,7 @@ jobs:
     needs: [setup]
     runs-on: ubuntu-latest
     container:
-        image: docker.ascendise.ch/ascendise/php-runner:1.0.0
+        image: docker.ascendise.ch/ascendise/php-runner:1.0.1-php84
     steps:
       - name: Checkout project
         uses: actions/checkout@v4
@@ -61,7 +61,7 @@ jobs:
     needs: [setup]
     runs-on: ubuntu-latest
     container:
-        image: docker.ascendise.ch/ascendise/php-runner:1.0.0
+        image: docker.ascendise.ch/ascendise/php-runner:1.0.1-php84
     steps:
       - name: Checkout project
         uses: actions/checkout@v4

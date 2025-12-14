@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block styles %}
+    <link rel='stylesheet' href="{{ asset('styles/pages/admin.scss') }}" />
+{% endblock %}
+
+{% block title %}Market Administration{% endblock %}
+
+{% block body %}
+
+<div class='bot-admin'>
+    <div class='bots'>
+        <h1>Bots</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Type</th>
+                    <th>Frequency</th>
+                    <th>Args</th>
+                    <th>Options</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for bot in bots %}
+                <tr class='clickable'
+                    hx-get='{{ bot.halLinks.self.href }}'
+                    hx-trigger='click'
+                    hx-swap='innerHTML'
+                    hx-target='#editor'>
+                    <td class='centered'>{{ bot.id }}</td>
+                    <td class='centered'>{{ bot.type.name }}</td>
+                    <td class='centered'>{{ bot.frequency }}</td>
+                    <td>{{ bot.args|json_encode(constant('JSON_PRETTY_PRINT')) }}</td>
+                    <td class='centered'>
+                        <button hx-delete='{{ bot.halLinks.self.href }}' hx-target='body'>Delete</button>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div id='editor' class='editor'>
+        {{ include('admin/_create_bot.html.twig') }}
+    </div>
+</div>
+
+{% endblock %}

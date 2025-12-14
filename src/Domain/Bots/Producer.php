@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Domain\Bots;
 
-use App\Domain\Market\CreateOffer;
 use App\Domain\Market\Market;
+use App\Domain\Market\OfferCommand;
 use App\Domain\Market\Payment;
 use App\Domain\Market\Product;
 use App\Domain\Market\Seller;
@@ -13,20 +13,18 @@ use App\Domain\Market\TraderRepository;
 
 final class Producer implements Bot, Seller
 {
-    /**
-     * @param array<int,ProduceRate> $produceRates
-     */
     public function __construct(
         private readonly Market $market,
-        private readonly array $produceRates,
+        private readonly ProducerArgs $args,
         private readonly ?RNG $rng,
     ) {
     }
 
     public function act(): void
     {
-        foreach ($this->produceRates as $produceRate) {
-            $volume = Range::getValue($produceRate->tradingVolume(), $this->rng);
+        $produceRates = $this->args->produceRates();
+        foreach ($produceRates as $produceRate) {
+            $volume = Range::getValue($produceRate->tradingVolume, $this->rng);
             while ($volume > 0) {
                 $this->createOffer($produceRate, $volume);
             }
@@ -35,19 +33,19 @@ final class Producer implements Bot, Seller
 
     private function createOffer(ProduceRate $produceRate, int &$volume): void
     {
-        $quantity = min($volume, Range::getValue($produceRate->offerQuantity(), $this->rng));
+        $quantity = min($volume, Range::getValue($produceRate->offerQuantity, $this->rng));
         $offer = $this->sell(
-            $produceRate->product(),
-            Range::getValue($produceRate->pricePerItem(), $this->rng),
+            $produceRate->product,
+            Range::getValue($produceRate->pricePerItem, $this->rng),
             $quantity
         );
         $this->market->createOffer($offer);
         $volume -= $offer->quantity();
     }
 
-    public function sell(Product $product, int $pricePerItem, int $quantity): CreateOffer
+    public function sell(Product $product, int $pricePerItem, int $quantity): OfferCommand
     {
-        return new CreateOffer($product, $pricePerItem, $quantity, $this);
+        return new OfferCommand($product, $pricePerItem, $quantity, $this);
     }
 
     public function receivePayment(Payment $payment): void

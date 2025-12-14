@@ -31,7 +31,7 @@ class Item
     public static function fromEntity(Domain\Market\Item $entity, Trader $owner): Item
     {
         $item = new Item();
-        $item->setProductName($entity->product()->name());
+        $item->setProductName($entity->product()->name);
         $item->setQuantity($entity->quantity());
         $item->setOwner($owner);
 

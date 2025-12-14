@@ -6,12 +6,21 @@
         {% block styles %}{% endblock %}
     </head>
     <body>
-        {% if app.user %}
+    {% if app.user %}
         <p>Logged in as {{ app.user.email }}</p>
-        <button hx-post='/auth/_logout' hx-target='body' hx-push-url='true'>Log out</button>
+        <a href='/'>
+            <button>Market</button>
+        </a>
+        {% if 'ROLE_ADMIN' in app.user.roles %}
+        <a href='/admin'>
+            <button>Admin</button>
+        </a>
         {% endif %}
+        <button hx-post='/auth/_logout' hx-target='body' hx-push-url='true'>Log out</button>
+    {% endif %}
         {% block body %}{% endblock %}
         <script src='https://cdn.jsdelivr.net/npm/htmx.org@2.0.7/dist/htmx.min.js' integrity='sha384-ZBXiYtYQ6hJ2Y0ZNoYuI+Nq5MqWBr+chMrS/RkXpNzQCApHEhOt2aY8EJgqwHLkJ' crossorigin='anonymous'></script>
         {% block importmap %}{{ importmap('app') }}{% endblock %}
+        {% block javascript %}{% endblock %}
     </body>
 </html>

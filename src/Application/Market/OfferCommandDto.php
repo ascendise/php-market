@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Application\Market;
 
-use App\Domain\Market\CreateOffer;
+use App\Domain\Market\OfferCommand;
 use App\Domain\Market\Seller;
 
-final class CreateOfferDto
+final class OfferCommandDto
 {
     public function __construct(
         public readonly ProductDto $product,
@@ -16,8 +16,8 @@ final class CreateOfferDto
     ) {
     }
 
-    public function toEntity(Seller $seller): CreateOffer
+    public function toEntity(Seller $seller): OfferCommand
     {
-        return new CreateOffer($this->product->toEntity(), $this->pricePerItem, $this->quantity, $seller);
+        return new OfferCommand($this->product->toEntity(), $this->pricePerItem, $this->quantity, $seller);
     }
 }

@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace App\Tests\Domain\Market;
 
 use App\Domain\Market\Balance;
-use App\Domain\Market\CreateOffer;
 use App\Domain\Market\InsufficientBalanceException;
 use App\Domain\Market\InsufficientStockException;
 use App\Domain\Market\Inventory;
 use App\Domain\Market\Item;
 use App\Domain\Market\Offer;
+use App\Domain\Market\OfferCommand;
 use App\Domain\Market\Product;
 use App\Domain\Market\Trader;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -27,7 +27,7 @@ final class TraderTest extends TestCase
         // Act
         $offer = $sut->sell($product, price: 1, quantity: 5);
         // Assert
-        $expected_offer = new CreateOffer($product, 1, 5, $sut);
+        $expected_offer = new OfferCommand($product, 1, 5, $sut);
         $this->assertEquals($expected_offer, $offer, 'Wrong offer created!');
         $this->assertEquals(7, $inventory->quantityOf($product));
     }

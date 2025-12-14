@@ -38,6 +38,11 @@ tr {
 th,
 td {
     border-bottom: 1px solid $text-color;
+
+}
+
+td.centered {
+    text-align: center;
 }
 
 tbody {
@@ -51,16 +56,21 @@ tbody {
     }
 }
 
-input[type=number],
-input[type=password],
-input[type=text] {
-    appearance: textfield;
+input,
+select {
     background-color: $main-color;
     color: $text-color;
     border: none;
     border-radius: 3px;
     font-size: 1em;
 }
+
+input[type=number],
+input[type=password],
+input[type=text] {
+    appearance: textfield;
+}
+
 
 button {
     font-size: 1em;
@@ -84,4 +94,8 @@ button {
             outline-color: $main-color
         }
     }
+}
+
+.clickable {
+    cursor: pointer
 }

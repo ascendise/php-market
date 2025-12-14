@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace App\Tests\Application\Auth;
 
 use App\Application\Auth\AuthenticationServiceImpl;
-use App\Application\Auth\CreateUserDto;
 use App\Application\Auth\InitState;
 use App\Application\Auth\LoginDto;
 use App\Application\Auth\RegistrationError;
 use App\Application\Auth\RegistrationException;
 use App\Application\Auth\TraderInitializer;
+use App\Application\Auth\UserCommandDto;
 use App\Application\Auth\UserDto;
 use App\Application\Auth\UserRepository;
 use App\Application\Auth\UserTraderInitializer;
@@ -47,7 +47,7 @@ final class AuthenticationServiceTest extends TestCase
         $userRepo = new MemoryUserRepository(new \ArrayIterator([$userId, $traderId]));
         $sut = $this->setupSut($userRepo);
         // Act
-        $createUser = new CreateUserDto('email@example.com', 'pass123');
+        $createUser = new UserCommandDto('email@example.com', 'pass123');
         $newUser = $sut->createUser($createUser);
         // Assert
         $expectedTrader = new TraderDto($traderId, 0, new InventoryDto());
@@ -77,7 +77,7 @@ final class AuthenticationServiceTest extends TestCase
         $traderInitializer = new UserTraderInitializer($initState);
         $sut = $this->setupSut($userRepo, $traderInitializer);
         // Act
-        $createUser = new CreateUserDto('email@example.com', 'pass123');
+        $createUser = new UserCommandDto('email@example.com', 'pass123');
         $newUser = $sut->createUser($createUser);
         // Assert
         $expectedTrader = new TraderDto(
@@ -101,7 +101,7 @@ final class AuthenticationServiceTest extends TestCase
         $userRepo = new MemoryUserRepository(new \ArrayIterator([$userId, $traderId]));
         $sut = $this->setupSut($userRepo);
         // Act
-        $createUser = new CreateUserDto('email@example.com', 'pass123');
+        $createUser = new UserCommandDto('email@example.com', 'pass123');
         $newUser = $sut->createUser($createUser);
         $_ = $sut->createUser($createUser); // Tries to create duplicate user and throws
     }
@@ -113,7 +113,7 @@ final class AuthenticationServiceTest extends TestCase
         $traderId = Uuid::v7();
         $userRepo = new MemoryUserRepository(new \ArrayIterator([$userId, $traderId]));
         $sut = $this->setupSut($userRepo);
-        $createUser = new CreateUserDto('email@example.com', 'pass123');
+        $createUser = new UserCommandDto('email@example.com', 'pass123');
         $_ = $sut->createUser($createUser);
         // Act
         $user = $sut->login(new LoginDto('email@example.com', 'pass123'));
@@ -132,7 +132,7 @@ final class AuthenticationServiceTest extends TestCase
         $traderId = Uuid::v7();
         $userRepo = new MemoryUserRepository(new \ArrayIterator([$userId, $traderId]));
         $sut = $this->setupSut($userRepo);
-        $createUser = new CreateUserDto('email@example.com', 'pass123');
+        $createUser = new UserCommandDto('email@example.com', 'pass123');
         $_ = $sut->createUser($createUser);
         // Act
         $user = $sut->login($wrongCredentials);

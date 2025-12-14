@@ -9,6 +9,7 @@ final class RegistrationException extends \Exception
     public function __construct(private readonly RegistrationError $error)
     {
         $this->code = $error->value;
+        $this->message = $this->__toString();
     }
 
     public function error(): RegistrationError

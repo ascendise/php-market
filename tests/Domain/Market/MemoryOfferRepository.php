@@ -2,8 +2,8 @@
 
 namespace App\Tests\Domain\Market;
 
-use App\Domain\Market\CreateOffer;
 use App\Domain\Market\Offer;
+use App\Domain\Market\OfferCommand;
 use App\Domain\Market\OfferRepository;
 use App\Domain\Market\Offers;
 use Symfony\Component\Uid\Uuid;
@@ -24,9 +24,9 @@ class MemoryOfferRepository implements OfferRepository
     /**
      * @param \Iterator<UuidV7> $uuidGenerator
      */
-    public function __construct(Offers $initOffers, ?\Iterator $uuidGenerator = null)
+    public function __construct(?Offers $initOffers = null, ?\Iterator $uuidGenerator = null)
     {
-        $this->offers = iterator_to_array($initOffers);
+        $this->offers = null === $initOffers ? [] : iterator_to_array($initOffers);
         $this->uuidGenerator = $uuidGenerator ?? $this->randomGenerator();
     }
 
@@ -44,7 +44,7 @@ class MemoryOfferRepository implements OfferRepository
         return new Offers(...$this->offers);
     }
 
-    public function create(CreateOffer $createOffer): Offer
+    public function create(OfferCommand $createOffer): Offer
     {
         $id = $this->getId();
         $offer = $createOffer->toOffer($id);
