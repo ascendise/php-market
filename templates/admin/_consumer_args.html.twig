@@ -22,7 +22,7 @@
                 <input type='text' pattern='^\d+(-\d+)?$' name='args[consumeRates][{{ loop.index }}][buyingVolume]' value='{{ rate.buyingVolume }}' required/>
             </td>
             <td class='centered'>
-                <button onclick="deleteRow('consumer-args', this)" type='button'>Delete Row</button>
+                <button onclick='consumerArgs.table.deleteRow(this)' type='button'>Delete Row</button>
             </td>
         </tr>
         {% endfor %}
@@ -38,56 +38,17 @@
                 <input type='text' pattern='^\d+(-\d+)?$' name='args[consumeRates][0][buyingVolume]' required/>
             </td>
             <td class='centered'>
-                <button onclick="deleteRow('consumer-args', this)" type='button'>Delete Row</button>
+                <button onclick='consumerArgs.table.deleteRow(this)' type='button'>Delete Row</button>
             </td>
         </tr>
         {% endif %}
     </tbody>
 </table>
-<button type='button' onclick="newRow('consumer-args')">Add Row</button>
+<button type='button' onclick='consumerArgs.table.newRow()'>Add Row</button>
 
 {% block javascript %}
+<script src='{{ asset('javascript/table.js') }}'></script>
 <script>
-    function newRow(tableId) {
-        const table = document.getElementById(tableId);
-        const templateRow = table.rows[table.rows.length - 1];
-        const newRow = table.insertRow(-1);
-        for (const cell of templateRow.cells) {
-            const newCell = newRow.insertCell(-1);
-            Array.from(cell.attributes).forEach(node =>
-                newCell.setAttributeNode(node.cloneNode(true));
-            );
-            newCell.innerHTML = cell.innerHTML;
-        }
-        updateArgsIndex(table);
-    }
-
-    function deleteRow(tableId, childElement) {
-        const table = document.getElementById(tableId);
-        const rows = Array.from(table.rows).slice(1); //Ignore Header Row
-        if(rows.length <= 1) {
-            console.log('Tried to delete last row, which is required for cloning');
-            return;
-        }
-        const row = rows.filter(r => r.contains(childElement));
-        if(row[0]) {
-            row[0].remove();
-        }
-        updateArgsIndex(table);
-    }
-
-    function updateArgsIndex(table) {
-        let index = 0;
-        for(const row of table.rows) {
-            const inputs = row.getElementsByTagName('input');
-            for(const input of inputs) {
-                const name = input.attributes['name'].nodeValue;
-                const newName = name.replace(/\d+/gm, index);
-                input.attributes['name'].nodeValue = newName;
-            }
-            index++;
-        }
-
-    }
+    window.consumerArgs = { table: new Table('consumer-args') };
 </script>
 {% endblock %}
