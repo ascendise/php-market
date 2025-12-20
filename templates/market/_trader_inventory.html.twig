@@ -1,0 +1,23 @@
+{% for item in trader.inventory %}
+    <tr>
+        <td class='product-name'>{{ item.product.name }}</td>
+        <td class='stocked centered'>{{ item.quantity }}</td>
+        <td class='options centered'>
+            <form hx-post='{{ trader.halLinks.sell.href }}'
+                hx-swap='innerHTML'
+                hx-target='#inventory'>
+                <span>
+                    {{ ux_icon('iconoir:cube', {class: 'icon'}) }}
+                    <input class='right-align' type='number' name='quantity' value='1'/>
+                </span>
+                <span>
+                    {{ ux_icon('iconoir:dollar-circle', {class: 'icon'}) }}
+                    <input class='right-align' type='number' name='pricePerItem' value='1'/>
+                </span>
+                <input hidden type='text' name='product[name]' value='{{ item.product.name }}'/>
+                <input type="hidden" name="_token" data-controller="csrf-protection" value="{{ csrf_token('sell') }}">
+                <button>Sell</button>
+            </form>
+        </td>
+    </tr>
+{% endfor %}

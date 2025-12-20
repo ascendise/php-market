@@ -16,6 +16,7 @@ use App\Domain\Market\Offer;
 use App\Domain\Market\Offers;
 use App\Domain\Market\Product;
 use App\Domain\Market\Trader;
+use App\Tests\Domain\Events\SpyEventDispatcher;
 use App\Tests\Domain\Market\MemoryOfferRepository;
 use App\Tests\Domain\Market\MemoryTraderRepository;
 use PHPUnit\Framework\TestCase;
@@ -35,7 +36,7 @@ final class ConsumerTest extends TestCase
      */
     private function setupMarket(Offers $offers, array $traders): Market
     {
-        return new Market(new MemoryOfferRepository($offers), new MemoryTraderRepository(...$traders));
+        return new Market(new MemoryOfferRepository($offers), new MemoryTraderRepository(...$traders), new SpyEventDispatcher());
     }
 
     private function setupSeller(int $balance = 0): Trader

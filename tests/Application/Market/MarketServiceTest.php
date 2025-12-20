@@ -5,12 +5,14 @@ declare(strict_types=1);
 namespace App\Tests\Application\Market;
 
 use App\Application\Market\CreatedOfferDto;
+use App\Application\Market\InventoryDto;
 use App\Application\Market\ItemDto;
 use App\Application\Market\MarketServiceImpl;
 use App\Application\Market\OfferCommandDto;
 use App\Application\Market\OfferDto;
 use App\Application\Market\OffersDto;
 use App\Application\Market\ProductDto;
+use App\Application\Market\TraderDto;
 use App\Domain\Market\Balance;
 use App\Domain\Market\Inventory;
 use App\Domain\Market\Item;
@@ -21,6 +23,7 @@ use App\Domain\Market\Offers;
 use App\Domain\Market\Product;
 use App\Domain\Market\Trader;
 use App\Domain\Market\TraderRepository;
+use App\Tests\Domain\Events\SpyEventDispatcher;
 use App\Tests\Domain\Market\MemoryOfferRepository;
 use App\Tests\Domain\Market\MemoryTraderRepository;
 use App\Tests\Domain\Market\StubTrader;
@@ -35,7 +38,7 @@ final class MarketServiceTest extends TestCase
     ): MarketServiceImpl {
         $offerRepository = $offerRepository ?? new MemoryOfferRepository(new Offers());
         $traderRepository = $traderRepository ?? new MemoryTraderRepository();
-        $market = new Market($offerRepository, $traderRepository);
+        $market = new Market($offerRepository, $traderRepository, new SpyEventDispatcher());
 
         return new MarketServiceImpl($market);
     }
@@ -92,7 +95,8 @@ final class MarketServiceTest extends TestCase
         );
         $expectedResponse = new CreatedOfferDto(
             $expectedOffer,
-            new OffersDto($expectedOffer)
+            new OffersDto($expectedOffer),
+            new TraderDto($traderId, 1000, new InventoryDto(new ItemDto(new ProductDto('Apple'), 2))),
         );
         $this->assertEquals($expectedResponse, $response);
         $this->assertCount(1, $offerRepository->list());

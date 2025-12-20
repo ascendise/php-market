@@ -13,6 +13,7 @@ use App\Domain\Market\Market;
 use App\Domain\Market\Offer;
 use App\Domain\Market\Offers;
 use App\Domain\Market\Product;
+use App\Tests\Domain\Events\SpyEventDispatcher;
 use App\Tests\Domain\Market\MemoryOfferRepository;
 use App\Tests\Domain\Market\MemoryTraderRepository;
 use PHPUnit\Framework\TestCase;
@@ -27,7 +28,8 @@ final class ProducerTest extends TestCase
     {
         return new Market(
             new MemoryOfferRepository(new Offers(), new \ArrayIterator($uuidgen)),
-            new MemoryTraderRepository()
+            new MemoryTraderRepository(),
+            new SpyEventDispatcher()
         );
     }
 

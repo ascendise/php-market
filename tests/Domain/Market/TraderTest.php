@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Domain\Market;
 
 use App\Domain\Market\Balance;
+use App\Domain\Market\BalanceChangedEvent;
 use App\Domain\Market\InsufficientBalanceException;
 use App\Domain\Market\InsufficientStockException;
 use App\Domain\Market\Inventory;
@@ -13,6 +14,7 @@ use App\Domain\Market\Offer;
 use App\Domain\Market\OfferCommand;
 use App\Domain\Market\Product;
 use App\Domain\Market\Trader;
+use App\Tests\Domain\Events\SpyEventDispatcher;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
@@ -91,6 +93,25 @@ final class TraderTest extends TestCase
         $sut->buy($offer);
         // Assert
         $this->assertEquals(900, $seller->balance());
+    }
+
+    public function testBuyShouldDispatchBalanceChangedEvents(): void
+    {
+        // Arrange
+        $spyEventDispatcher = new SpyEventDispatcher();
+        $sut = new Trader('id', new Inventory(), new Balance(1000), $spyEventDispatcher);
+        $computer = new Product('Computer');
+        $seller = new Trader('id2', new Inventory(), new Balance(0), $spyEventDispatcher);
+        $offer = new Offer('id', $computer, 300, 3, $seller);
+        // Act
+        $sut->buy($offer);
+        // Assert
+        $this->assertEquals(900, $seller->balance());
+        $expectedBalanceEvents = [
+            new BalanceChangedEvent($sut, new Balance(100)),
+            new BalanceChangedEvent($seller, new Balance(900)),
+        ];
+        $spyEventDispatcher->assertEventsContain($expectedBalanceEvents, $this);
     }
 
     public function testBuyShouldThrowWhenNotEnoughCurrencyToPayOffer(): void

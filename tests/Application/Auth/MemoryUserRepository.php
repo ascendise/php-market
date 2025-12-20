@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Application\Auth;
 
 use App\Application\Auth\UserRepository;
+use App\Application\Market\TraderDto;
 use App\Entity\User;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Uid\UuidV7;
@@ -81,7 +82,7 @@ final class MemoryUserRepository implements UserRepository
         $idProperty->setValue($object, $id);
     }
 
-    public function load(string $email): ?User
+    public function fetchByEmail(string $email): ?User
     {
         if (!array_key_exists($email, $this->users)) {
             return null;
@@ -96,5 +97,15 @@ final class MemoryUserRepository implements UserRepository
     public function list(): array
     {
         return $this->users;
+    }
+
+    public function fetchFromTrader(TraderDto $trader): User
+    {
+        foreach ($this->users as $user) {
+            if ($user->getTrader()->getId() == $trader->id) {
+                return $user;
+            }
+        }
+        throw new \InvalidArgumentException('Orphaned trader!');
     }
 }

@@ -34,7 +34,7 @@ final class MarketServiceImpl implements MarketService
         $newOffer = $this->market->createOffer($offer);
         $offers = $this->market->listOffers();
 
-        return CreatedOfferDto::fromEntity($newOffer, $offers);
+        return CreatedOfferDto::fromEntity($newOffer, $offers, $seller);
     }
 
     public function buyOffer(Uuid $buyerId, Uuid $offerId): TraderDto

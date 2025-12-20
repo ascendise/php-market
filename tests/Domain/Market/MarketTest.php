@@ -4,27 +4,36 @@ declare(strict_types=1);
 
 namespace App\Tests\Domain\Market;
 
+use App\Domain\Events\EventDispatcher;
 use App\Domain\Market\Balance;
+use App\Domain\Market\BalanceChangedEvent;
 use App\Domain\Market\Inventory;
 use App\Domain\Market\Item;
 use App\Domain\Market\Market;
 use App\Domain\Market\Offer;
+use App\Domain\Market\OfferCreatedEvent;
+use App\Domain\Market\OfferRepository;
 use App\Domain\Market\Offers;
+use App\Domain\Market\OfferSoldEvent;
 use App\Domain\Market\Product;
 use App\Domain\Market\Trader;
+use App\Domain\Market\TraderRepository;
+use App\Tests\Domain\Events\SpyEventDispatcher;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Uid\Uuid;
 
 class MarketTest extends TestCase
 {
     private function setupSut(
-        ?MemoryOfferRepository $offerRepo = null,
-        ?MemoryTraderRepository $traderRepo = null,
+        ?OfferRepository $offerRepo = null,
+        ?TraderRepository $traderRepo = null,
+        ?EventDispatcher $eventDispatcher = null,
     ): Market {
         $offerRepo ??= new MemoryOfferRepository(new Offers());
         $traderRepo ??= new MemoryTraderRepository();
+        $eventDispatcher ??= new SpyEventDispatcher();
 
-        return new Market($offerRepo, $traderRepo);
+        return new Market($offerRepo, $traderRepo, $eventDispatcher);
     }
 
     public function testListOffersShouldReturnAllOffersInRepository(): void
@@ -85,7 +94,8 @@ class MarketTest extends TestCase
             new Balance(0)
         );
         $traderRepo = new MemoryTraderRepository($seller);
-        $sut = $this->setupSut($offerRepo, $traderRepo);
+        $spyEventDispatcher = new SpyEventDispatcher();
+        $sut = $this->setupSut($offerRepo, $traderRepo, $spyEventDispatcher);
         // Act
         $newOffer = $seller->sell(new Product('Ben and Jerrys'), price: 8, quantity: 1);
         $sut->createOffer($newOffer);
@@ -94,6 +104,7 @@ class MarketTest extends TestCase
         $this->assertCount(1, $offers);
         $dbSeller = $traderRepo->find($seller->id());
         $this->assertEquals($seller, $dbSeller, 'Trader not updated in DB!');
+        $spyEventDispatcher->assertOnlyEventDispatched(OfferCreatedEvent::class, $this);
     }
 
     public function testTransferShouldMoveItemsAndMoney(): void
@@ -130,5 +141,26 @@ class MarketTest extends TestCase
         $dbBuyer = $traderRepo->find($buyer->id());
         $this->assertEquals($dbSeller, $seller, 'Seller was not updated in DB!');
         $this->assertEquals($dbBuyer, $buyer, 'Buyer was not updated in DB!');
+    }
+
+    public function testTransferShouldTriggerEvents(): void
+    {
+        // Arrange
+        $spyEventDispatcher = new SpyEventDispatcher();
+        $seller = new Trader('seller', new Inventory(), new Balance(0), $spyEventDispatcher);
+        $buyer = new Trader('buyer', new Inventory(), new Balance(1000), $spyEventDispatcher);
+        $offer = new Offer('offer', new Product('Graphics Card'), 100, 3, $seller);
+        $offerRepo = new MemoryOfferRepository(new Offers($offer));
+        $traderRepo = new MemoryTraderRepository($buyer, $seller);
+        $sut = $this->setupSut($offerRepo, $traderRepo, $spyEventDispatcher);
+        // Act
+        $sut->transact($buyer, $offer);
+        // Assert
+        $expectedBalanceEvents = [
+            new OfferSoldEvent($offer),
+            new BalanceChangedEvent($seller, new Balance(300)),
+            new BalanceChangedEvent($buyer, new Balance(700)),
+        ];
+        $spyEventDispatcher->assertEventsContain($expectedBalanceEvents, $this);
     }
 }

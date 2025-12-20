@@ -45,7 +45,7 @@ final class TraderDto extends HALResource implements WebLinksProvider, RestLinks
     public function getWebLinks(): array
     {
         return [
-            'self' => new Link('/market/_trader'),
+            'inventory' => new Link('/market/_trader/inventory'),
             'sell' => new Link('/market/_sell'),
         ];
     }

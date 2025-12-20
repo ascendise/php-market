@@ -1,6 +1,9 @@
-<div id='offers' class='market' hx-get='{{ market.halLinks.offers.href }}' hx-trigger='offers-update from:#buy-offer'>
+<div id='offers' class='market'>
     <h1>Market</h1>
-    <table>
+    <table hx-ext='sse'
+        sse-connect='{{ mercure(['html-App\\Domain\\Market\\OfferCreatedEvent', 'json-App\\Domain\\Market\\OfferSoldEvent']) }}'
+        sse-swap='json-App\Domain\Market\OfferSoldEvent'
+        hx-swap='none'>
         <thead>
             <tr>
                 <th class='product-name'>Product</th>
@@ -9,23 +12,25 @@
                 <th>Options</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody sse-swap='html-App\Domain\Market\OfferCreatedEvent' hx-swap='afterbegin'>
         {% for offer in market.offers %}
-            <tr>
-                <td class='product-name'> <span>{{ offer.product.name }}</span> </td>
-                <td class='centered'>{{ offer.quantity }}</td>
-                <td class='centered'>{{ offer.totalPrice }}</td>
-                <td class='centered'>
-                    <form id='buy-offer'
-                            hx-post={{ offer.halLinks.buy.href }}
-                            hx-swap='outerHtml'
-                            hx-target='#trader'>
-                        <button>Buy</button>
-                        <input type='hidden' name='_token' data-controller='csrf-protection' value='{{ csrf_token('buy') }}' />
-                    </form>
-                </td>
-            </tr>
+            {{ include('market/_offer.html.twig') }}
         {% endfor %}
         </tbody>
     </table>
 </div>
+
+{% block javascript %}
+<script>
+    document.buyCsrfToken = '{{ csrf_token('buy') }}';
+    document.body.addEventListener('htmx:sseBeforeMessage', function (e) {
+        const message = e.detail;
+        if(message.type == 'json-App\\Domain\\Market\\OfferSoldEvent') {
+            soldEvent = JSON.parse(message.data);
+            const row = document.getElementById(`offer-${soldEvent.soldOffer}`)
+            if(row)
+                row.remove();
+        }
+    });
+</script>
+{% endblock %}

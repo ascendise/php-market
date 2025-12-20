@@ -14,6 +14,7 @@ use App\Domain\Bots\Schedule\InvalidBlueprintError;
 use App\Domain\Bots\Schedule\InvalidBlueprintException;
 use App\Domain\Market\Market;
 use App\Tests\Domain\Bots\Schedule\MemoryBlueprintRepository;
+use App\Tests\Domain\Events\SpyEventDispatcher;
 use App\Tests\Domain\Market\MemoryOfferRepository;
 use App\Tests\Domain\Market\MemoryTraderRepository;
 use PHPUnit\Framework\TestCase;
@@ -24,7 +25,7 @@ final class BotAdministrationServiceTest extends TestCase
     {
         $offerRepo = new MemoryOfferRepository();
         $traderRepo = new MemoryTraderRepository();
-        $market = new Market($offerRepo, $traderRepo);
+        $market = new Market($offerRepo, $traderRepo, new SpyEventDispatcher());
 
         return $market;
     }

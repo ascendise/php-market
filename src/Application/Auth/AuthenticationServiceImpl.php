@@ -19,7 +19,7 @@ class AuthenticationServiceImpl implements AuthenticationService
 
     public function createUser(UserCommandDto $createUser): UserDto
     {
-        $userExists = null != $this->userRepo->load($createUser->email);
+        $userExists = null != $this->userRepo->fetchByEmail($createUser->email);
         if ($userExists) {
             throw new RegistrationException(RegistrationError::UserAlreadyExists);
         }
@@ -40,7 +40,7 @@ class AuthenticationServiceImpl implements AuthenticationService
 
     public function login(LoginDto $login): ?UserDto
     {
-        $user = $this->userRepo->load($login->email);
+        $user = $this->userRepo->fetchByEmail($login->email);
         if (null == $user) {
             return null;
         }

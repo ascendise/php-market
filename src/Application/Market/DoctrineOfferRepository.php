@@ -24,7 +24,7 @@ final class DoctrineOfferRepository implements OfferRepository
 
     public function list(): Offers
     {
-        $offers = $this->offerRepo()->findAll();
+        $offers = $this->offerRepo()->findBy([], ['id' => 'DESC']);
         $traders = $this->getSellersFromOffers($offers);
         $offers = array_map(fn (Entity\Market\Offer $o) => $o->toEntity($traders[$o->getSellerId()]), $offers);
         $offers = new Offers(...$offers);

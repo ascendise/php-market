@@ -53,7 +53,7 @@ final class MarketController extends AbstractController
     }
 
     #[Route('market/_buy/{offerId}', methods: 'POST')]
-    #[IsCsrfTokenValid('buy')]
+    #[IsCsrfTokenValid('buy', tokenKey: 'X-CSRF-TOKEN', tokenSource: IsCsrfTokenValid::SOURCE_HEADER)]
     public function buy(
         Uuid $offerId,
         UserInterface $user,
@@ -61,10 +61,9 @@ final class MarketController extends AbstractController
         return $this->rateLimiter->guard(function () use ($offerId, $user) {
             $traderId = $this->fetchTrader($user)->getId();
             $updatedTrader = $this->marketService->buyOffer($traderId, $offerId);
-            $response = $this->render('market/_trader.html.twig', [
+            $response = $this->render('market/_trader_inventory.html.twig', [
                 'trader' => $this->linkPopulator->populateWebLinks($updatedTrader),
             ]);
-            $response->headers->set('HX-Trigger', 'offers-update');
 
             return $response;
         }, $user->getUserIdentifier());
@@ -77,46 +76,28 @@ final class MarketController extends AbstractController
         UserInterface $user,
     ): Response {
         return $this->rateLimiter->guard(function () use ($createOfferRequest, $user) {
-            $traderId = $this->fetchTrader($user)->getId();
-            $createdOffer = $this->marketService->createOffer($traderId, $createOfferRequest);
-            $market = new MarketDto($createdOffer->offers);
+            $trader = $this->fetchTrader($user);
+            $createdOffer = $this->marketService->createOffer($trader->getId(), $createOfferRequest);
             $response = $this->render(
-                'market/_offers.html.twig',
+                'market/_trader_inventory.html.twig',
                 [
-                    'market' => $this->linkPopulator->populateWebLinks($market),
+                    'trader' => $this->linkPopulator->populateWebLinks($createdOffer->seller),
                 ]
             );
-            $response->headers->set('HX-Trigger', 'trader-update');
 
             return $response;
         }, $user->getUserIdentifier());
     }
 
-    #[Route('market/_offers', methods: 'GET')]
-    public function offers(UserInterface $user): Response
-    {
-        return $this->rateLimiter->guard(function () {
-            $offers = $this->marketService->listOffers();
-            $market = new MarketDto($offers);
-
-            return $this->render(
-                'market/_offers.html.twig',
-                [
-                    'market' => $this->linkPopulator->populateWebLinks($market),
-                ]
-            );
-        }, $user->getUserIdentifier());
-    }
-
-    #[Route('market/_trader', methods: 'GET')]
-    public function trader(UserInterface $user): Response
+    #[Route('market/_trader/inventory', methods: 'GET')]
+    public function traderInventory(UserInterface $user): Response
     {
         return $this->rateLimiter->guard(function () use ($user) {
             $trader = $this->fetchTrader($user);
             $trader = TraderDto::fromEntity($trader->toEntity());
 
             return $this->render(
-                'market/_trader.html.twig',
+                'market/_trader_inventory.html.twig',
                 [
                     'trader' => $this->linkPopulator->populateWebLinks($trader),
                 ]

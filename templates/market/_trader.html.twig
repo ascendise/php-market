@@ -1,7 +1,10 @@
-<div id='trader' class='trader' hx-get={{ trader.halLinks.self.href }} hx-trigger='trader-update from:#sell-offer'>
+<div id='trader' class='trader'
+    hx-ext='sse'
+    hx-swap='outerHTML'
+    sse-connect='{{ mercure(['html-App\\Domain\\Market\\BalanceChangedEvent']) }}'>
     <div>
         <h1>Trader</h1>
-        <h2>Balance: {{ trader.balance }}</h2>
+        {{ include('market/_trader_balance.html.twig', variables: {balance: trader.balance}) }}
         <h2>Inventory</h2>
     </div>
     <table>
@@ -12,30 +15,8 @@
                 <th>Options</th>
             </tr>
         </thead>
-        <tbody>
-        {% for item in trader.inventory %}
-            <tr>
-                <td class='product-name'>{{ item.product.name }}</td>
-                <td class='stocked centered'>{{ item.quantity }}</td>
-                <td class='options centered'>
-                    <form id='sell-offer' hx-post={{ trader.halLinks.sell.href }}
-                        hx-swap='outer-html'
-                        hx-target='#offers'>
-                        <span>
-                            {{ ux_icon('iconoir:cube', {class: 'icon'}) }}
-                            <input class='right-align' type='number' name='quantity' value='1'/>
-                        </span>
-                        <span>
-                            {{ ux_icon('iconoir:dollar-circle', {class: 'icon'}) }}
-                            <input class='right-align' type='number' name='pricePerItem' value='1'/>
-                        </span>
-                        <input hidden type='text' name='product[name]' value='{{ item.product.name }}'/>
-                        <input type="hidden" name="_token" data-controller="csrf-protection" value="{{ csrf_token('sell') }}">
-                        <button>Sell</button>
-                    </form>
-                </td>
-            </tr>
-        {% endfor %}
+        <tbody id='inventory'>
+            {{ include('market/_trader_inventory.html.twig') }}
         </tbody>
     </table>
 </div>

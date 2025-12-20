@@ -4,12 +4,19 @@ declare(strict_types=1);
 
 namespace App\Domain\Market;
 
+use App\Domain\Events\EventDispatcher;
+use App\Domain\Events\NoopEventDispatcher;
+
 final class Market
 {
+    private readonly EventDispatcher $eventDispatcher;
+
     public function __construct(
         private readonly OfferRepository $offerRepository,
         private readonly TraderRepository $traderRepository,
+        ?EventDispatcher $eventDispatcher = null,
     ) {
+        $this->eventDispatcher = $eventDispatcher ?? new NoopEventDispatcher();
     }
 
     public function listOffers(): Offers
@@ -31,6 +38,7 @@ final class Market
     {
         $offer = $this->offerRepository->create($createOffer);
         $this->persistTrader($createOffer->seller());
+        $this->eventDispatcher->dispatch(new OfferCreatedEvent($offer));
 
         return $offer;
     }
@@ -48,5 +56,6 @@ final class Market
         $this->offerRepository->remove($offer->id());
         $this->persistTrader($buyer);
         $this->persistTrader($offer->seller());
+        $this->eventDispatcher->dispatch(new OfferSoldEvent($offer));
     }
 }

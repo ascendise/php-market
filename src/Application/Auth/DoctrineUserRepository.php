@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Application\Auth;
 
+use App\Application\Market\TraderDto;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -22,10 +23,21 @@ final class DoctrineUserRepository implements UserRepository
         return $user;
     }
 
-    public function load(string $email): ?User
+    public function fetchByEmail(string $email): ?User
     {
         $users = $this->entityManager->getRepository(User::class);
 
         return $users->findOneBy(['email' => $email]);
+    }
+
+    public function fetchFromTrader(TraderDto $trader): User
+    {
+        $users = $this->entityManager->getRepository(User::class);
+        $result = $users->findOneBy(['trader' => $trader->id]);
+        if (!$result) {
+            throw new \InvalidArgumentException('Orphaned trader!');
+        }
+
+        return $result;
     }
 }
