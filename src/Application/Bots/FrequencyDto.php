@@ -31,6 +31,11 @@ final class FrequencyDto
         return new \DateInterval("PT{$h}H{$m}M{$s}S");
     }
 
+    public function timestamp(): string
+    {
+        return $this->toDateInterval()->format('%H:%M:%S');
+    }
+
     public function __toString(): string
     {
         $str = '';

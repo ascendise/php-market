@@ -12,6 +12,8 @@
         </option>
     {% endfor %}
     </select>
+    <input name='frequency' type='time' step=1 min='00:00:01' max='24:00:00' required
+        value='00:05:00'/>
     <div id='args-editor' class='args-editor'>
         {{ include('admin/_producer_args.html.twig') }}
     </div>
